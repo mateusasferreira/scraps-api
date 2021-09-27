@@ -1,9 +1,7 @@
-import express from 'express'
+import app from './app'
 
-const app = express()
+import dotenv from 'dotenv'
 
-app.get('/', (req, res) => {
-	res.json({message: 'Hello World'})
-})
+dotenv.config()
 
-app.listen(3333, () => console.log('servidor rodando'))
+app.listen(process.env.PORT, () => console.log('servidor rodando'))
