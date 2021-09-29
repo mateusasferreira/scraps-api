@@ -1,3 +1,5 @@
+import 'reflect-metadata'
+import './config/connect.ts'
 import express from 'express'
 
 const app = express()
