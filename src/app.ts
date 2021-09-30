@@ -1,13 +1,25 @@
 import 'reflect-metadata'
 import './config/connect.ts'
 import express from 'express'
+import root from './routes/root'
 
-const app = express()
+class App {
 
-app.use(express.json())
+	public express
 
-app.get('/', (req, res) => {
-	res.status(200).json({message: 'Hello World'})
-})
+	constructor(){
+		this.express = express()
+		this.middlewares()
+		this.routes()
+	}
 
-export default app
+	middlewares(){
+		this.express.use(express.json())
+	}
+
+	routes(){
+		this.express.use(root)
+	}
+}
+
+export default new App().express
