@@ -1,5 +1,4 @@
 import 'reflect-metadata'
-import './config/connect.ts'
 import express from 'express'
 import root from './routes/root'
 
