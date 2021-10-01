@@ -8,4 +8,16 @@ services:
       - 3333:3333
     volumes: 
       - .:/usr/app
-    
+  
+  db:
+    container_name: 'db_container'
+    image: mysql:8.0.26
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - 3308:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: 'scraps_db'
+
+      
