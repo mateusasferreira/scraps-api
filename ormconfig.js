@@ -1,4 +1,4 @@
-{
+module.exports = {
   "subscribers": [
      "src/subscriber/**/*.ts"
   ],
