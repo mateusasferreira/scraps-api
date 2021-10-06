@@ -2,6 +2,12 @@ import 'reflect-metadata'
 import express from 'express'
 import root from './routes/root'
 
+import dotenv from 'dotenv'
+
+dotenv.config({
+	path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env'
+})
+
 class App {
 
 	public express
