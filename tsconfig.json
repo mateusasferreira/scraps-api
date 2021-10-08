@@ -9,7 +9,7 @@
     "baseUrl": ".",                                  
     "paths": {
       "@controllers/*": ["./src/controllers/*"],
-      "@models/*": ["./src/models/*"],
+      "@models/*": ["src/models/*"],
       "@config/*": ["./src/config/*"],
       "@services/*": ["./src/services/*"],
       "@middlewares/*": ["./src/middlewares/*"]
