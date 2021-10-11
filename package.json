@@ -5,9 +5,11 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules src/server.ts",
-    "test": "NODE_ENV=test  jest",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
-    "migration:run": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:run"
+    "migration:run": "ts-node --transpile-only ./node_modules/typeorm/cli.js -c default migration:run", 
+    "pretest": "NODE_ENV=test ts-node --transpile-only ./node_modules/typeorm/cli.js -c test migration:run",
+    "test": "NODE_ENV=test jest",
+    "posttest": "NODE_ENV=test ts-node-dev ./node_modules/typeorm/cli.js -c test migration:revert"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
