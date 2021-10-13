@@ -1,13 +1,7 @@
 import 'reflect-metadata'
-import '@config/db-connect.ts'
 import express from 'express'
-import root from './routes/root'
-
-import dotenv from 'dotenv'
-
-dotenv.config({
-	path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env'
-})
+import root from '@routes/root'
+import userRoute from '@routes/user'
 
 class App {
 
@@ -25,6 +19,7 @@ class App {
 
 	routes(){
 		this.express.use(root)
+		this.express.use(userRoute)
 	}
 }
 

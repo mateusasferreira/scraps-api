@@ -9,10 +9,12 @@
     "baseUrl": ".",                                  
     "paths": {
       "@controllers/*": ["./src/controllers/*"],
+      "@routes/*": ["./src/routes/*"],
       "@models/*": ["src/models/*"],
       "@config/*": ["./src/config/*"],
       "@services/*": ["./src/services/*"],
-      "@middlewares/*": ["./src/middlewares/*"]
+      "@middlewares/*": ["./src/middlewares/*"],
+      "@repositories/*": ["./src/repositories/*"]
     },                                      
     "typeRoots": [
       "./node_modules/@types",
@@ -28,5 +30,5 @@
   },
   "include": [
     "src/**/*"
-, "__test__", "node_modules/__test__"  ]
+]
 }
