@@ -10,6 +10,7 @@
     "test": "NODE_ENV=test jest"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/better-sqlite3": "^7.4.0",
     "@types/jest": "^27.0.2",
     "@types/supertest": "^2.0.11",
