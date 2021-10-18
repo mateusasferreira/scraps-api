@@ -6,6 +6,19 @@ class UserService {
 	async create(data){
 		const userRepo = getCustomRepository(UserRepository)
 
+		const userAlreadyExists = await userRepo.findOne({
+			where: {username: data.username}
+			
+		})
+
+		if(userAlreadyExists) throw new Error('username already registered')
+
+		const emailAlreadyRegistered = await userRepo.findOne({
+			where: {email: data.email}
+		})
+
+		if(emailAlreadyRegistered) throw new Error('email already exists')
+
 		const passwordHash = await bcrypt.hash(data.password, 8)
 
 		data.password = undefined
