@@ -3,6 +3,10 @@ import app from '../../src/app'
 import {createConnection, getConnection} from 'typeorm'
 import { clearDB } from '../utils/truncate'
 import {User} from '../../src/models/User'
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 beforeAll(async () => {
 	await createConnection({
@@ -54,6 +58,20 @@ describe('Registration', () => {
 
 		expect(res.status).toBe(401)
 	})
-  
-  
+
+	it('should be able to confirm email', async () => {
+		await request(app)
+			.post('/users')
+			.send({username: 'mateus', email: 'mateus@email.com', password: '1234'})
+
+		const user = await getConnection().getRepository(User).findOne({where: { username: 'mateus'}})
+
+		const token = jwt.sign(user.id, process.env.JWT_SECRET)
+
+		const res: Response = await request(app)
+			.get(`/confirmation/${token}`)
+
+		expect(res.status).toBe(200)
+		
+	})
 })
