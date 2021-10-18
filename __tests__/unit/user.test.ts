@@ -34,4 +34,5 @@ describe('User', () => {
 
 		expect(await bcrypt.compare('1234', user.password_hash)).toBe(true)
 	})
+
 })
