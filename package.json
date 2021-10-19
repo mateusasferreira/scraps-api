@@ -7,13 +7,14 @@
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules src/server.ts",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
     "migration:run": "ts-node --transpile-only ./node_modules/typeorm/cli.js -c default migration:run",
-    "test": "NODE_ENV=test jest"
+    "test": "jest"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/better-sqlite3": "^7.4.0",
     "@types/jest": "^27.0.2",
     "@types/jsonwebtoken": "^8.5.5",
+    "@types/nodemailer": "^6.4.4",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^4.31.2",
     "@typescript-eslint/parser": "^4.31.2",

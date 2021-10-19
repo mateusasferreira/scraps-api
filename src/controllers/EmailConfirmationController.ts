@@ -10,10 +10,10 @@ class EmailConfirmationController {
 
 			await EmailConfirmationService.confirm(token)
       
-			res.sendStatus(200)
+			res.redirect('/')
 		} catch(e) {
 			console.log(e)
-			res.sendStatus(400)
+			res.sendStatus(400)		
 		}
 	}
 

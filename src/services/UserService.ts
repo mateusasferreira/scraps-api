@@ -1,6 +1,7 @@
 import { getCustomRepository, } from 'typeorm'
 import { UserRepository } from '@repositories/UserRepository'
 import bcrypt from 'bcrypt'
+import EmailConfirmationService from './EmailConfirmationService'
 
 class UserService {
 	async create(data){
@@ -28,8 +29,10 @@ class UserService {
 			email: data.email,
 			password_hash: passwordHash
 		})
-
+    
 		await userRepo.save(user)
+
+		await EmailConfirmationService.sendEmail(user.id, user.email)
     
 	}
 }

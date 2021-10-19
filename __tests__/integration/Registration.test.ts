@@ -66,12 +66,14 @@ describe('Registration', () => {
 
 		const user = await getConnection().getRepository(User).findOne({where: { username: 'mateus'}})
 
-		const token = jwt.sign(user.id, process.env.JWT_SECRET)
+		const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {
+			expiresIn: 60 * 60
+		}) 
 
 		const res: Response = await request(app)
 			.get(`/confirmation/${token}`)
 
-		expect(res.status).toBe(200)
+		expect(res.redirect).toBeTruthy()
 		
 	})
 })
