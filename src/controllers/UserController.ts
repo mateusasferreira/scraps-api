@@ -14,6 +14,20 @@ class UserController {
 			res.status(401).json({message: 'could not create user'})
 		}
 	}
+
+	async login(req: Request, res: Response){
+		try {
+			const token = await UserService.login(req.body)
+			
+			res.status(200).json({
+				auth: true,
+				token: token
+			})
+		} catch(e){
+			console.log(e)
+			res.status(400).json(e.message)
+		}
+	}
 }
 
 export default new UserController()

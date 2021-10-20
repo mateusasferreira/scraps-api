@@ -2,8 +2,10 @@ import { getCustomRepository, } from 'typeorm'
 import { UserRepository } from '@repositories/UserRepository'
 import bcrypt from 'bcrypt'
 import EmailConfirmationService from './EmailConfirmationService'
+import jwt from 'jsonwebtoken'
 
 class UserService {
+
 	async create(data){
 		const userRepo = getCustomRepository(UserRepository)
 
@@ -33,7 +35,26 @@ class UserService {
 		await userRepo.save(user)
 
 		await EmailConfirmationService.sendEmail(user.id, user.email)
-    
+	}
+
+	async login(data) {
+		const userRepo = getCustomRepository(UserRepository)
+
+		const user = await userRepo.findOne({
+			where: {username: data.username}
+		})
+
+		if(!user) throw new Error('User doesn\'t exists')
+
+		const passwordIsValid = await bcrypt.compare(data.password, user.password_hash)
+
+		if(!passwordIsValid) throw new Error('Incorrect password')
+
+		const token = jwt.sign({user}, process.env.JWT_SECRET)
+
+		return token
+		
+
 	}
 }
 

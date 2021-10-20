@@ -1,9 +1,11 @@
-import 'reflect-metadata'
 import express from 'express'
+import dotenv from 'dotenv'
+
+//routes
 import root from '@routes/root'
 import userRoute from '@routes/user'
 import emailConfirmation from '@routes/confirmEmail'
-import dotenv from 'dotenv'
+import login from '@routes/login'
 
 dotenv.config()
 
@@ -25,6 +27,7 @@ class App {
 		this.express.use(root)
 		this.express.use(userRoute)
 		this.express.use(emailConfirmation)
+		this.express.use(login)
 	}
 }
 
