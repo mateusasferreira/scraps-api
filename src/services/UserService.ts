@@ -1,8 +1,14 @@
-import { getCustomRepository, } from 'typeorm'
+import { getCustomRepository, getRepository, } from 'typeorm'
 import { UserRepository } from '@repositories/UserRepository'
 import bcrypt from 'bcrypt'
 import EmailConfirmationService from './EmailConfirmationService'
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
+import { RefreshTokens } from '@models/RefreshTokens'
+import { createToken } from '@utils/createToken'
+
+interface TokenPayload extends JwtPayload {
+	id: string
+}
 
 class UserService {
 
@@ -39,6 +45,7 @@ class UserService {
 
 	async login(data) {
 		const userRepo = getCustomRepository(UserRepository)
+		const refreshTokenRepo = getRepository(RefreshTokens)
 
 		const user = await userRepo.findOne({
 			where: {username: data.username}
@@ -50,11 +57,38 @@ class UserService {
 
 		if(!passwordIsValid) throw new Error('Incorrect password')
 
-		const token = jwt.sign({user}, process.env.JWT_SECRET)
-
-		return token
+		const token = createToken(user)
 		
+		const refreshToken = jwt.sign({id: user.id}, process.env.JWT_REFRESH_SECRET)
 
+		const dbtoken = await refreshTokenRepo.create({
+			token: refreshToken,
+			user: user
+		})
+
+		await refreshTokenRepo.save(dbtoken)
+
+		return {token, refreshToken}
+	}
+
+	async refreshToken(rToken){
+		const payload = jwt.verify(rToken, process.env.JWT_REFRESH_SECRET) as TokenPayload
+		
+		const rTokenRepo = getRepository(RefreshTokens)
+
+		const validToken = await rTokenRepo.findOne(rToken)
+
+		if(!validToken) throw new Error('Refresh Token Invalid')
+
+		const userRepo = getCustomRepository(UserRepository)
+
+		const user = await userRepo.findOne(payload.id)
+
+		if(!user) throw new Error('User Invalid')
+
+		const newToken = createToken(user)
+
+		return newToken
 	}
 }
 

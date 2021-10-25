@@ -1,11 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 
-//routes
-import root from '@routes/root'
-import userRoute from '@routes/user'
-import emailConfirmation from '@routes/confirmEmail'
-import login from '@routes/login'
+import routes from './routes'
 
 dotenv.config()
 
@@ -24,10 +20,11 @@ class App {
 	}
 
 	routes(){
-		this.express.use(root)
-		this.express.use(userRoute)
-		this.express.use(emailConfirmation)
-		this.express.use(login)
+		this.express.use(routes)
+		// this.express.use(root)
+		// this.express.use(userRoute)
+		// this.express.use(emailConfirmation)
+		// this.express.use(login)
 	}
 }
 

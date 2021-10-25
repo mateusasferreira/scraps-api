@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany } from 'typeorm'
+import { RefreshTokens } from './RefreshTokens'
 
 @Entity()
 export class User {
@@ -20,4 +21,7 @@ export class User {
   
   @CreateDateColumn()
   created_at: string
+
+  @OneToMany(() => RefreshTokens, token => token.user)
+  token: RefreshTokens[]
 }

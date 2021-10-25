@@ -3,7 +3,7 @@ import { UserRepository } from '@repositories/UserRepository'
 import {transport} from '@config/mailer.config'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 
-interface Token extends JwtPayload {
+interface TokenPayload extends JwtPayload {
 	id: string
 }
 
@@ -25,7 +25,7 @@ class EmailConfirmationService {
 	async confirm(token){
 		const userRepo = getCustomRepository(UserRepository)
 
-		const {id} = jwt.verify(token, process.env.JWT_SECRET) as Token
+		const {id} = jwt.verify(token, process.env.JWT_SECRET) as TokenPayload
 		
 		await userRepo.update(id, { confirmed: true}) 
 	}

@@ -3,6 +3,7 @@ import app from '../../src/app'
 import {createConnection, getConnection} from 'typeorm'
 import { clearDB } from '../utils/truncate'
 import {User} from '../../src/models/User'
+import {RefreshTokens} from '../../src/models/RefreshTokens'
 import bcrypt from 'bcrypt'
 
 
@@ -11,7 +12,7 @@ beforeAll(async () => {
 		type: 'sqlite',
 		database: ':memory:',
 		dropSchema: true,
-		entities: [User],
+		entities: [User, RefreshTokens],
 		synchronize: true,
 	})
 })

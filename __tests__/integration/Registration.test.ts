@@ -1,8 +1,9 @@
-import request, {Request, Response} from 'supertest'
+import request, {Response} from 'supertest'
 import app from '../../src/app'
 import {createConnection, getConnection} from 'typeorm'
 import { clearDB } from '../utils/truncate'
 import {User} from '../../src/models/User'
+import {RefreshTokens} from '../../src/models/RefreshTokens'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 
@@ -13,7 +14,7 @@ beforeAll(async () => {
 		type: 'sqlite',
 		database: ':memory:',
 		dropSchema: true,
-		entities: [User],
+		entities: [User, RefreshTokens],
 		synchronize: true,
 	})
 })
@@ -44,7 +45,7 @@ describe('Registration', () => {
 			.post('/users')
 			.send({username: 'mateus', email: 'mateus2@email.com', password: '1234'})
 
-		expect(res.status).toBe(401)
+		expect(res.status).toBe(400)
 	})
   
 	it('should not create user if email was already registered', async () => {
@@ -56,7 +57,7 @@ describe('Registration', () => {
 			.post('/users')
 			.send({username: 'mateuss', email: 'mateus@email.com', password: '1234'})
 
-		expect(res.status).toBe(401)
+		expect(res.status).toBe(400)
 	})
 
 	it('should be able to confirm email', async () => {
