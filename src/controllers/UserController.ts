@@ -26,7 +26,7 @@ class UserController {
 			})
 		} catch(e){
 			console.log(e)
-			res.status(400).json(e.message)
+			res.status(400).json({message: e.message})
 		}
 	}
 

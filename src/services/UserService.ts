@@ -53,6 +53,8 @@ class UserService {
 
 		if(!user) throw new Error('User doesn\'t exists')
 
+		if(!user.confirmed) throw new Error('Email not Confirmed')
+
 		const passwordIsValid = await bcrypt.compare(data.password, user.password_hash)
 
 		if(!passwordIsValid) throw new Error('Incorrect password')

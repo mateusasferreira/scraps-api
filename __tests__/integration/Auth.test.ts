@@ -33,6 +33,8 @@ describe('Authentication', () => {
 			.post('/users')
 			.send({username: 'mateus', email: 'mateus@email.com', password: '1234'})
 
+		await getConnection().getRepository(User).update({username: 'mateus'}, {confirmed: true})
+
 
 		const res = await request(app)
 			.post('/login')
@@ -46,6 +48,9 @@ describe('Authentication', () => {
 		await request(app)
 			.post('/users')
 			.send({username: 'mateus', email: 'mateus@email.com', password: '1234'})
+
+		
+		await getConnection().getRepository(User).update({username: 'mateus'}, {confirmed: true})
 
 
 		const res = await request(app)

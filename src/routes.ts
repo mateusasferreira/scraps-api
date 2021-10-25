@@ -2,10 +2,12 @@ import {Router} from 'express'
 import  UserController  from '@controllers/UserController'
 import EmailConfirmationController from '@controllers/EmailConfirmationController'
 
+import ensureAuthenticated from '@middlewares/ensureAuthenticated'
+
 const routes = Router()
 
-routes.get('/', (req, res) => {
-	res.status(200).json({message: 'Hello World'})
+routes.get('/', ensureAuthenticated, (req, res) => {
+	res.status(200).json({message: 'Hello World', user: req.body.user})
 })
 
 // user route
