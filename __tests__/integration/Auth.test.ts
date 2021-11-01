@@ -83,6 +83,28 @@ describe('Authentication', () => {
 
 		expect(payload.id).toEqual(user.id)
 	})
+
+	it('should invalidate refresh token when logging out', async () => {
+		const user = await getConnection().getRepository(User).create({
+			username: 'exemplo',
+			email: 'exemplo@email.com',
+			password_hash: '1234'
+		})
+		
+		await getConnection().getRepository(User).save(user)
+
+		const rToken = await getConnection().getRepository(RefreshTokens).create({
+			user: user
+		})
+
+		await getConnection().getRepository(RefreshTokens).save(rToken)
+
+		await request(app)
+			.delete('/logout')
+			.send({refreshToken: rToken.token})
+
+		expect((await request(app).post('/token').send({token: rToken.token})).status).toBe(401)
+	})
 })
 
 interface TokenPayload extends JwtPayload {

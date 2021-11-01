@@ -7,13 +7,13 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column({unique: true})
+  @Column({unique: true, nullable: false})
   username: string
   
-  @Column({unique: true})
+  @Column({unique: true, nullable: false})
   email: string
   
-  @Column()
+  @Column({nullable: false})
   password_hash: string
 
   @Column({default: false})

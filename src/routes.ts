@@ -13,13 +13,14 @@ routes.get('/', ensureAuthenticated, (req, res) => {
 
 // user route
 routes.post('/users', UserController.create)
-
-// login route
 routes.post('/login', UserController.login)
+routes.delete('/logout', UserController.logout)
 
 //email confirmation route
 routes.get('/confirmation/:token', EmailConfirmationController.confirm)
 
+//token revalidation
 routes.post('/token', UserController.refreshToken)
+
 
 export default routes

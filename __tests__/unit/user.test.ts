@@ -1,6 +1,6 @@
 import request from 'supertest'
 import app from '../../src/app'
-import {createConnection, getConnection} from 'typeorm'
+import {createConnection, getConnection, getRepository} from 'typeorm'
 import { clearDB } from '../utils/truncate'
 import {User} from '../../src/models/User'
 import {RefreshTokens} from '../../src/models/RefreshTokens'
@@ -35,5 +35,4 @@ describe('User', () => {
 
 		expect(await bcrypt.compare('1234', user.password_hash)).toBe(true)
 	})
-
 })

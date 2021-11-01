@@ -83,6 +83,12 @@ class UserService {
 
 		return {accessToken: newToken, refreshToken: validToken.token}
 	}
+
+	async logout(token){
+		const rTokenRepo = getRepository(RefreshTokens)
+
+		await rTokenRepo.delete(token)
+	}
 }
 
 export default new UserService()
