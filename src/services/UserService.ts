@@ -6,10 +6,6 @@ import jwt, { JwtPayload } from 'jsonwebtoken'
 import { RefreshTokens } from '@models/RefreshTokens'
 import { createToken } from '@utils/createToken'
 
-interface TokenPayload extends JwtPayload {
-	id: string
-}
-
 class UserService {
 
 	async create(data){
@@ -59,23 +55,18 @@ class UserService {
 
 		if(!passwordIsValid) throw new Error('Incorrect password')
 
-		const token = createToken(user)
+		const accessToken = createToken(user)
 		
-		const refreshToken = jwt.sign({id: user.id}, process.env.JWT_REFRESH_SECRET)
-
-		const dbtoken = await refreshTokenRepo.create({
-			token: refreshToken,
+		const refreshToken = await refreshTokenRepo.create({
 			user: user
 		})
 
-		await refreshTokenRepo.save(dbtoken)
+		await refreshTokenRepo.save(refreshToken)
 
-		return {token, refreshToken}
+		return {accessToken, refreshToken: refreshToken.token}
 	}
 
-	async refreshToken(rToken){
-		const payload = jwt.verify(rToken, process.env.JWT_REFRESH_SECRET) as TokenPayload
-		
+	async validateRefreshToken(rToken){
 		const rTokenRepo = getRepository(RefreshTokens)
 
 		const validToken = await rTokenRepo.findOne(rToken)
@@ -84,13 +75,13 @@ class UserService {
 
 		const userRepo = getCustomRepository(UserRepository)
 
-		const user = await userRepo.findOne(payload.id)
+		const user = await userRepo.findOne(validToken.user)
 
 		if(!user) throw new Error('User Invalid')
 
 		const newToken = createToken(user)
 
-		return newToken
+		return {accessToken: newToken, refreshToken: validToken.token}
 	}
 }
 

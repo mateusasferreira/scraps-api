@@ -40,7 +40,7 @@ describe('Authentication', () => {
 			.post('/login')
 			.send({username: 'mateus', password: '1234'})
 		
-		expect(res.body).toHaveProperty('token')
+		expect(res.body).toHaveProperty('accessToken')
 		expect(res.body).toHaveProperty('refreshToken')
 	})
 	
@@ -57,7 +57,7 @@ describe('Authentication', () => {
 			.post('/login')
 			.send({username: 'mateus', password: '123456'})
 
-		expect(res.status).toBe(400)
+		expect(res.status).toBe(401)
 	})
 
 	it('should provide a new token if refresh token is valid', async () => {
@@ -69,20 +69,17 @@ describe('Authentication', () => {
 		
 		await getConnection().getRepository(User).save(user)
 
-		const rToken = jwt.sign({id: user.id}, process.env.JWT_REFRESH_SECRET)
-		
-		const dbToken = await getConnection().getRepository(RefreshTokens).create({
-			token: rToken,
+		const rToken = await getConnection().getRepository(RefreshTokens).create({
 			user: user
 		})
 
-		await getConnection().getRepository(RefreshTokens).save(dbToken)
+		await getConnection().getRepository(RefreshTokens).save(rToken)
 
 		const res = await request(app)
 			.post('/token')
-			.send({token: rToken})
+			.send({token: rToken.token})
 		
-		const {payload} = jwt.verify(res.body.token, process.env.JWT_SECRET) as TokenPayload
+		const {payload} = jwt.verify(res.body.accessToken, process.env.JWT_SECRET) as TokenPayload
 
 		expect(payload.id).toEqual(user.id)
 	})

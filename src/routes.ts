@@ -7,6 +7,7 @@ import ensureAuthenticated from '@middlewares/ensureAuthenticated'
 const routes = Router()
 
 routes.get('/', ensureAuthenticated, (req, res) => {
+	console.log(req.body.user)
 	res.status(200).json({message: 'Hello World', user: req.body.user})
 })
 

@@ -1,10 +1,10 @@
-import { Entity, Column, PrimaryColumn, ManyToOne } from 'typeorm'
+import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 import { User } from './User'
 
 
 @Entity('refresh_tokens')
 export class RefreshTokens {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('uuid')
   token: string
 
   @ManyToOne(() => User, user => user.token)

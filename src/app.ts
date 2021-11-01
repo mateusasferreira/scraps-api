@@ -21,10 +21,6 @@ class App {
 
 	routes(){
 		this.express.use(routes)
-		// this.express.use(root)
-		// this.express.use(userRoute)
-		// this.express.use(emailConfirmation)
-		// this.express.use(login)
 	}
 }
 

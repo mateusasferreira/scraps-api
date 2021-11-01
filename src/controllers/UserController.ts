@@ -17,16 +17,16 @@ class UserController {
 
 	async login(req: Request, res: Response){
 		try {
-			const {token, refreshToken} = await UserService.login(req.body)
+			const {accessToken, refreshToken} = await UserService.login(req.body)
 			
 			res.status(200).json({
 				auth: true,
-				token,
+				accessToken,
 				refreshToken
 			})
 		} catch(e){
 			console.log(e)
-			res.status(400).json({message: e.message})
+			res.status(401).json({message: e.message})
 		}
 	}
 
@@ -34,12 +34,16 @@ class UserController {
 		try {
 			const {token} = req.body
 
-			const newToken = await UserService.refreshToken(token)
+			const {accessToken, refreshToken} = await UserService.validateRefreshToken(token)
 
-			res.status(200).json({token: newToken})
+			res.status(200).json({
+				auth: true,
+				accessToken,
+				refreshToken
+			})
 		} catch(e){
 			console.log(e)
-			res.status(400).json({message: 'login required'})
+			res.status(401).json({message: 'login required'})
 		}
 	}
 }
