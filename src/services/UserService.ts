@@ -1,14 +1,15 @@
-import { getCustomRepository, getRepository, } from 'typeorm'
-import { UserRepository } from '@repositories/UserRepository'
+import { getRepository, } from 'typeorm'
+//import { UserRepository } from '@repositories/UserRepository'
 import bcrypt from 'bcrypt'
 import EmailConfirmationService from '@services/EmailService'
 import { RefreshTokens } from '@models/RefreshTokens'
+import { User } from '@models/User'
 import { createToken } from '@utils/createToken'
 
 class UserService {
 
 	async create(data){
-		const userRepo = getCustomRepository(UserRepository)
+		const userRepo = getRepository(User)
 
 		const userAlreadyExists = await userRepo.findOne({
 			where: {username: data.username}
@@ -39,7 +40,7 @@ class UserService {
 	}
 
 	async login(data) {
-		const userRepo = getCustomRepository(UserRepository)
+		const userRepo = getRepository(User)
 		const refreshTokenRepo = getRepository(RefreshTokens)
 
 		const user = await userRepo.findOne({
@@ -72,7 +73,7 @@ class UserService {
 
 		if(!validToken) throw new Error('Refresh Token Invalid')
 
-		const userRepo = getCustomRepository(UserRepository)
+		const userRepo = getRepository(User)
 
 		const user = await userRepo.findOne(validToken.user)
 

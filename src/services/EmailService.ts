@@ -1,7 +1,8 @@
-import { getCustomRepository, } from 'typeorm'
-import { UserRepository } from '@repositories/UserRepository'
+import { getRepository } from 'typeorm'
+//import { UserRepository } from '@repositories/UserRepository'
 import {transport} from '@config/mailer.config'
 import jwt, { JwtPayload } from 'jsonwebtoken'
+import {User} from '@models/User'
 
 interface TokenPayload extends JwtPayload {
 	id: string
@@ -23,7 +24,7 @@ class EmailConfirmationService {
 	}
   
 	async confirmEmail(token){
-		const userRepo = getCustomRepository(UserRepository)
+		const userRepo = getRepository(User)
 
 		const {id} = jwt.verify(token, process.env.JWT_SECRET) as TokenPayload
 		
