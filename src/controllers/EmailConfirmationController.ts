@@ -1,5 +1,5 @@
 
-import EmailConfirmationService from '@services/EmailConfirmationService'
+import EmailService from '@services/EmailService'
 import {Request, Response} from 'express'
 
 
@@ -8,7 +8,7 @@ class EmailConfirmationController {
 		try {
 			const {token} = req.params
 
-			await EmailConfirmationService.confirm(token)
+			await EmailService.confirmEmail(token)
       
 			res.redirect('/')
 		} catch(e) {

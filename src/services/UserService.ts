@@ -1,8 +1,7 @@
 import { getCustomRepository, getRepository, } from 'typeorm'
 import { UserRepository } from '@repositories/UserRepository'
 import bcrypt from 'bcrypt'
-import EmailConfirmationService from './EmailConfirmationService'
-import jwt, { JwtPayload } from 'jsonwebtoken'
+import EmailConfirmationService from '@services/EmailService'
 import { RefreshTokens } from '@models/RefreshTokens'
 import { createToken } from '@utils/createToken'
 
@@ -13,7 +12,6 @@ class UserService {
 
 		const userAlreadyExists = await userRepo.findOne({
 			where: {username: data.username}
-			
 		})
 
 		if(userAlreadyExists) throw new Error('username already registered')
@@ -36,7 +34,8 @@ class UserService {
     
 		await userRepo.save(user)
 
-		await EmailConfirmationService.sendEmail(user.id, user.email)
+		await EmailConfirmationService.sendConfirmationEmail(user.id, user.email)
+		
 	}
 
 	async login(data) {
