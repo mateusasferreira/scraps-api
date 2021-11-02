@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-unexpected-multiline */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import {Repository} from 'typeorm'
-import {User} from '../../src/models/User'
+import typeorm, {Repository} from 'typeorm'
 import bcrypt from 'bcrypt'
 import {mock} from 'jest-mock-extended'
 
+import {User} from '../../src/models/User'
+
 import UserService from '../../src/services/UserService'
 
-import typeorm from 'typeorm'
 
 const repositoryMock = mock<Repository<any>>()
 

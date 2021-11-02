@@ -16,6 +16,8 @@ routes.post('/users', UserController.create)
 routes.post('/login', UserController.login)
 routes.delete('/logout', UserController.logout)
 
+routes.patch('/recover-password', UserController.recoverPassword)
+
 //email confirmation route
 routes.get('/confirmation/:token', EmailConfirmationController.confirm)
 

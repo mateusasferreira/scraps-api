@@ -75,6 +75,5 @@ describe('Registration', () => {
 			.get(`/confirmation/${token}`)
 
 		expect(res.redirect).toBeTruthy()
-		
 	})
 })

@@ -56,6 +56,21 @@ class UserController {
 			res.status(400).json({message: e.message})
 		}
 	}
+
+	async recoverPassword(req: Request, res: Response){
+		try {
+			const {email} = req.body
+			
+			if(!email) throw new Error('email is missing')
+
+			await UserService.recoverPassword(req.body.email)
+			
+			res.status(200).json({message: 'recovery password created'})
+		} catch(e){
+			res.status(400).json({message: e.message})
+		}
+		
+	}
 }
 
 export default new UserController()

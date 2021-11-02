@@ -1,5 +1,4 @@
 import { getRepository } from 'typeorm'
-//import { UserRepository } from '@repositories/UserRepository'
 import {transport} from '@config/mailer.config'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import {User} from '@models/User'
@@ -30,6 +29,15 @@ class EmailConfirmationService {
 		
 		await userRepo.update(id, { confirmed: true}) 
 	}
+
+	async sendRecoverPassword(email, newPassword){
+		await transport.sendMail({
+			to: email,
+			subject: '[Scraper] new password',
+			html: `<span> Nova Senha: ${newPassword}</span>`,
+		})
+	}
 }
 
 export default new EmailConfirmationService()
+

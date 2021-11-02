@@ -1,14 +1,16 @@
 import { getRepository, } from 'typeorm'
-//import { UserRepository } from '@repositories/UserRepository'
 import bcrypt from 'bcrypt'
 import EmailConfirmationService from '@services/EmailService'
 import { RefreshTokens } from '@models/RefreshTokens'
 import { User } from '@models/User'
 import { createToken } from '@utils/createToken'
+import EmailService from '@services/EmailService'
+import randomString from 'randomstring'
+
 
 class UserService {
 
-	async create(data){
+	async create(data): Promise<Partial<User>>{
 		const userRepo = getRepository(User)
 
 		const userAlreadyExists = await userRepo.findOne({
@@ -67,7 +69,7 @@ class UserService {
 		return {accessToken, refreshToken: refreshToken.token}
 	}
 
-	async validateRefreshToken(rToken){
+	async validateRefreshToken(rToken: string){
 		const rTokenRepo = getRepository(RefreshTokens)
 
 		const validToken = await rTokenRepo.findOne(rToken)
@@ -89,6 +91,30 @@ class UserService {
 		const rTokenRepo = getRepository(RefreshTokens)
 
 		await rTokenRepo.delete(token)
+	}
+
+	async recoverPassword(email: string){
+		const userRepo = getRepository(User)
+
+		const user = await userRepo.findOne({
+			where: {
+				email: email
+			}
+		})
+
+		if(!user) throw new Error('invalid email')
+
+		if(!user.confirmed) throw new Error('Email not confirmed')
+
+		const newPassword = randomString.generate(16)
+
+		const newPasswordHash = await bcrypt.hash(newPassword, 8)
+
+		await userRepo.update(user.id, {
+			password_hash: newPasswordHash
+		})
+
+		EmailService.sendRecoverPassword(email, newPassword)
 	}
 }
 
