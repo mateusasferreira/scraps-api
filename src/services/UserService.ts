@@ -37,6 +37,7 @@ class UserService {
 
 		await EmailConfirmationService.sendConfirmationEmail(user.id, user.email)
 		
+		return user
 	}
 
 	async login(data) {

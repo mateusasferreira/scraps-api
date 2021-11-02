@@ -1,37 +1,48 @@
-import request from 'supertest'
-import app from '../../src/app'
-import {createConnection, getConnection} from 'typeorm'
-import { clearDB } from '../utils/truncate'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-unexpected-multiline */
+/* eslint-disable @typescript-eslint/no-empty-function */
+import {Repository} from 'typeorm'
 import {User} from '../../src/models/User'
-import {RefreshTokens} from '../../src/models/RefreshTokens'
 import bcrypt from 'bcrypt'
+import {mock} from 'jest-mock-extended'
 
-beforeAll(async () => {
-	await createConnection({
-		type: 'sqlite',
-		database: ':memory:',
-		dropSchema: true,
-		entities: [User, RefreshTokens],
-		synchronize: true,
-	})
+import UserService from '../../src/services/UserService'
+
+import typeorm from 'typeorm'
+
+const repositoryMock = mock<Repository<any>>()
+
+jest.mock('typeorm', () => {
+	
+	return {
+		getRepository: () => repositoryMock,
+
+		BaseEntity: class Mock {},
+		ObjectType: () => {},
+		Entity: () => {},
+		InputType: () => {},
+		Index: () => {},
+		PrimaryGeneratedColumn: () => {},
+		Column: () => {},
+		CreateDateColumn: () => {},
+		UpdateDateColumn: () => {},
+		OneToMany: () => {},
+		ManyToOne: () => {},
+	}
 })
 
-afterEach(async () => {
-	await clearDB()
-})
 
-afterAll(async () => {
-	await getConnection().close()
-})
 
 describe('User', () => {
 	it('should have an encrypted password', async () => {
-		await request(app)
-			.post('/users')
-			.send({username: 'mateus', email: 'mateus@email.com', password: '1234'})
+		(typeorm.getRepository(User).create as jest.Mock).mockImplementation(obj => Promise.resolve(obj))
 
-		const user = await getConnection().getRepository(User).findOne({where: { username: 'mateus'}})
+		const user = await UserService.create({
+			username: 'example',
+			email: 'example@email.com',
+			password: '123'
+		}) as any
 
-		expect(await bcrypt.compare('1234', user.password_hash)).toBe(true)
+		expect(bcrypt.compare('123', user.password_hash)).toBeTruthy()
 	})
 })
