@@ -15,9 +15,8 @@ routes.get('/', ensureAuthenticated, (req, res) => {
 routes.post('/users', UserController.create)
 routes.post('/login', UserController.login)
 routes.delete('/logout', UserController.logout)
-
 routes.patch('/recover-password', UserController.recoverPassword)
-
+routes.post('/change-password/:userId', UserController.changePassword)
 //email confirmation route
 routes.get('/confirmation/:token', EmailConfirmationController.confirm)
 

@@ -50,26 +50,39 @@ class UserController {
 		try {
 			const { refreshToken } = req.body
 			await UserService.logout(refreshToken)
-			res.status(200).json({message: 'succesfully logged out'})
+			res.status(200).json({ message: 'succesfully logged out' })
+		} catch (e) {
+			console.log(e)
+			res.status(400).json({ message: e.message })
+		}
+	}
+
+	async recoverPassword(req: Request, res: Response) {
+		try {
+			const { email } = req.body
+
+			if (!email) throw new Error('email is missing')
+
+			await UserService.recoverPassword(req.body.email)
+
+			res.status(200).json({ message: 'recovery password created' })
+		} catch (e) {
+			res.status(400).json({ message: e.message })
+		}
+	}
+
+	async changePassword(req: Request, res: Response) {
+		try {
+			const { userId } = req.params
+			const { oldPassword, newPassword } = req.body
+
+			await UserService.changePassword(userId, oldPassword, newPassword)
+
+			res.status(200).json({message: 'password changed'})
 		} catch (e) {
 			console.log(e)
 			res.status(400).json({message: e.message})
 		}
-	}
-
-	async recoverPassword(req: Request, res: Response){
-		try {
-			const {email} = req.body
-			
-			if(!email) throw new Error('email is missing')
-
-			await UserService.recoverPassword(req.body.email)
-			
-			res.status(200).json({message: 'recovery password created'})
-		} catch(e){
-			res.status(400).json({message: e.message})
-		}
-		
 	}
 }
 

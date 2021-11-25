@@ -116,6 +116,32 @@ class UserService {
 
 		EmailService.sendRecoverPassword(email, newPassword)
 	}
+
+	async changePassword(userId, oldPassword, newPassword){
+		const userRepo = getRepository(User)
+		const rTokenRepo = getRepository(RefreshTokens)
+
+
+		const user = await userRepo.findOne(userId)
+
+		if(!user) throw new Error('User doesn\'t exists')
+
+		if(!user.confirmed) throw new Error('Email not Confirmed')
+
+		const oldPasswordIsValid = await bcrypt.compare(oldPassword, user.password_hash)
+		
+		if(!oldPasswordIsValid) throw new Error('current password is invalid')
+
+		const newPasswordHash = await bcrypt.hash(newPassword, 8)
+
+		await userRepo.update(user.id, {
+			password_hash: newPasswordHash
+		})
+
+		await rTokenRepo.delete({user: userId})
+		
+		return 
+	}
 }
 
 export default new UserService()

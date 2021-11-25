@@ -79,5 +79,27 @@ describe('User Service', () => {
 		expect(mockedTypeorm.getRepository(RefreshTokens).delete).toBeCalledWith('token')
 	})
 
+
+	it('should change password if requested', async () => {
+		
+		
+		const user = {
+			id: 1,
+			username: 'example',
+			email: 'example@email.com',
+			password_hash: '1231231',
+			confirmed: true
+		};
+
+		(mockedTypeorm.getRepository(User).findOne as jest.Mock).mockResolvedValue(user);
+		(mockedBcrypt.compare as jest.Mock).mockResolvedValue(true)
+		await UserService.changePassword(user.id, '1234', '12345');
+
+		expect(mockedTypeorm.getRepository(User).findOne).toBeCalledWith(user.id);
+		expect(bcrypt.compare).toBeCalledWith('1234', '1231231');
+		expect(bcrypt.hash).toBeCalledWith('12345', 8);
+		expect(mockedTypeorm.getRepository(User).update).toBeCalledTimes(1)
+		expect(mockedTypeorm.getRepository(RefreshTokens).delete).toBeCalledWith({user: user.id})
+	})
 })
 
