@@ -1,4 +1,4 @@
-import express from 'express'
+import express, {Express} from 'express'
 import dotenv from 'dotenv'
 
 import routes from './routes'
@@ -7,7 +7,7 @@ dotenv.config()
 
 class App {
 
-	public express
+	public express: Express
 
 	constructor(){
 		this.express = express()

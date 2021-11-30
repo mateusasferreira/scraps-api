@@ -93,6 +93,7 @@ describe('User Service', () => {
 
 		(mockedTypeorm.getRepository(User).findOne as jest.Mock).mockResolvedValue(user);
 		(mockedBcrypt.compare as jest.Mock).mockResolvedValue(true)
+		
 		await UserService.changePassword(user.id, '1234', '12345');
 
 		expect(mockedTypeorm.getRepository(User).findOne).toBeCalledWith(user.id);
