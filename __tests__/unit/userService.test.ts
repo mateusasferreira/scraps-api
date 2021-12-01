@@ -102,5 +102,12 @@ describe('User Service', () => {
 		expect(mockedTypeorm.getRepository(User).update).toBeCalledTimes(1)
 		expect(mockedTypeorm.getRepository(RefreshTokens).delete).toBeCalledWith({user: user.id})
 	})
+
+	it('should delete user', async () => {
+		await UserService.delete(99)
+
+		expect(mockedTypeorm.getRepository(RefreshTokens).delete).toBeCalledWith(99)
+
+	})
 })
 

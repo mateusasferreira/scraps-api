@@ -11,12 +11,13 @@ routes.get('/', ensureAuthenticated, (req, res) => {
 	res.status(200).json({message: 'Hello World', user: req.body.user})
 })
 
-// user route
+// user routes
 routes.post('/users', UserController.create)
 routes.post('/login', UserController.login)
-routes.delete('/logout', UserController.logout)
-routes.patch('/recover-password', UserController.recoverPassword)
-routes.post('/change-password/:userId', UserController.changePassword)
+routes.delete('/logout', ensureAuthenticated, UserController.logout)
+routes.patch('/recover-password', ensureAuthenticated, UserController.recoverPassword)
+routes.post('/change-password/:userId', ensureAuthenticated, UserController.changePassword)
+routes.delete('/users/:id', ensureAuthenticated, UserController.delete)
 
 //email confirmation route
 routes.get('/confirmation/:token', EmailConfirmationController.confirm)

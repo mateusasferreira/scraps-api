@@ -84,6 +84,20 @@ class UserController {
 			res.status(400).json({message: e.message})
 		}
 	}
+
+	async delete(req: Request, res: Response){
+		try {
+			const id = req.params
+
+			if(!id) res.status(400).json({message: 'id property is missing'})
+
+			await UserService.delete(id)
+		} catch (e) {
+			console.log(e)
+			res.status(400).json({message: e.message})
+		}
+		res.sendStatus(200)
+	}
 }
 
 export default new UserController()

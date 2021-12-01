@@ -142,6 +142,12 @@ class UserService {
 		
 		return 
 	}
+
+	async delete(id){
+		const userRepo = getRepository(User)
+
+		await userRepo.delete(id)
+	}
 }
 
 export default new UserService()

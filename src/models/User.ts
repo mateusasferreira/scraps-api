@@ -22,6 +22,6 @@ export class User {
   @CreateDateColumn()
   created_at: string
 
-  @OneToMany(() => RefreshTokens, token => token.user)
+  @OneToMany(() => RefreshTokens, token => token.user, {cascade: true})
   token: RefreshTokens[]
 }
