@@ -3,11 +3,9 @@ import jwt from 'jsonwebtoken'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function ensureAuthenticated(req: Request, res: Response, next: NextFunction){
-	const {headers} = req
-
-	//returns response so tests dont crash when mocking express
-	if(!headers) return res.status(403).json({message: 'Missing authentication token'})
-		
+	
+	if(!req.headers['authorization']) return res.status(403).json({message: 'Missing authentication token'})
+	
 	const [,token] = req.headers['authorization'].split(' ')
 
 	jwt.verify(token, process.env.JWT_SECRET, function(err, decoded){

@@ -20,6 +20,11 @@ beforeEach(() => {
 
 describe('Ensure authentication middleware', () => {
   it('should respond with 403 status if no headers are provided', () => {
+    
+    mockRequest = {
+      headers: {}
+    }
+    
     ensureAuthenticated(mockRequest as Request, mockResponse as Response, nextFunction as NextFunction)
 
     expect(mockResponse.status).toBeCalledWith(403)
