@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, OneToOne } from 'typeorm'
+import { Profile } from './Profile'
 import { RefreshTokens } from './RefreshTokens'
 
 @Entity()
@@ -24,4 +25,7 @@ export class User {
 
   @OneToMany(() => RefreshTokens, token => token.user, {cascade: true})
   token: RefreshTokens[]
+
+  @OneToOne(() => Profile, profile => profile.user)
+  profile: Profile
 }
