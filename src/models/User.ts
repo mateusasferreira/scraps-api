@@ -26,6 +26,6 @@ export class User {
   @OneToMany(() => RefreshTokens, token => token.user, {cascade: true})
   token: RefreshTokens[]
 
-  @OneToOne(() => Profile, profile => profile.user)
+  @OneToOne(() => Profile, profile => profile.id)
   profile: Profile
 }

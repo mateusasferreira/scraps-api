@@ -1,9 +1,10 @@
-import { Entity, Column, PrimaryColumn, OneToOne, JoinColumn } from 'typeorm'
+import { Entity, Column, OneToOne, JoinColumn } from 'typeorm'
 import { User } from './User'
 
 @Entity()
 export class Profile {
-  @PrimaryColumn({unique: true, nullable: false})
+  @OneToOne(() => User, user => user.profile, { primary: true })
+  @JoinColumn({ name: 'id' })
   id: string
 
   @Column({nullable: false})
@@ -11,6 +12,9 @@ export class Profile {
   
   @Column({nullable: false})
   bio: string
+
+  @Column({nullable: false})
+  picture: string
  
   @Column({nullable: false})
   birth_date: string
@@ -18,7 +22,4 @@ export class Profile {
   @Column()
   location: string
 
-  @OneToOne(() => User)
-    @JoinColumn()
-    user: User;
 }

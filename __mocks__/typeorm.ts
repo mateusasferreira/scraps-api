@@ -12,11 +12,14 @@ const typeorm = {
   		InputType: () => {},
   		Index: () => {},
   		PrimaryGeneratedColumn: () => {},
+  		PrimaryColumn: () => {},
+  		JoinColumn: () => {},
   		Column: () => {},
   		CreateDateColumn: () => {},
   		UpdateDateColumn: () => {},
   		OneToMany: () => {},
   		ManyToOne: () => {},
+			OneToOne: () => {},
   	}
 
 module.exports = typeorm

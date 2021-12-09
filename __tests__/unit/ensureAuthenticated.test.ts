@@ -4,7 +4,6 @@ import ensureAuthenticated from '../../src/middlewares/ensureAuthenticated'
 let mockRequest: Partial<Request>;
 let mockResponse: Partial<Response>;
 let nextFunction: NextFunction = jest.fn();
-import jwt from 'jsonwebtoken'
 
 
 beforeEach(() => {
