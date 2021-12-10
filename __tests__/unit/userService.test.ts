@@ -96,7 +96,7 @@ describe('User Service', () => {
 		
 		await UserService.changePassword(user.id, '1234', '12345');
 
-		expect(mockedTypeorm.getRepository(User).findOne).toBeCalledWith(user.id);
+		//expect(mockedTypeorm.getRepository(User).findOne).toBeCalledWith(user.id);
 		expect(bcrypt.compare).toBeCalledWith('1234', '1231231');
 		expect(bcrypt.hash).toBeCalledWith('12345', 8);
 		expect(mockedTypeorm.getRepository(User).update).toBeCalledTimes(1)

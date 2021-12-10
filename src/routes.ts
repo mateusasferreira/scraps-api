@@ -22,8 +22,8 @@ routes.post('/users', UserController.create)
 routes.post('/login', UserController.login)
 routes.delete('/logout', ensureAuthenticated, UserController.logout)
 routes.patch('/recover-password', ensureAuthenticated, UserController.recoverPassword)
-routes.post('/change-password/:userId', ensureAuthenticated, UserController.changePassword)
-routes.delete('/users/:id', ensureAuthenticated, UserController.delete)
+routes.post('/change-password', ensureAuthenticated, UserController.changePassword)
+routes.delete('/users', ensureAuthenticated, UserController.delete)
 
 //email confirmation route
 routes.get('/confirmation/:token', EmailConfirmationController.confirm)

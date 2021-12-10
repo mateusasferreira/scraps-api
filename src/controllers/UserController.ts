@@ -73,10 +73,9 @@ class UserController {
 
 	async changePassword(req: Request, res: Response) {
 		try {
-			const { userId } = req.params
-			const { oldPassword, newPassword } = req.body
+			const {user, oldPassword, newPassword } = req.body
 
-			await UserService.changePassword(userId, oldPassword, newPassword)
+			await UserService.changePassword(user.id, oldPassword, newPassword)
 
 			res.status(200).json({message: 'password changed'})
 		} catch (e) {
@@ -87,9 +86,7 @@ class UserController {
 
 	async delete(req: Request, res: Response){
 		try {
-			const id = req.params
-
-			if(!id) res.status(400).json({message: 'id property is missing'})
+			const {id} = req.body
 
 			await UserService.delete(id)
 		} catch (e) {

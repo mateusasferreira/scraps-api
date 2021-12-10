@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function ensureAuthenticated(req: Request, res: Response, next: NextFunction){
 	
+	//returns response so mcoked tests dont crash
 	if(!req.headers['authorization']) return res.status(403).json({message: 'Missing authentication token'})
 	
 	const [,token] = req.headers['authorization'].split(' ')
