@@ -6,6 +6,7 @@ import EmailConfirmationController from '@controllers/EmailConfirmationControlle
 import ProfileController from '@controllers/ProfileController'
 
 import ensureAuthenticated from '@middlewares/ensureAuthenticated'
+import validate from '@middlewares/validateFields'
 
 const routes = Router()
 
@@ -18,7 +19,7 @@ routes.get('/', ensureAuthenticated, (req, res) => {
 })
 
 // user routes
-routes.post('/users', UserController.create)
+routes.post('/users', validate('create-user'), UserController.create)
 routes.post('/login', UserController.login)
 routes.delete('/logout', ensureAuthenticated, UserController.logout)
 routes.patch('/recover-password', ensureAuthenticated, UserController.recoverPassword)

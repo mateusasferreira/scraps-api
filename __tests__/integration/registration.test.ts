@@ -18,8 +18,8 @@ describe('Registration', () => {
 		
 		const res = await request(app)
 			.post('/users')
-			.send({username: 'example', email: 'example@email.com', password: '1234'})
-      
+			.send({username: 'example', email: 'example@email.com', password: '12341234'})
+		
 		expect(res.status).toBe(201)
 	})
 
@@ -28,7 +28,7 @@ describe('Registration', () => {
 
 		const res: Response = await request(app)
 			.post('/users')
-			.send({username: 'example', email: 'example2@email.com', password: '1234'})
+			.send({username: 'example', email: 'example2@email.com', password: '12341234'})
 
 		expect(res.status).toBe(400)
 	})

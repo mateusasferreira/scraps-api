@@ -14,7 +14,7 @@ beforeAll(() => {
 describe('Authentication', () => {
 	it('should provide a valid token and refresh Token when user logs in', async () => {
 		
-		const password = await bcrypt.hash('1234', 8);
+		const password = await bcrypt.hash('12341234', 8);
 		
 		(mockedTypeorm.getRepository(User).findOne as jest.Mock).mockResolvedValue({
 			username: 'example',
@@ -29,14 +29,14 @@ describe('Authentication', () => {
 
 		const res = await request(app)
 			.post('/login')
-			.send({username: 'mateus', password: '1234'});
+			.send({username: 'mateus', password: '12341234'});
 		
 		expect(res.body).toHaveProperty('accessToken');
 		expect(res.body).toHaveProperty('refreshToken');
 	})
 	
 	it('should not provide a token if credentials are invalid', async () => {
-		const password = await bcrypt.hash('1234', 8);
+		const password = await bcrypt.hash('12341234', 8);
 		
 		(mockedTypeorm.getRepository(User).findOne as jest.Mock).mockResolvedValue({
 			username: 'example',
@@ -51,7 +51,7 @@ describe('Authentication', () => {
 
 		const res = await request(app)
 			.post('/login')
-			.send({username: 'mateus', password: '12345'});
+			.send({username: 'mateus', password: '123412345'});
 		
 		expect(res.status).toBe(401);
 	})
