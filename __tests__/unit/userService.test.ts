@@ -41,9 +41,6 @@ describe('User Service', () => {
 			password: '1234'
 		})
 
-		expect(mockedTypeorm.getRepository(User).findOne).toBeCalledTimes(2)
-		expect(mockedTypeorm.getRepository(User).findOne).toBeCalledWith({where: {username: 'example'}})
-		expect(mockedTypeorm.getRepository(User).findOne).toBeCalledWith({where: {email: 'example@email.com'}})
 		expect(mockedBcrypt.hash).toBeCalledWith('1234', 8)
 		expect(mockedEmailService.sendConfirmationEmail).toHaveBeenCalledTimes(1)
 

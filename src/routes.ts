@@ -20,7 +20,7 @@ routes.get('/', ensureAuthenticated, (req, res) => {
 
 // user routes
 routes.post('/users', validate('create-user'), UserController.create)
-routes.post('/login', UserController.login)
+routes.post('/login', validate('login'), UserController.login)
 routes.delete('/logout', ensureAuthenticated, UserController.logout)
 routes.patch('/recover-password', ensureAuthenticated, UserController.recoverPassword)
 routes.post('/change-password', ensureAuthenticated, UserController.changePassword)

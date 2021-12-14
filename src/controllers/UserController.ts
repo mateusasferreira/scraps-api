@@ -29,7 +29,11 @@ class UserController {
 			const errors = validationResult(req)
 
 			if (!errors.isEmpty()) {
-				return res.status(400).json({ errors: errors.array() })
+				return res.status(400).json({
+					errors: errors.array().map((error) => {
+						return { message: error.msg }
+					}),
+				})
 			}
 
 			const { accessToken, refreshToken } = await UserService.login(req.body)
@@ -41,7 +45,7 @@ class UserController {
 			})
 		} catch (e) {
 			console.log(e)
-			res.status(401).json({ message: e.message })
+			res.status(401).json({errors: [{ message: e.message}] })
 		}
 	}
 
@@ -50,7 +54,11 @@ class UserController {
 			const errors = validationResult(req)
 
 			if (!errors.isEmpty()) {
-				return res.status(400).json({ errors: errors.array() })
+				return res.status(400).json({
+					errors: errors.array().map((error) => {
+						return { message: error.msg }
+					}),
+				})
 			}
 
 			const { token } = req.body
@@ -65,7 +73,7 @@ class UserController {
 			})
 		} catch (e) {
 			console.log(e)
-			res.status(401).json({ message: 'login required' })
+			res.status(401).json({errors: [{ message: e.message}] })
 		}
 	}
 
@@ -74,7 +82,11 @@ class UserController {
 			const errors = validationResult(req)
 
 			if (!errors.isEmpty()) {
-				return res.status(400).json({ errors: errors.array() })
+				return res.status(400).json({
+					errors: errors.array().map((error) => {
+						return { message: error.msg }
+					}),
+				})
 			}
 
 			const { refreshToken } = req.body
@@ -82,7 +94,7 @@ class UserController {
 			res.status(200).json({ message: 'succesfully logged out' })
 		} catch (e) {
 			console.log(e)
-			res.status(400).json({ message: e.message })
+			res.status(400).json({errors: [{ message: e.message}] })
 		}
 	}
 
@@ -91,7 +103,11 @@ class UserController {
 			const errors = validationResult(req)
 
 			if (!errors.isEmpty()) {
-				return res.status(400).json({ errors: errors.array() })
+				return res.status(400).json({
+					errors: errors.array().map((error) => {
+						return { message: error.msg }
+					}),
+				})
 			}
 
 			const { email } = req.body
@@ -102,7 +118,7 @@ class UserController {
 
 			res.status(200).json({ message: 'recovery password created' })
 		} catch (e) {
-			res.status(400).json({ message: e.message })
+			res.status(400).json({errors: [{ message: e.message}] })
 		}
 	}
 
@@ -111,7 +127,11 @@ class UserController {
 			const errors = validationResult(req)
 
 			if (!errors.isEmpty()) {
-				return res.status(400).json({ errors: errors.array() })
+				return res.status(400).json({
+					errors: errors.array().map((error) => {
+						return { message: error.msg }
+					}),
+				})
 			}
 
 			const { user, oldPassword, newPassword } = req.body
@@ -121,7 +141,7 @@ class UserController {
 			res.status(200).json({ message: 'password changed' })
 		} catch (e) {
 			console.log(e)
-			res.status(400).json({ message: e.message })
+			res.status(400).json({errors: [{ message: e.message}] })
 		}
 	}
 
@@ -130,17 +150,22 @@ class UserController {
 			const errors = validationResult(req)
 
 			if (!errors.isEmpty()) {
-				return res.status(400).json({ errors: errors.array() })
+				return res.status(400).json({
+					errors: errors.array().map((error) => {
+						return { message: error.msg }
+					}),
+				})
 			}
 
 			const { id } = req.body
 
 			await UserService.delete(id)
+
+			res.status(200).json({message: 'sucessfully deleted user'})
 		} catch (e) {
 			console.log(e)
-			res.status(400).json({ message: e.message })
+			res.status(400).json({errors: [{ message: e.message}] })
 		}
-		res.sendStatus(200)
 	}
 }
 

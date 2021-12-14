@@ -5,6 +5,7 @@ import {User} from '../../src/models/User'
 
 import UserService from '../../src/services/UserService'
 
+jest.mock('../../src/services/EmailService')
 
 describe('User', () => {
 	it('should have an encrypted password', async () => {

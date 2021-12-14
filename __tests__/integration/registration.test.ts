@@ -6,6 +6,8 @@ import jwt from 'jsonwebtoken'
 
 const mockedTypeorm = typeorm as jest.Mocked<typeof typeorm>
 
+jest.mock('../../src/services/EmailService')
+
 describe('Registration', () => {
 	it('should create user', async () => {
 		(mockedTypeorm.getRepository(User).create as jest.Mock).mockResolvedValue({
