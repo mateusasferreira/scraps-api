@@ -1,5 +1,5 @@
 import { User } from '@models/User'
-import { body } from 'express-validator'
+import { body, header, param } from 'express-validator'
 import { getRepository } from 'typeorm'
 
 export default function validate(method: string){
@@ -57,6 +57,43 @@ export default function validate(method: string){
 				.withMessage('username missing')
 				.isLength({min: 4, max: 20})
 				.withMessage('username must be 8 to 20 characters long')
+		]
+	case 'logout':
+		return [
+			body('refreshToken')
+				.exists()
+				.withMessage('missing refresh token'),
+		]
+	case 'recover-password': 
+		return [
+			body('email')
+				.exists()
+				.withMessage('email is missing')
+				.isEmail()
+				.withMessage('invalid email')
+		]
+	case 'change-password':
+		return [
+			body('oldPassword')
+				.exists()
+				.withMessage('current password missing'),
+			body('newPassword')
+				.exists()
+				.withMessage('new password password missing')
+				.isLength({min: 8, max: 20})
+				.withMessage('password must be 8 to 20 characters long')
+		]
+	case 'confirm-email':
+		return [
+			param('id')
+				.exists()
+				.withMessage('id is missing')
+		]
+	case 'refresh-token':
+		return [
+			body('token')
+				.exists()
+				.withMessage('token is missing')
 		]
 	}
 }

@@ -21,16 +21,16 @@ routes.get('/', ensureAuthenticated, (req, res) => {
 // user routes
 routes.post('/users', validate('create-user'), UserController.create)
 routes.post('/login', validate('login'), UserController.login)
-routes.delete('/logout', ensureAuthenticated, UserController.logout)
-routes.patch('/recover-password', ensureAuthenticated, UserController.recoverPassword)
-routes.post('/change-password', ensureAuthenticated, UserController.changePassword)
+routes.delete('/logout', validate('logout'), ensureAuthenticated, UserController.logout)
+routes.patch('/recover-password', validate('recover-password'), ensureAuthenticated, UserController.recoverPassword)
+routes.post('/change-password', validate('recover-password'), ensureAuthenticated, UserController.changePassword)
 routes.delete('/users', ensureAuthenticated, UserController.delete)
 
 //email confirmation route
-routes.get('/confirmation/:token', EmailConfirmationController.confirm)
+routes.get('/confirmation/:token', validate('confirm-email'), EmailConfirmationController.confirm)
 
 //token revalidation
-routes.post('/token', UserController.refreshToken)
+routes.post('/token', validate('refresh-token'), UserController.refreshToken)
 
 
 routes.post('/profile', upload.single('avatar'), ensureAuthenticated, ProfileController.create)

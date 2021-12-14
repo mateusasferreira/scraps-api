@@ -112,9 +112,7 @@ class UserController {
 
 			const { email } = req.body
 
-			if (!email) throw new Error('email is missing')
-
-			await UserService.recoverPassword(req.body.email)
+			await UserService.recoverPassword(email)
 
 			res.status(200).json({ message: 'recovery password created' })
 		} catch (e) {
