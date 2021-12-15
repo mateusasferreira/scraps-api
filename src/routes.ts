@@ -22,7 +22,7 @@ routes.get('/', ensureAuthenticated, (req, res) => {
 routes.post('/users', validate('create-user'), UserController.create)
 routes.post('/login', validate('login'), UserController.login)
 routes.delete('/logout', validate('logout'), ensureAuthenticated, UserController.logout)
-routes.patch('/recover-password', validate('recover-password'), ensureAuthenticated, UserController.recoverPassword)
+routes.patch('/recover-password', validate('recover-password'), UserController.recoverPassword)
 routes.post('/change-password', validate('recover-password'), ensureAuthenticated, UserController.changePassword)
 routes.delete('/users', ensureAuthenticated, UserController.delete)
 

@@ -1,5 +1,10 @@
 import {Request, Response, NextFunction} from 'express'
 import ensureAuthenticated from '../../src/middlewares/ensureAuthenticated'
+import jwt from 'jsonwebtoken'
+
+jest.mock('jsonwebtoken')
+
+const mockedJwt = jwt as jest.Mocked<typeof jwt>
 
 let mockRequest: Partial<Request>;
 let mockResponse: Partial<Response>;
@@ -15,6 +20,8 @@ beforeEach(() => {
         }
       }),
     };
+
+    jest.clearAllMocks()
 });
 
 describe('Ensure authentication middleware', () => {
@@ -30,6 +37,10 @@ describe('Ensure authentication middleware', () => {
   })
 
   it('should respond with 401 if token is not valid', () => {
+    mockedJwt.verify.mockImplementationOnce(() => {
+      throw new Error()
+    });
+    
     mockRequest = {
       headers: {
         'authorization': 'Bearer 1234'
@@ -39,5 +50,23 @@ describe('Ensure authentication middleware', () => {
     ensureAuthenticated(mockRequest as Request, mockResponse as Response, nextFunction as NextFunction)
 
     expect(mockResponse.status).toBeCalledWith(401)
+  })
+
+  it('should call next if token is valid', async () => {
+    mockedJwt.verify.mockImplementationOnce(() => {
+      return {
+        user: 'user'
+      }
+    })
+      
+    mockRequest = {
+      headers: {
+        'authorization': 'Bearer 1234'
+      }
+    }
+    
+    ensureAuthenticated(mockRequest as Request, mockResponse as Response, nextFunction as NextFunction)
+    
+    expect(mockedJwt.verify).toBeCalledTimes(1)
   })
 })
