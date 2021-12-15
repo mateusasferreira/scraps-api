@@ -8,10 +8,10 @@ export default function ensureAuthenticated(req: Request, res: Response, next: N
 	
 	  const [,token] = req.headers['authorization'].split(' ')
 
-		const decoded = jwt.verify(token, process.env.JWT_SECRET)
-
-		req.body.user = (<any>decoded).payload.id
-
+		const decoded = jwt.verify(token, process.env.JWT_SECRET) as any
+		
+		req.body.user = decoded.payload.id
+		
 		next()
 	} catch (e) {
 		res.status(401).json({errors: [{message: e.message}]})
