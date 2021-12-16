@@ -25,4 +25,14 @@ describe('Profile Service', () => {
     expect(mockedTypeorm.getRepository(Profile).create).toBeCalledTimes(1)
     expect(mockedTypeorm.getRepository(Profile).save).toBeCalledTimes(1)
   })
+
+  it('should return a profile', async () => {
+    const param = 1;
+    
+    (mockedTypeorm.getRepository(Profile).findOne as jest.Mock).mockResolvedValue({picture: '123'});
+
+    await ProfileService.get(param);
+
+    expect(mockedTypeorm.getRepository(Profile).findOne).toBeCalledWith(param)
+  })
 })

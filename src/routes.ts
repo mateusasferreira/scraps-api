@@ -25,15 +25,12 @@ routes.delete('/logout', validate('logout'), ensureAuthenticated, UserController
 routes.patch('/recover-password', validate('recover-password'), UserController.recoverPassword)
 routes.post('/change-password', validate('recover-password'), ensureAuthenticated, UserController.changePassword)
 routes.delete('/users', ensureAuthenticated, UserController.delete)
-
-//email confirmation route
 routes.get('/confirmation/:token', validate('confirm-email'), EmailConfirmationController.confirm)
-
-//token revalidation
 routes.post('/token', validate('refresh-token'), UserController.refreshToken)
 
 
+//profile routes
 routes.post('/profile', upload.single('avatar'), ensureAuthenticated, ProfileController.create)
-
+routes.get('/profile/:id', validate('retrieve-profile'), ProfileController.get)
 
 export default routes

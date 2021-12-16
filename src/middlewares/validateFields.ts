@@ -1,8 +1,8 @@
 import { User } from '@models/User'
-import { body, header, param } from 'express-validator'
+import { body, param } from 'express-validator'
 import { getRepository } from 'typeorm'
 
-export default function validate(method: string){
+export default function validate(method: string) {
 	switch (method) {
 	case 'create-user':
 		return [
@@ -109,6 +109,12 @@ export default function validate(method: string){
 			body('birth_date')
 				.exists()
 				.withMessage('birth date is missing')
+		]
+	case('retrieve-profile'):
+		return [
+			param('id')
+				.exists()
+				.withMessage('id param is missing')		
 		]
 	}
 }

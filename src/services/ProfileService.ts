@@ -19,6 +19,18 @@ class ProfileService {
 		
 		await profileRepo.save(newProfile)
 	}
+
+	async get(id){
+		const profileRepo = getRepository(Profile)
+
+		let profile = await profileRepo.findOne(id)
+
+		const parsedPicture = `/images/${profile.picture}`
+
+		profile = {...profile, picture: parsedPicture}
+		
+		return profile
+	}
 }
 
 export default new ProfileService()

@@ -37,6 +37,29 @@ class ProfileController {
 			}
 		}
 	}
+
+	async get(req: Request, res: Response){
+		try {
+			const errors = validationResult(req)
+
+			if (!errors.isEmpty()) {
+				return res.status(400).json({
+					errors: errors.array().map((error) => {
+						return { message: error.msg }
+					}),
+				})
+			}
+
+			const {id} = req.params
+
+			const profile = await ProfileService.get(id)
+
+			res.status(200).json({profile})
+		} catch (e) {
+			console.log(e)
+			res.status(400).json({errors: [{message: e.message}]})
+		}
+	}
 }
 
 export default new ProfileController()
