@@ -2,6 +2,7 @@ import ProfileService from '@services/ProfileService'
 import { Request, Response } from 'express'
 import fs from 'fs'
 import { validationResult } from 'express-validator'
+import S3Service from '@services/external/s3'
 
 class ProfileController {
 	async create(req: Request, res: Response){
@@ -55,6 +56,29 @@ class ProfileController {
 			const profile = await ProfileService.get(id)
 
 			res.status(200).json({profile})
+		} catch (e) {
+			console.log(e)
+			res.status(400).json({errors: [{message: e.message}]})
+		}
+	}
+
+	async getImageStream(req: Request, res: Response){
+		try {
+			const errors = validationResult(req)
+
+			if (!errors.isEmpty()) {
+				return res.status(400).json({
+					errors: errors.array().map((error) => {
+						return { message: error.msg }
+					}),
+				})
+			}
+
+			const {key} = req.params
+
+			const imageStream = await S3Service.getFileStream(key)
+
+			imageStream.pipe(res)
 		} catch (e) {
 			console.log(e)
 			res.status(400).json({errors: [{message: e.message}]})

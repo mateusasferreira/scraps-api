@@ -116,5 +116,11 @@ export default function validate(method: string) {
 				.exists()
 				.withMessage('id param is missing')		
 		]
+	case('get-image-stream'):
+		return [
+			param('key')
+				.exists()
+				.withMessage('image key param is missing')
+		]
 	}
 }

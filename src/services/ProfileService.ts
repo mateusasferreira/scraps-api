@@ -31,6 +31,7 @@ class ProfileService {
 		
 		return profile
 	}
+
 }
 
 export default new ProfileService()

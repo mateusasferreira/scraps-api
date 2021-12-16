@@ -32,5 +32,5 @@ routes.post('/token', validate('refresh-token'), UserController.refreshToken)
 //profile routes
 routes.post('/profile', upload.single('avatar'), ensureAuthenticated, ProfileController.create)
 routes.get('/profile/:id', validate('retrieve-profile'), ProfileController.get)
-
+routes.get('/images/:key', validate('get-image-stream'), ProfileController.getImageStream)
 export default routes
