@@ -2,8 +2,6 @@ import {Request, Response, NextFunction} from 'express'
 import ensureAuthenticated from '../../src/middlewares/ensureAuthenticated'
 import jwt from 'jsonwebtoken'
 
-//jest.mock('express')
-
 jest.mock('jsonwebtoken')
 
 const mockedJwt = jwt as jest.Mocked<typeof jwt>
@@ -57,7 +55,7 @@ describe('Ensure authentication middleware', () => {
   })
 
   it('should call next if token is valid', async () => {
-    mockedJwt.verify.mockImplementation(() => { return {payload: {id: 1}}})
+    mockedJwt.verify.mockImplementationOnce(() => { return {payload: {id: 1}}})
       
     mockRequest = {
       headers: {
