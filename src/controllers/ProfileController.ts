@@ -62,6 +62,34 @@ class ProfileController {
 		}
 	}
 
+	async update(req: Request, res: Response){
+		try {
+			const errors = validationResult(req)
+
+			if (!errors.isEmpty()) {
+				return res.status(400).json({
+					errors: errors.array().map((error) => {
+						return { message: error.msg }
+					}),
+				})
+			}
+
+			await ProfileService.update({
+				file: req.file,
+				name: req.body.name,
+				bio: req.body.bio,
+				birth_date: req.body.birth_date,
+				location: req.body.location,
+				user: req.body.user
+			})
+
+			res.status(200).json({message: 'successfully updated profile'})
+		} catch (e) {
+			console.log(e)
+			res.status(400).json({errors: [{message: e.message}]})
+		}
+	}
+
 	async getImageStream(req: Request, res: Response){
 		try {
 			const errors = validationResult(req)

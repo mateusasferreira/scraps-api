@@ -32,6 +32,19 @@ class ProfileService {
 		return profile
 	}
 
+	async update(options){
+		const profileRepo = getRepository(Profile)
+		
+		const resultFile = await S3Service.uploadFile(options.file) 
+
+		await profileRepo.update(options.user, {
+			name: options.name,
+			bio: options.bio,
+			picture: resultFile,
+			birth_date: options.birth_date,
+			location: options.location,
+		})
+	}
 }
 
 export default new ProfileService()

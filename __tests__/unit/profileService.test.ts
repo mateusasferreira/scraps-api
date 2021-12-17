@@ -35,4 +35,20 @@ describe('Profile Service', () => {
 
     expect(mockedTypeorm.getRepository(Profile).findOne).toBeCalledWith(param)
   })
+
+  it('should update profile', async () => {
+    const options = {
+      file: 'file',
+      name: 'name',
+      bio: 'bio',
+      birthDate: 'birthdate',
+      location: 'location'
+    }
+    
+    await ProfileService.update(options)
+
+    expect(mockedS3Service.uploadFile).toBeCalledTimes(1)
+    expect(mockedS3Service.uploadFile).toBeCalledWith(options.file);
+    expect(mockedTypeorm.getRepository(Profile).update).toBeCalledTimes(1)
+  })
 })

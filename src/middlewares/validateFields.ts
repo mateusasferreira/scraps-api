@@ -97,15 +97,12 @@ export default function validate(method: string) {
 		]
 	case('create-profile'):
 		return [
-			body('avatar')
-				.exists()
-				.withMessage('avatar picture is missing'),
 			body('name')
 				.exists()
 				.withMessage('name is missing'),
 			body('bio')
 				.exists()
-				.withMessage('name is missing'),
+				.withMessage('bio is missing'),
 			body('birth_date')
 				.exists()
 				.withMessage('birth date is missing')
