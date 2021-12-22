@@ -10,7 +10,7 @@ import validate from '@middlewares/validateFields'
 
 const routes = Router()
 
-const upload = multer({ dest: 'uploads/' })
+const upload = multer()
 
 
 routes.get('/', ensureAuthenticated, (req, res) => {

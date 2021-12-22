@@ -30,13 +30,7 @@ class ProfileController {
 		} catch (e) {
 			console.log(e)
 			res.status(400).json({errors: [{ message: e.message}] })
-		} finally {
-			try {
-				fs.unlinkSync(req.file.path)
-			} catch(e) {
-				console.log(e)
-			}
-		}
+		} 
 	}
 
 	async get(req: Request, res: Response){
