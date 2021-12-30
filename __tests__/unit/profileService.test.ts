@@ -42,13 +42,14 @@ describe('Profile Service', () => {
       name: 'name',
       bio: 'bio',
       birthDate: 'birthdate',
-      location: 'location'
+      location: 'location',
+      user: {id: '1'}
     }
     
     await ProfileService.update(options)
 
     expect(mockedS3Service.uploadFile).toBeCalledTimes(1)
-    expect(mockedS3Service.uploadFile).toBeCalledWith(options.file);
+    expect(mockedS3Service.uploadFile).toBeCalledWith("file");
     expect(mockedTypeorm.getRepository(Profile).update).toBeCalledTimes(1)
   })
 })

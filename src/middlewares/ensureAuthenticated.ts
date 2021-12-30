@@ -10,7 +10,7 @@ export default function ensureAuthenticated(req: Request, res: Response, next: N
 
 		const decoded = jwt.verify(token, process.env.JWT_SECRET) as any
 		
-		req.body.user = decoded.payload.id
+		req.body.user = decoded.payload
 		
 		next()
 	} catch (e) {

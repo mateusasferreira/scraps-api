@@ -1,6 +1,5 @@
 import ProfileService from '@services/ProfileService'
 import { Request, Response } from 'express'
-import fs from 'fs'
 import { validationResult } from 'express-validator'
 import S3Service from '@services/external/s3'
 
@@ -17,7 +16,7 @@ class ProfileController {
 				})
 			}
 			
-			await ProfileService.create({
+			const profile = await ProfileService.create({
 				file: req.file,
 				name: req.body.name,
 				bio: req.body.bio,
@@ -26,7 +25,7 @@ class ProfileController {
 				user: req.body.user
 			})
 			
-			res.status(200).json({message: 'profile created sucessfully'})
+			res.status(200).json(profile)
 		} catch (e) {
 			console.log(e)
 			res.status(400).json({errors: [{ message: e.message}] })
@@ -49,7 +48,7 @@ class ProfileController {
 
 			const profile = await ProfileService.get(id)
 
-			res.status(200).json({profile})
+			res.status(200).json(profile)
 		} catch (e) {
 			console.log(e)
 			res.status(400).json({errors: [{message: e.message}]})
@@ -68,7 +67,7 @@ class ProfileController {
 				})
 			}
 
-			await ProfileService.update({
+			const profile = await ProfileService.update({
 				file: req.file,
 				name: req.body.name,
 				bio: req.body.bio,
@@ -77,7 +76,7 @@ class ProfileController {
 				user: req.body.user
 			})
 
-			res.status(200).json({message: 'successfully updated profile'})
+			res.status(200).json(profile)
 		} catch (e) {
 			console.log(e)
 			res.status(400).json({errors: [{message: e.message}]})
