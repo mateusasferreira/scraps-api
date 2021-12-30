@@ -26,7 +26,7 @@ export class User {
   @OneToMany(() => RefreshTokens, token => token.user, {cascade: true})
   token: RefreshTokens[]
 
-  @OneToOne(() => Profile, profile => profile.id)
+  @OneToOne(() => Profile, profile => profile.user)
   profile: Profile
 
   @OneToMany(() => Scrap, scrap => scrap.sender, {onDelete: 'SET NULL'})
