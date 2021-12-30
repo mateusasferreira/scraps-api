@@ -1,4 +1,4 @@
-import {Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne } from 'typeorm'
+import {Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm'
 import { User } from './User'
 
 @Entity('scraps')
@@ -9,13 +9,20 @@ export class Scrap {
   @Column({nullable: false})
   content: string
 
+  @Column()
+  senderId: string
+  
+  @Column()
+  receiverId: string
+
   @ManyToOne(() => User, user => user.scraps_sent, {onDelete: 'SET NULL'})
-  sender: string
+  @JoinColumn({name: 'senderId'})
+  sender: User
   
   @ManyToOne(() => User, user => user.scraps_received, {onDelete: 'SET NULL'})
-  receiver: string
+  @JoinColumn({name: 'receiverId'})
+  receiver: User
 
   @CreateDateColumn()
   created_at: string
-
 }

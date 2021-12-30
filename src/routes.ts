@@ -7,6 +7,7 @@ import ProfileController from '@controllers/ProfileController'
 
 import ensureAuthenticated from '@middlewares/ensureAuthenticated'
 import validate from '@middlewares/validateFields'
+import ScrapController from '@controllers/ScrapController'
 
 const routes = Router()
 
@@ -28,11 +29,14 @@ routes.delete('/users', ensureAuthenticated, UserController.delete)
 routes.get('/confirmation/:token', validate('confirm-email'), EmailConfirmationController.confirm)
 routes.post('/token', validate('refresh-token'), UserController.refreshToken)
 
-
 //profile routes
 routes.post('/profile', upload.single('avatar'), validate('create-profile'), ensureAuthenticated, ProfileController.create)
 routes.get('/profile/:id', validate('retrieve-profile'), ProfileController.get)
 routes.get('/images/:key', validate('get-image-stream'), ProfileController.getImageStream)
 routes.put('/profile', upload.single('avatar'), validate('create-profile'), ensureAuthenticated, ProfileController.update)
+
+//scraps routes
+routes.post('/scraps/:receiverId', validate('create-scrap'), ensureAuthenticated, ScrapController.create)
+
 
 export default routes

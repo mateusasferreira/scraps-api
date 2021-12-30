@@ -30,8 +30,8 @@ export class User {
   profile: Profile
 
   @OneToMany(() => Scrap, scrap => scrap.sender, {onDelete: 'SET NULL'})
-  scraps_sent: string
+  scraps_sent: Scrap[]
 
   @OneToMany(() => Scrap, scrap => scrap.receiver, {onDelete: 'SET NULL'})
-  scraps_received: string
+  scraps_received: Scrap[]
 }

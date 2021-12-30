@@ -119,5 +119,14 @@ export default function validate(method: string) {
 				.exists()
 				.withMessage('image key param is missing')
 		]
+	case('create-scrap'): 
+		return [
+			body('content')
+				.exists()
+				.withMessage('content is required'),
+			param('receiverId')
+				.exists()
+				.withMessage('receiverId param is required')
+		]
 	}
 }
