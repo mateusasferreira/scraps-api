@@ -37,6 +37,8 @@ routes.put('/profile', upload.single('avatar'), validate('create-profile'), ensu
 
 //scraps routes
 routes.post('/scraps/:receiverId', validate('create-scrap'), ensureAuthenticated, ScrapController.create)
-
+routes.get('/scraps/:id', validate('get-scrap'), ScrapController.get)
+routes.patch('/scraps/:id', validate('update-scrap'), ensureAuthenticated, ScrapController.update)
+routes.delete('/scraps/:id', validate('delete-scrap'), ensureAuthenticated, ScrapController.delete)
 
 export default routes

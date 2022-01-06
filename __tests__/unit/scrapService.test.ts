@@ -80,4 +80,69 @@ describe('scraps service', () => {
 
     expect(() => ScrapService.update(oldScrap.id, 'content', user)).rejects.toThrow();
   })
+
+  it('should delete scrap if caller is the creator', async () => {
+    const user = {
+      id: '1'
+    }
+
+    const scrap = {
+      id: '1',
+      content: 'new content',
+      senderId: '1',
+      receiverId: '2',
+      date: '2022-01-03'
+    };
+
+    (mockedTypeorm.getRepository(Scrap).findOne as jest.Mock)
+      .mockResolvedValue(scrap)
+
+    await ScrapService.delete(scrap.id, user)
+
+    expect(mockedTypeorm.getRepository(Scrap).findOne).toBeCalledTimes(1)
+    expect(mockedTypeorm.getRepository(Scrap).delete).toBeCalledTimes(1)
+    expect(mockedTypeorm.getRepository(Scrap).delete).toBeCalledWith(scrap.id)
+  })
+  
+  it('should delete scrap if caller is the receiver', async () => {
+    const user = {
+      id: '2'
+    }
+
+    const scrap = {
+      id: '1',
+      content: 'new content',
+      senderId: '1',
+      receiverId: '2',
+      date: '2022-01-03'
+    };
+
+    (mockedTypeorm.getRepository(Scrap).findOne as jest.Mock)
+      .mockResolvedValue(scrap)
+
+    await ScrapService.delete(scrap.id, user)
+
+    expect(mockedTypeorm.getRepository(Scrap).findOne).toBeCalledTimes(1)
+    expect(mockedTypeorm.getRepository(Scrap).delete).toBeCalledTimes(1)
+    expect(mockedTypeorm.getRepository(Scrap).delete).toBeCalledWith(scrap.id)
+  })
+  
+  it('should not delete scrap if caller is not creator nor receiver', async () => {
+    const user = {
+      id: '3'
+    }
+
+    const scrap = {
+      id: '1',
+      content: 'new content',
+      senderId: '1',
+      receiverId: '2',
+      date: '2022-01-03'
+    };
+
+    (mockedTypeorm.getRepository(Scrap).findOne as jest.Mock)
+      .mockResolvedValue(scrap)
+
+    expect(() => ScrapService.delete(scrap.id, user)).rejects.toThrow()
+  })
 })

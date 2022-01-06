@@ -2,6 +2,7 @@ import { User } from '@models/User'
 import { body, param } from 'express-validator'
 import { getRepository } from 'typeorm'
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function validate(method: string) {
 	switch (method) {
 	case 'create-user':
@@ -127,6 +128,30 @@ export default function validate(method: string) {
 			param('receiverId')
 				.exists()
 				.withMessage('receiverId param is required')
+		]
+	case('update-scrap'): 
+		return [
+			body('content')
+				.exists()
+				.withMessage('content is required'),
+			param('id')
+				.exists()
+				.withMessage('scrap id is missing')
+		]
+	case('delete-scrap'): 
+		return [
+			body('content')
+				.exists()
+				.withMessage('content is required'),
+			param('id')
+				.exists()
+				.withMessage('scrap id is missing')
+		]
+	case('get-scrap'):
+		return [
+			param('id')
+				.exists()
+				.withMessage('scrap id is missing')
 		]
 	}
 }

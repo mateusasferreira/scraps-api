@@ -2,6 +2,14 @@ import { Scrap } from '@models/Scrap'
 import { getRepository } from 'typeorm'
 
 class ScrapService {
+	async get(scrapId): Promise<Scrap>{
+		const scrapRepo = getRepository(Scrap)
+
+		const scrap = await scrapRepo.findOne(scrapId)
+
+		return scrap
+	}
+	
 	async create(options: Partial<Scrap>): Promise<Scrap>{
 		const scrapRepo = getRepository(Scrap)
 
@@ -30,6 +38,16 @@ class ScrapService {
 		const updatedScrap = await scrapRepo.findOne(scrapId)
 
 		return updatedScrap		
+	}
+
+	async delete(scrapId, user): Promise<void>{
+		const scrapRepo = getRepository(Scrap)
+		
+		const scrap = await scrapRepo.findOne(scrapId)
+
+		if(user.id !== scrap.senderId && user.id !== scrap.receiverId) throw new Error('Caller is not scrap creator nor receiver')
+
+		await scrapRepo.delete(scrap.id)	
 	}
 }
 
