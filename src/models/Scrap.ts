@@ -1,5 +1,6 @@
-import {Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm'
+import {Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, JoinColumn, OneToMany} from 'typeorm'
 import { User } from './User'
+import {Like} from './Like'
 
 @Entity('scraps')
 export class Scrap {
@@ -22,6 +23,9 @@ export class Scrap {
   @ManyToOne(() => User, user => user.scraps_received, {onDelete: 'SET NULL'})
   @JoinColumn({name: 'receiverId'})
   receiver: User
+
+  @OneToMany(() => Like, like => like.scrap)
+  likes: Like[]
 
   @CreateDateColumn()
   created_at: string

@@ -4,10 +4,11 @@ import multer from 'multer'
 import  UserController  from '@controllers/UserController'
 import EmailConfirmationController from '@controllers/EmailConfirmationController'
 import ProfileController from '@controllers/ProfileController'
+import ScrapController from '@controllers/ScrapController'
 
 import ensureAuthenticated from '@middlewares/ensureAuthenticated'
 import validate from '@middlewares/validateFields'
-import ScrapController from '@controllers/ScrapController'
+import LikeController from '@controllers/LikeController'
 
 const routes = Router()
 
@@ -40,5 +41,9 @@ routes.post('/scraps/:receiverId', validate('create-scrap'), ensureAuthenticated
 routes.get('/scraps/:id', validate('get-scrap'), ScrapController.get)
 routes.patch('/scraps/:id', validate('update-scrap'), ensureAuthenticated, ScrapController.update)
 routes.delete('/scraps/:id', validate('delete-scrap'), ensureAuthenticated, ScrapController.delete)
+
+//likes routes
+routes.post('/like', validate('like_scrap'), ensureAuthenticated, LikeController.like)
+routes.delete('/like/:id', ensureAuthenticated, LikeController.dislike)
 
 export default routes

@@ -153,5 +153,11 @@ export default function validate(method: string) {
 				.exists()
 				.withMessage('scrap id is missing')
 		]
+	case('like_scrap'): 
+		return [
+			body('scrap')
+				.exists()
+				.withMessage('scrap id is missing')
+		]
 	}
 }
