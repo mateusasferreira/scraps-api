@@ -13,6 +13,6 @@ export class Like {
 	@ManyToOne(() => Scrap, scrap => scrap.likes, {onDelete: 'CASCADE', eager: false})
   scrap: Scrap
   
-	@ManyToOne(() => User, {onDelete: 'CASCADE'})
+	@ManyToOne(() => User, {onDelete: 'CASCADE', eager: false})
 	user: User
 }
