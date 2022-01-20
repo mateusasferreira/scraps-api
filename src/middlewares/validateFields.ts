@@ -159,5 +159,11 @@ export default function validate(method: string) {
 				.exists()
 				.withMessage('scrap id is missing')
 		]
+	case('follow_user'):
+		return [
+			body('userId')
+				.exists()
+				.withMessage('userId is missing')
+		]	
 	}
 }

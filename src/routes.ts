@@ -9,6 +9,7 @@ import ScrapController from '@controllers/ScrapController'
 import ensureAuthenticated from '@middlewares/ensureAuthenticated'
 import validate from '@middlewares/validateFields'
 import LikeController from '@controllers/LikeController'
+import FollowController from '@controllers/FollowController'
 
 const routes = Router()
 
@@ -45,5 +46,9 @@ routes.delete('/scraps/:id', validate('delete-scrap'), ensureAuthenticated, Scra
 //likes routes
 routes.post('/like', validate('like_scrap'), ensureAuthenticated, LikeController.like)
 routes.delete('/like/:id', ensureAuthenticated, LikeController.dislike)
+
+//follow routes 
+routes.post('/follow', validate('follow_user'), ensureAuthenticated, FollowController.follow)
+routes.delete('/follow/:id', ensureAuthenticated, FollowController.unfollow)
 
 export default routes

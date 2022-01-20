@@ -9,9 +9,9 @@ export class Follow {
   @CreateDateColumn()
   created_at: string
 
-  @ManyToOne(() => User, user => user.following, {onDelete: 'CASCADE', eager: false})
+  @ManyToOne(() => User, user => user.following, {onDelete: 'CASCADE'})
   follower: User
   
-	@ManyToOne(() => User, user => user.followedBy, {onDelete: 'CASCADE', eager: false})
+	@ManyToOne(() => User, user => user.followedBy, {onDelete: 'CASCADE'})
 	following: User
 }
