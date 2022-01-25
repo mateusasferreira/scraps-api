@@ -5,16 +5,15 @@ import  UserController  from '@controllers/UserController'
 import EmailConfirmationController from '@controllers/EmailConfirmationController'
 import ProfileController from '@controllers/ProfileController'
 import ScrapController from '@controllers/ScrapController'
+import LikeController from '@controllers/LikeController'
+import FollowController from '@controllers/FollowController'
 
 import ensureAuthenticated from '@middlewares/ensureAuthenticated'
 import validate from '@middlewares/validateFields'
-import LikeController from '@controllers/LikeController'
-import FollowController from '@controllers/FollowController'
 
 const routes = Router()
 
 const upload = multer()
-
 
 routes.get('/', ensureAuthenticated, (req, res) => {
 	console.log(req.body.user)
@@ -23,11 +22,14 @@ routes.get('/', ensureAuthenticated, (req, res) => {
 
 // user routes
 routes.post('/users', validate('create-user'), UserController.create)
+routes.delete('/users', ensureAuthenticated, UserController.delete)
+routes.post('/users/:id/follow', ensureAuthenticated, FollowController.follow)
+routes.delete('/users/:id/follow', ensureAuthenticated, FollowController.unfollow)
+
 routes.post('/login', validate('login'), UserController.login)
 routes.delete('/logout', validate('logout'), ensureAuthenticated, UserController.logout)
 routes.patch('/recover-password', validate('recover-password'), UserController.recoverPassword)
 routes.post('/change-password', validate('change-password'), ensureAuthenticated, UserController.changePassword)
-routes.delete('/users', ensureAuthenticated, UserController.delete)
 routes.get('/confirmation/:token', validate('confirm-email'), EmailConfirmationController.confirm)
 routes.post('/token', validate('refresh-token'), UserController.refreshToken)
 
@@ -42,13 +44,9 @@ routes.post('/scraps/:receiverId', validate('create-scrap'), ensureAuthenticated
 routes.get('/scraps/:id', validate('get-scrap'), ScrapController.get)
 routes.patch('/scraps/:id', validate('update-scrap'), ensureAuthenticated, ScrapController.update)
 routes.delete('/scraps/:id', validate('delete-scrap'), ensureAuthenticated, ScrapController.delete)
-
-//likes routes
 routes.post('/scraps/:id/like', ensureAuthenticated, LikeController.like)
 routes.delete('/scraps/:id/like', ensureAuthenticated, LikeController.dislike)
 
-//follow routes 
-routes.post('/follow', validate('follow_user'), ensureAuthenticated, FollowController.follow)
-routes.delete('/follow/:id', ensureAuthenticated, FollowController.unfollow)
+
 
 export default routes

@@ -1,23 +1,13 @@
 import FollowService from '@services/FollowService'
 import { Request, Response } from 'express'
-import { validationResult } from 'express-validator'
 
 class FollowController {
 	async follow(req: Request, res: Response){
 		try {
-			const errors = validationResult(req)
+			const {id: followingId} = req.params 
+			const {user: follower} = req.body
 
-			if (!errors.isEmpty()) {
-				return res.status(400).json({
-					errors: errors.array().map((error) => {
-						return { message: error.msg }
-					}),
-				})
-			}
-
-			const {user, userId: followingId} = req.body
-
-			await FollowService.follow(user, followingId)
+			await FollowService.follow(follower, followingId)
 
 			res.sendStatus(201)
 		} catch (e) {

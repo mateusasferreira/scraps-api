@@ -21,10 +21,13 @@ class FollowService {
 		await followRepo.save(follow)
 	}
   
-	async unfollow(followId): Promise<void>{
+	async unfollow(followingId): Promise<void>{
 		const followRepo = getRepository(Follow)
+		const userRepo = getRepository(User)
 
-		await followRepo.delete(followId) 
+		const following = await userRepo.findOne(followingId)
+
+		await followRepo.delete({following}) 
 	}
 }
 
