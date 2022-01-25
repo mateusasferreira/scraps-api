@@ -44,8 +44,8 @@ routes.patch('/scraps/:id', validate('update-scrap'), ensureAuthenticated, Scrap
 routes.delete('/scraps/:id', validate('delete-scrap'), ensureAuthenticated, ScrapController.delete)
 
 //likes routes
-routes.post('/like', validate('like_scrap'), ensureAuthenticated, LikeController.like)
-routes.delete('/like/:id', ensureAuthenticated, LikeController.dislike)
+routes.post('/scraps/:id/like', ensureAuthenticated, LikeController.like)
+routes.delete('/scraps/:id/like', ensureAuthenticated, LikeController.dislike)
 
 //follow routes 
 routes.post('/follow', validate('follow_user'), ensureAuthenticated, FollowController.follow)

@@ -5,9 +5,10 @@ import { Request, Response } from 'express'
 class LikeController {
 	async like(req: Request, res: Response){
 		try {
-			const {user, scrap: scrapId} = req.body
+			const {id: scrapId} = req.params
+			const {user} = req.body
       
-			await LikeService.like(scrapId, user.id)
+			await LikeService.like(scrapId, user)
 
 			res.sendStatus(201)
 		} catch (e) {
@@ -18,9 +19,9 @@ class LikeController {
 
 	async dislike(req: Request, res: Response){
 		try {
-			const {id} = req.params
+			const {id: scrapId} = req.params
 
-			await LikeService.dislike(id)
+			await LikeService.dislike(scrapId)
 
 			res.sendStatus(200)
 		} catch (e) {

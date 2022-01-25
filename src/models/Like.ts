@@ -10,7 +10,7 @@ export class Like {
   @CreateDateColumn()
   created_at: string
 
-	@ManyToOne(() => Scrap, scrap => scrap.likes, {onDelete: 'CASCADE', eager: false})
+  @ManyToOne(() => Scrap, scrap => scrap.likes, {onDelete: 'CASCADE', eager: false})
   scrap: Scrap
   
 	@ManyToOne(() => User, {onDelete: 'CASCADE', eager: false})
