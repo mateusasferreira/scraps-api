@@ -25,6 +25,7 @@ routes.post('/users', validate('create-user'), UserController.create)
 routes.delete('/users', ensureAuthenticated, UserController.delete)
 routes.post('/users/:id/follow', ensureAuthenticated, FollowController.follow)
 routes.delete('/users/:id/follow', ensureAuthenticated, FollowController.unfollow)
+routes.get('/users/:username', UserController.get)
 
 routes.post('/login', validate('login'), UserController.login)
 routes.delete('/logout', validate('logout'), ensureAuthenticated, UserController.logout)
@@ -35,7 +36,7 @@ routes.post('/token', validate('refresh-token'), UserController.refreshToken)
 
 //profile routes
 routes.post('/profile', upload.single('avatar'), validate('create-profile'), ensureAuthenticated, ProfileController.create)
-routes.get('/profile/:id', validate('retrieve-profile'), ProfileController.get)
+routes.get('/my-profile', ensureAuthenticated, ProfileController.getMyProfile)
 routes.get('/images/:key', validate('get-image-stream'), ProfileController.getImageStream)
 routes.put('/profile', upload.single('avatar'), validate('create-profile'), ensureAuthenticated, ProfileController.update)
 

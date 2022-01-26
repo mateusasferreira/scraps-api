@@ -3,6 +3,19 @@ import UserService from '@services/UserService'
 import { validationResult } from 'express-validator'
 
 class UserController {
+	async get(req: Request, res: Response){
+		try {
+			const {username} = req.params
+
+			const profile = await UserService.get(username)
+
+			res.status(200).json(profile)
+		} catch (e) {
+			console.log(e)
+			res.status(400).json({errors: [{message: e.message}]})
+		}
+	}
+	
 	async create(req: Request, res: Response) {
 		try {
 			const errors = validationResult(req)

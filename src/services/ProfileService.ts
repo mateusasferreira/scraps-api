@@ -3,6 +3,16 @@ import S3Service from '@services/external/s3'
 import {getRepository} from 'typeorm'
 
 class ProfileService {
+	async getMyProfile(user): Promise<Profile> {
+		const profileRepo = getRepository(Profile)
+
+		const profile = await profileRepo.findOne({user})
+
+		console.log(profile)
+
+		return profile
+	}
+
 	async create(options): Promise<Profile>{
 		const profileRepo = getRepository(Profile)
 		
@@ -20,21 +30,6 @@ class ProfileService {
 		await profileRepo.save(newProfile)
 
 		return newProfile
-	}
-
-	async get(id): Promise<Profile>{
-		const profileRepo = getRepository(Profile)
-
-		let profile = await profileRepo.findOne(id)
-
-		if(!profile) throw new Error('Profile doesn\'t exists')
-		
-
-		const parsedPicture = `/images/${profile.picture}`
-
-		profile = {...profile, picture: parsedPicture}
-		
-		return profile
 	}
 
 	async update(options): Promise<Profile>{

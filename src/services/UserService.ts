@@ -1,4 +1,4 @@
-import { getRepository, } from 'typeorm'
+import { getRepository, SelectQueryBuilder, } from 'typeorm'
 import bcrypt from 'bcrypt'
 import EmailConfirmationService from '@services/EmailService'
 import { RefreshTokens } from '@models/RefreshTokens'
@@ -9,6 +9,20 @@ import randomString from 'randomstring'
 
 
 class UserService {
+	async get(username): Promise<User>{
+		const userRepo = getRepository(User)
+
+		const profile = await userRepo
+			.createQueryBuilder('user')
+			.select(['user.id', 'user.username'])
+			.leftJoinAndSelect('user.profile', 'profile')
+			.where('user.username = :username', {username})
+			.leftJoinAndSelect('user.scraps_received', 'scraps')
+			.getOne()
+
+		return profile
+
+	}
 
 	async create(data): Promise<Partial<User>>{
 		const userRepo = getRepository(User)
