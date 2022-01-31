@@ -17,7 +17,10 @@ class UserService {
 			.select(['user.id', 'user.username'])
 			.leftJoinAndSelect('user.profile', 'profile')
 			.where('user.username = :username', {username})
-			.leftJoinAndSelect('user.scraps_received', 'scraps')
+			.loadRelationCountAndMap('user.scraps_received', 'user.scraps_received' )
+			.loadRelationCountAndMap('user.scraps_sent', 'user.scraps_sent')
+			.loadRelationCountAndMap('user.followers', 'user.followedBy')
+			.loadRelationCountAndMap('user.follows', 'user.following')
 			.getOne()
 
 		return profile
