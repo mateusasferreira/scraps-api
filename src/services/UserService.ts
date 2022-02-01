@@ -1,4 +1,4 @@
-import { getRepository, SelectQueryBuilder, } from 'typeorm'
+import { getRepository, } from 'typeorm'
 import bcrypt from 'bcrypt'
 import EmailConfirmationService from '@services/EmailService'
 import { RefreshTokens } from '@models/RefreshTokens'

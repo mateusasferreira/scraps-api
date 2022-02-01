@@ -26,6 +26,7 @@ routes.delete('/users', ensureAuthenticated, UserController.delete)
 routes.post('/users/:id/follow', ensureAuthenticated, FollowController.follow)
 routes.delete('/users/:id/follow', ensureAuthenticated, FollowController.unfollow)
 routes.get('/users/:username', UserController.get)
+routes.get('/users/:id/scraps', UserController.getScraps)
 
 routes.post('/login', validate('login'), UserController.login)
 routes.delete('/logout', validate('logout'), ensureAuthenticated, UserController.logout)

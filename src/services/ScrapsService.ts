@@ -1,5 +1,5 @@
 import { Scrap } from '@models/Scrap'
-import { getRepository } from 'typeorm'
+import { getRepository} from 'typeorm'
 
 class ScrapService {
 	async get(scrapId): Promise<Scrap>{
@@ -9,6 +9,21 @@ class ScrapService {
 
 		return scrap
 	}
+
+	async getManyByUser(userId): Promise<Scrap[]>{
+		const scrapRepo = getRepository(Scrap)
+
+		const scraps = await scrapRepo
+			.createQueryBuilder('scraps')
+			.addSelect('sender.username' )
+			.where('scraps.receiver = :userId', {userId})
+			.loadRelationCountAndMap('scraps.likes', 'scraps.likes')
+			.leftJoin('scraps.sender', 'sender')
+			.getMany()
+
+		return scraps
+	}
+
 	
 	async create(options: Partial<Scrap>): Promise<Scrap>{
 		const scrapRepo = getRepository(Scrap)

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import UserService from '@services/UserService'
 import { validationResult } from 'express-validator'
+import ScrapsService from '@services/ScrapsService'
 
 class UserController {
 	async get(req: Request, res: Response){
@@ -10,6 +11,19 @@ class UserController {
 			const profile = await UserService.get(username)
 
 			res.status(200).json(profile)
+		} catch (e) {
+			console.log(e)
+			res.status(400).json({errors: [{message: e.message}]})
+		}
+	}
+
+	async getScraps(req: Request, res: Response){
+		try {
+			const {id} = req.params
+
+			const scraps = await ScrapsService.getManyByUser(id)
+
+			res.status(200).json(scraps)
 		} catch (e) {
 			console.log(e)
 			res.status(400).json({errors: [{message: e.message}]})
