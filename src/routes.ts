@@ -25,6 +25,7 @@ routes.post('/users', validate('create-user'), UserController.create)
 routes.delete('/users', ensureAuthenticated, UserController.delete)
 routes.post('/users/:id/follow', ensureAuthenticated, FollowController.follow)
 routes.delete('/users/:id/follow', ensureAuthenticated, FollowController.unfollow)
+routes.get('/users', UserController.getMany)
 routes.get('/users/:username', UserController.get)
 routes.get('/users/:id/scraps', UserController.getScraps)
 
@@ -43,7 +44,7 @@ routes.put('/profile', upload.single('avatar'), validate('create-profile'), ensu
 
 //scraps routes
 routes.post('/scraps/:receiverId', validate('create-scrap'), ensureAuthenticated, ScrapController.create)
-routes.get('/scraps/:id', validate('get-scrap'), ScrapController.get)
+routes.get('/scraps/:id', validate('get-scrap'), ScrapController.getOne)
 routes.patch('/scraps/:id', validate('update-scrap'), ensureAuthenticated, ScrapController.update)
 routes.delete('/scraps/:id', validate('delete-scrap'), ensureAuthenticated, ScrapController.delete)
 routes.post('/scraps/:id/like', ensureAuthenticated, LikeController.like)

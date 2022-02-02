@@ -9,7 +9,7 @@ import randomString from 'randomstring'
 
 
 class UserService {
-	async get(username): Promise<User>{
+	async getOne(username): Promise<User>{
 		const userRepo = getRepository(User)
 
 		const profile = await userRepo
@@ -24,7 +24,24 @@ class UserService {
 			.getOne()
 
 		return profile
+	}
 
+	async getMany(): Promise<[User[], number]>{
+		const userRepo = getRepository(User)
+
+		const profile = await userRepo
+			.createQueryBuilder('user')
+			.select(['user.id', 'user.username'])
+			.leftJoinAndSelect('user.profile', 'profile')
+			.loadRelationCountAndMap('user.scraps_received', 'user.scraps_received' )
+			.loadRelationCountAndMap('user.scraps_sent', 'user.scraps_sent')
+			.loadRelationCountAndMap('user.followers', 'user.followedBy')
+			.loadRelationCountAndMap('user.follows', 'user.following')
+			.getMany()
+
+		const count = await userRepo.count()
+
+		return [profile, count]
 	}
 
 	async create(data): Promise<Partial<User>>{

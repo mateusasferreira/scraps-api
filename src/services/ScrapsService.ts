@@ -2,10 +2,25 @@ import { Scrap } from '@models/Scrap'
 import { getRepository } from 'typeorm'
 
 class ScrapService {
-	async get(scrapId): Promise<Scrap> {
+	async getOne(scrapId): Promise<Scrap> {
 		const scrapRepo = getRepository(Scrap)
 
-		const scrap = await scrapRepo.findOne(scrapId)
+		const scrap = await scrapRepo
+			.createQueryBuilder('scraps')
+			.select([
+				'scraps.id',
+				'scraps.created_at',
+				'scraps.content',
+				'sender.username',
+				'sender.id',
+				'receiver.username',
+				'receiver.id',
+			])
+			.where('scraps.id = :scrapId', { scrapId })
+			.leftJoin('scraps.sender', 'sender')
+			.leftJoin('scraps.receiver', 'receiver')
+			.loadRelationCountAndMap('scraps.likes', 'scraps.likes')
+			.getOne()
 
 		return scrap
 	}

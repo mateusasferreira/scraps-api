@@ -8,9 +8,20 @@ class UserController {
 		try {
 			const {username} = req.params
 
-			const profile = await UserService.get(username)
+			const user = await UserService.getOne(username)
 
-			res.status(200).json(profile)
+			res.status(200).json(user)
+		} catch (e) {
+			console.log(e)
+			res.status(400).json({errors: [{message: e.message}]})
+		}
+	}
+
+	async getMany(req: Request, res: Response){
+		try {
+			const users = await UserService.getMany()
+
+			res.status(200).json(users)
 		} catch (e) {
 			console.log(e)
 			res.status(400).json({errors: [{message: e.message}]})

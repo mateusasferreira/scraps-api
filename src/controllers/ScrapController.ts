@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 
 class ScrapController {
-	async get(req: Request, res: Response){
+	async getOne(req: Request, res: Response){
 		try {
 			const errors = validationResult(req)
 
@@ -17,7 +17,7 @@ class ScrapController {
 
 			const {id} = req.params
 
-			const scrap = await ScrapsService.get(id)
+			const scrap = await ScrapsService.getOne(id)
 
 			res.status(200).json(scrap)
 		} catch (e) {
