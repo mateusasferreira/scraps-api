@@ -47,7 +47,7 @@ class UserService {
 		return [profile, count]
 	}
 
-	async create(data): Promise<Partial<User>>{
+	async create(data): Promise<User>{
 		const userRepo = getRepository(User)
 
 		const passwordHash = await bcrypt.hash(data.password, 8)
@@ -67,7 +67,7 @@ class UserService {
 		return user
 	}
 
-	async login(data) {
+	async login(data): Promise<{accessToken: string, refreshToken: string}> {
 		const userRepo = getRepository(User)
 		const refreshTokenRepo = getRepository(RefreshTokens)
 
@@ -94,7 +94,7 @@ class UserService {
 		return {accessToken, refreshToken: refreshToken.token}
 	}
 
-	async validateRefreshToken(rToken: string){
+	async validateRefreshToken(rToken):  Promise<{accessToken: string, refreshToken: string}>{
 		const rTokenRepo = getRepository(RefreshTokens)
 
 		const validToken = await rTokenRepo.findOne(rToken)
@@ -112,13 +112,13 @@ class UserService {
 		return {accessToken: newToken, refreshToken: validToken.token}
 	}
 
-	async logout(token){
+	async logout(token): Promise<void>{
 		const rTokenRepo = getRepository(RefreshTokens)
 
 		await rTokenRepo.delete(token)
 	}
 
-	async recoverPassword(email: string){
+	async recoverPassword(email: string): Promise<void>{
 		const userRepo = getRepository(User)
 
 		const user = await userRepo.findOne({
@@ -142,7 +142,7 @@ class UserService {
 		emailService.sendRecoverPassword(email, newPassword)
 	}
 
-	async changePassword(userId, oldPassword, newPassword){
+	async changePassword(userId, oldPassword, newPassword): Promise<void>{
 		const userRepo = getRepository(User)
 		const rTokenRepo = getRepository(RefreshTokens)
 
@@ -164,11 +164,9 @@ class UserService {
 		})
 
 		await rTokenRepo.delete({user: userId})
-		
-		return 
 	}
 
-	async delete(id){
+	async delete(id): Promise<void>{
 		const userRepo = getRepository(User)
 
 		await userRepo.delete(id)

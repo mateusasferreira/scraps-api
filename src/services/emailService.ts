@@ -8,7 +8,7 @@ interface TokenPayload extends JwtPayload {
 }
 
 class EmailService {
-	async sendConfirmationEmail(id, email){
+	async sendConfirmationEmail(id, email): Promise<void>{
 		const token = jwt.sign({id}, process.env.JWT_SECRET, {
 			expiresIn: 60 * 60
 		})    
@@ -22,7 +22,7 @@ class EmailService {
 		})
 	}
   
-	async confirmEmail(token){
+	async confirmEmail(token): Promise<void>{
 		const userRepo = getRepository(User)
 
 		const {id} = jwt.verify(token, process.env.JWT_SECRET) as TokenPayload
