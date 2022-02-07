@@ -1,4 +1,4 @@
-import ProfileService from '@services/ProfileService'
+import profileService from '@services/profileService'
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import S3Service from '@services/external/s3'
@@ -16,7 +16,7 @@ class ProfileController {
 				})
 			}
 			
-			const profile = await ProfileService.create({
+			const profile = await profileService.create({
 				file: req.file,
 				name: req.body.name,
 				bio: req.body.bio,
@@ -36,7 +36,7 @@ class ProfileController {
 		try {
 			const {user} = req.body
 			
-			const profile = await ProfileService.getMyProfile(user)
+			const profile = await profileService.getMyProfile(user)
 
 			res.status(200).json(profile)
 		} catch (e) {
@@ -57,7 +57,7 @@ class ProfileController {
 				})
 			}
 
-			const profile = await ProfileService.update({
+			const profile = await profileService.update({
 				file: req.file,
 				name: req.body.name,
 				bio: req.body.bio,

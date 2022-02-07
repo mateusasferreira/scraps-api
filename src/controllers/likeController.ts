@@ -1,4 +1,4 @@
-import LikeService from '@services/LikeService'
+import likeService from '@services/likeService'
 import { Request, Response } from 'express'
 // import { validationResult } from 'express-validator'
 
@@ -8,7 +8,7 @@ class LikeController {
 			const {id: scrapId} = req.params
 			const {user} = req.body
       
-			await LikeService.like(scrapId, user)
+			await likeService.like(scrapId, user)
 
 			res.sendStatus(201)
 		} catch (e) {
@@ -21,7 +21,7 @@ class LikeController {
 		try {
 			const {id: scrapId} = req.params
 
-			await LikeService.dislike(scrapId)
+			await likeService.dislike(scrapId)
 
 			res.sendStatus(200)
 		} catch (e) {

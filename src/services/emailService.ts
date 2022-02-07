@@ -7,7 +7,7 @@ interface TokenPayload extends JwtPayload {
 	id: string
 }
 
-class EmailConfirmationService {
+class EmailService {
 	async sendConfirmationEmail(id, email){
 		const token = jwt.sign({id}, process.env.JWT_SECRET, {
 			expiresIn: 60 * 60
@@ -39,5 +39,5 @@ class EmailConfirmationService {
 	}
 }
 
-export default new EmailConfirmationService()
+export default new EmailService()
 

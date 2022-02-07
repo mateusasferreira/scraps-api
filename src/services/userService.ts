@@ -1,10 +1,10 @@
 import { getRepository, } from 'typeorm'
 import bcrypt from 'bcrypt'
-import EmailConfirmationService from '@services/EmailService'
+import EmailConfirmationService from '@services/emailService'
 import { RefreshTokens } from '@models/RefreshTokens'
 import { User } from '@models/User'
 import { createToken } from '@utils/createToken'
-import EmailService from '@services/EmailService'
+import emailService from '@services/emailService'
 import randomString from 'randomstring'
 
 
@@ -139,7 +139,7 @@ class UserService {
 			password_hash: newPasswordHash
 		})
 
-		EmailService.sendRecoverPassword(email, newPassword)
+		emailService.sendRecoverPassword(email, newPassword)
 	}
 
 	async changePassword(userId, oldPassword, newPassword){

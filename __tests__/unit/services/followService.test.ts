@@ -1,6 +1,6 @@
 import typeorm from 'typeorm'
 import { Follow } from '../../../src/models/Follow'
-import FollowService from '../../../src/services/FollowService'
+import followService from '../../../src/services/followService'
 
 const mockedTypeorm = typeorm as jest.Mocked<typeof typeorm>
 
@@ -14,7 +14,7 @@ describe("follow service", () => {
 
     const followingId = '1'
 
-    expect(() => FollowService.follow(follower, followingId)).rejects.toThrow()
+    expect(() => followService.follow(follower, followingId)).rejects.toThrow()
   })
 
   it("should allow user to follow another user", async () => {
@@ -26,7 +26,7 @@ describe("follow service", () => {
 
     const followingId = '2';
 
-    await FollowService.follow(follower, followingId)
+    await followService.follow(follower, followingId)
 
     expect(mockedTypeorm.getRepository(Follow).create).toBeCalled()
     expect(mockedTypeorm.getRepository(Follow).save).toBeCalled()

@@ -1,4 +1,4 @@
-import ProfileService from '../../../src/services/ProfileService'
+import profileService from '../../../src/services/profileService'
 import S3Service from '../../../src/services/external/s3'
 import typeorm from 'typeorm'
 import { Profile } from '../../../src/models/Profile'
@@ -18,7 +18,7 @@ describe('Profile Service', () => {
       location: 'location'
     }
     
-    await ProfileService.create(options)
+    await profileService.create(options)
 
     expect(mockedS3Service.uploadFile).toBeCalledTimes(1)
     expect(mockedS3Service.uploadFile).toBeCalledWith(options.file);
@@ -36,7 +36,7 @@ describe('Profile Service', () => {
       user: {id: '1'}
     }
     
-    await ProfileService.update(options)
+    await profileService.update(options)
 
     expect(mockedS3Service.uploadFile).toBeCalledTimes(1)
     expect(mockedS3Service.uploadFile).toBeCalledWith("file");

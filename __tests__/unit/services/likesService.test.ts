@@ -2,9 +2,9 @@ import typeorm from 'typeorm'
 import { Like } from '../../../src/models/Like'
 import { Scrap } from '../../../src/models/Scrap'
 import { User } from '../../../src/models/User'
-import LikesService from '../../../src/services/LikeService'
+import LikesService from '../../../src/services/likeService'
 
-import LikeService from '../../../src/services/LikeService'
+import likeService from '../../../src/services/likeService'
 
 const mockedTypeorm = typeorm as jest.Mocked<typeof typeorm>
 
@@ -31,7 +31,7 @@ describe('likes service', () => {
   })
 
   it('should dislike a post', async () => {
-    await LikeService.dislike('1');
+    await likeService.dislike('1');
 
     expect(mockedTypeorm.getRepository(Like).delete).toBeCalledTimes(1)
   })

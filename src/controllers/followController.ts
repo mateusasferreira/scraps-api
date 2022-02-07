@@ -1,4 +1,4 @@
-import FollowService from '@services/FollowService'
+import followService from '@services/followService'
 import { Request, Response } from 'express'
 
 class FollowController {
@@ -7,7 +7,7 @@ class FollowController {
 			const {id: followingId} = req.params 
 			const {user: follower} = req.body
 
-			await FollowService.follow(follower, followingId)
+			await followService.follow(follower, followingId)
 
 			res.sendStatus(201)
 		} catch (e) {
@@ -20,7 +20,7 @@ class FollowController {
 		try {
 			const {id} = req.params
 
-			await FollowService.unfollow(id)
+			await followService.unfollow(id)
 
 			res.sendStatus(200)
 		} catch (e) {

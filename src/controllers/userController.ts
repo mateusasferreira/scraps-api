@@ -1,14 +1,14 @@
 import { Request, Response } from 'express'
-import UserService from '@services/UserService'
+import userService from '@services/userService'
 import { validationResult } from 'express-validator'
-import ScrapsService from '@services/ScrapsService'
+import scrapsService from '@services/scrapsService'
 
 class UserController {
 	async get(req: Request, res: Response){
 		try {
 			const {username} = req.params
 
-			const user = await UserService.getOne(username)
+			const user = await userService.getOne(username)
 
 			res.status(200).json(user)
 		} catch (e) {
@@ -22,7 +22,7 @@ class UserController {
 
 			const {limit, skip} = req.body
 			
-			const [results, total] = await UserService.getMany({limit, skip})
+			const [results, total] = await userService.getMany({limit, skip})
 
 			res.status(200).json({
 				total,
@@ -40,7 +40,7 @@ class UserController {
 
 			const {limit, skip} = req.body
 
-			const [results, total] = await ScrapsService.getManyByUser(id, {limit, skip})
+			const [results, total] = await scrapsService.getManyByUser(id, {limit, skip})
 
 			res.status(200).json({
 				total,
@@ -64,7 +64,7 @@ class UserController {
 				})
 			}
 
-			await UserService.create(req.body)
+			await userService.create(req.body)
 
 			res.status(201).json({ message: 'sucessfully created new user' })
 		} catch (e) {
@@ -85,7 +85,7 @@ class UserController {
 				})
 			}
 
-			const { accessToken, refreshToken } = await UserService.login(req.body)
+			const { accessToken, refreshToken } = await userService.login(req.body)
 
 			res.status(200).json({
 				auth: true,
@@ -113,7 +113,7 @@ class UserController {
 			const { token } = req.body
 
 			const { accessToken, refreshToken } =
-        await UserService.validateRefreshToken(token)
+        await userService.validateRefreshToken(token)
 
 			res.status(200).json({
 				auth: true,
@@ -139,7 +139,7 @@ class UserController {
 			}
 
 			const { refreshToken } = req.body
-			await UserService.logout(refreshToken)
+			await userService.logout(refreshToken)
 			res.status(200).json({ message: 'succesfully logged out' })
 		} catch (e) {
 			console.log(e)
@@ -161,7 +161,7 @@ class UserController {
 
 			const { email } = req.body
 
-			await UserService.recoverPassword(email)
+			await userService.recoverPassword(email)
 
 			res.status(200).json({ message: 'recovery password created' })
 		} catch (e) {
@@ -183,7 +183,7 @@ class UserController {
 
 			const { user, oldPassword, newPassword } = req.body
 
-			await UserService.changePassword(user.id, oldPassword, newPassword)
+			await userService.changePassword(user.id, oldPassword, newPassword)
 
 			res.status(200).json({ message: 'password changed' })
 		} catch (e) {
@@ -206,7 +206,7 @@ class UserController {
 
 			const { id } = req.body
 
-			await UserService.delete(id)
+			await userService.delete(id)
 
 			res.status(200).json({message: 'sucessfully deleted user'})
 		} catch (e) {

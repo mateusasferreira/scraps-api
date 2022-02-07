@@ -1,4 +1,4 @@
-import ScrapService from '../../../src/services/ScrapsService'
+import ScrapService from '../../../src/services/scrapsService'
 import typeorm from 'typeorm'
 import { Scrap } from '../../../src/models/Scrap'
 

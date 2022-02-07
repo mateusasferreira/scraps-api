@@ -1,20 +1,20 @@
 import typeorm from 'typeorm'
 import bcrypt from 'bcrypt'
 import {User} from '../../../src/models/User'
-import UserService from '../../../src/services/UserService'
-import EmailService from '../../../src/services/EmailService'
+import userService from '../../../src/services/userService'
+import emailService from '../../../src/services/emailService'
 
 import randomString from 'randomstring'
 import { RefreshTokens } from '../../../src/models/RefreshTokens'
 import jwt from 'jsonwebtoken'
 
-jest.mock('../../../src/services/EmailService')
+jest.mock('../../../src/services/emailService')
 jest.mock('randomstring')
 jest.mock('bcrypt')
 jest.mock('nodemailer')
 jest.mock('jsonwebtoken')
 
-const mockedEmailService = EmailService as jest.Mocked<typeof EmailService>
+const mockedemailService = emailService as jest.Mocked<typeof emailService>
 const mockedRandomString = randomString as jest.Mocked<typeof randomString>
 const mockedTypeorm = typeorm as jest.Mocked<typeof typeorm>
 const mockedBcrypt = bcrypt as jest.Mocked<typeof bcrypt>
@@ -35,34 +35,34 @@ describe('User Service', () => {
 			confirmed: false
 		});
 		
-		await UserService.create({
+		await userService.create({
 			username: 'example',
 			email: 'example@email.com',
 			password: '1234'
 		})
 
 		expect(mockedBcrypt.hash).toBeCalledWith('1234', 8)
-		expect(mockedEmailService.sendConfirmationEmail).toHaveBeenCalledTimes(1)
+		expect(mockedemailService.sendConfirmationEmail).toHaveBeenCalledTimes(1)
 
 	})
 
 	it('should recover password',  async () => {
 		(mockedTypeorm.getRepository(User).findOne as jest.Mock).mockImplementation(obj => { return {confirmed: true}} )
     
-		await UserService.recoverPassword('myemail')
+		await userService.recoverPassword('myemail')
   
 		expect(mockedTypeorm.getRepository(User).findOne).toBeCalledTimes(1)
 		expect(mockedRandomString.generate).toBeCalledTimes(1)
 		expect(mockedBcrypt.hash).toBeCalledTimes(1)
 		expect(mockedTypeorm.getRepository(User).update).toBeCalledTimes(1)
-		expect(mockedEmailService.sendRecoverPassword).toBeCalledTimes(1)
+		expect(mockedemailService.sendRecoverPassword).toBeCalledTimes(1)
 	})
 
 	it('should provide a new token if refresh token is valid', async () => {
 		(mockedTypeorm.getRepository(User).findOne as jest.Mock).mockResolvedValue({user: 'user'});
 		(mockedTypeorm.getRepository(RefreshTokens).findOne as jest.Mock).mockResolvedValue({token: 'token', user: 'user'});
 
-		await UserService.validateRefreshToken('token');
+		await userService.validateRefreshToken('token');
 
 		expect(mockedTypeorm.getRepository(RefreshTokens).findOne).toBeCalledWith('token');
 		expect(mockedTypeorm.getRepository(User).findOne).toBeCalledWith('user');
@@ -70,7 +70,7 @@ describe('User Service', () => {
 	})
 
 	it('should invalidate refresh token when logging out', async () => {
-		await UserService.logout('token');
+		await userService.logout('token');
 
 		expect(mockedTypeorm.getRepository(RefreshTokens).delete).toBeCalledTimes(1)
 		expect(mockedTypeorm.getRepository(RefreshTokens).delete).toBeCalledWith('token')
@@ -91,7 +91,7 @@ describe('User Service', () => {
 		(mockedTypeorm.getRepository(User).findOne as jest.Mock).mockResolvedValue(user);
 		(mockedBcrypt.compare as jest.Mock).mockResolvedValue(true)
 		
-		await UserService.changePassword(user.id, '1234', '12345');
+		await userService.changePassword(user.id, '1234', '12345');
 
 		//expect(mockedTypeorm.getRepository(User).findOne).toBeCalledWith(user.id);
 		expect(bcrypt.compare).toBeCalledWith('1234', '1231231');
@@ -101,7 +101,7 @@ describe('User Service', () => {
 	})
 
 	it('should delete user', async () => {
-		await UserService.delete(99)
+		await userService.delete(99)
 
 		expect(mockedTypeorm.getRepository(RefreshTokens).delete).toBeCalledWith(99)
 

@@ -1,14 +1,14 @@
 
-import EmailService from '@services/EmailService'
+import emailService from '@services/emailService'
 import {Request, Response} from 'express'
 
 
-class EmailConfirmationController {
+class EmailController {
 	async confirm(req: Request, res: Response): Promise<void>{
 		try {
 			const {token} = req.params
 
-			await EmailService.confirmEmail(token)
+			await emailService.confirmEmail(token)
       
 			res.redirect('/')
 		} catch(e) {
@@ -19,4 +19,4 @@ class EmailConfirmationController {
 
 }
 
-export default new EmailConfirmationController()
+export default new EmailController()

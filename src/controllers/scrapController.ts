@@ -1,4 +1,4 @@
-import ScrapsService from '@services/ScrapsService'
+import scrapsService from '@services/scrapsService'
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 
@@ -17,7 +17,7 @@ class ScrapController {
 
 			const {id} = req.params
 
-			const scrap = await ScrapsService.getOne(id)
+			const scrap = await scrapsService.getOne(id)
 
 			res.status(200).json(scrap)
 		} catch (e) {
@@ -42,7 +42,7 @@ class ScrapController {
 
 			const {receiverId} = req.params
 
-			const scrap = await ScrapsService.create({
+			const scrap = await scrapsService.create({
 				content,
 				senderId: user.id, 
 				receiverId
@@ -71,7 +71,7 @@ class ScrapController {
 
 			const {content, user} = req.body
 
-			const scrap = await ScrapsService.update(id, content, user)
+			const scrap = await scrapsService.update(id, content, user)
 
 			res.status(200).json(scrap)
 		} catch (e) {
@@ -96,7 +96,7 @@ class ScrapController {
 
 			const {user} = req.body
 
-			await ScrapsService.delete(id, user)
+			await scrapsService.delete(id, user)
 
 			res.status(200).json({message: 'succesfully deleted scrap'})
 		} catch (e) {
