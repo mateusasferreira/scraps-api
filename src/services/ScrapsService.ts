@@ -25,7 +25,7 @@ class ScrapService {
 		return scrap
 	}
 
-	async getManyByUser(userId): Promise<Scrap[]> {
+	async getManyByUser(userId, options): Promise<[Scrap[], number]> {
 		const scrapRepo = getRepository(Scrap)
 
 		const scraps = await scrapRepo
@@ -43,9 +43,14 @@ class ScrapService {
 			.leftJoin('scraps.sender', 'sender')
 			.leftJoin('scraps.receiver', 'receiver')
 			.loadRelationCountAndMap('scraps.likes', 'scraps.likes')
+			.orderBy('scraps.created_at', 'ASC' )
+			.take(options.limit)
+			.skip(options.skip)
 			.getMany()
 
-		return scraps
+		const count = await scrapRepo.count()
+
+		return [scraps, count]
 	}
 
 	async create(options: Partial<Scrap>): Promise<Scrap> {

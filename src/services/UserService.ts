@@ -26,17 +26,20 @@ class UserService {
 		return profile
 	}
 
-	async getMany(): Promise<[User[], number]>{
+	async getMany(options): Promise<[User[], number]>{
 		const userRepo = getRepository(User)
 
 		const profile = await userRepo
 			.createQueryBuilder('user')
-			.select(['user.id', 'user.username'])
+			.select(['user.id', 'user.username', 'user.created_at'])
 			.leftJoinAndSelect('user.profile', 'profile')
 			.loadRelationCountAndMap('user.scraps_received', 'user.scraps_received' )
 			.loadRelationCountAndMap('user.scraps_sent', 'user.scraps_sent')
 			.loadRelationCountAndMap('user.followers', 'user.followedBy')
 			.loadRelationCountAndMap('user.follows', 'user.following')
+			.orderBy('user.created_at', 'DESC')
+			.take(options.limit)
+			.skip(options.skip)
 			.getMany()
 
 		const count = await userRepo.count()

@@ -19,9 +19,15 @@ class UserController {
 
 	async getMany(req: Request, res: Response){
 		try {
-			const users = await UserService.getMany()
 
-			res.status(200).json(users)
+			const {limit, skip} = req.body
+			
+			const [results, total] = await UserService.getMany({limit, skip})
+
+			res.status(200).json({
+				total,
+				results
+			})
 		} catch (e) {
 			console.log(e)
 			res.status(400).json({errors: [{message: e.message}]})
@@ -32,9 +38,14 @@ class UserController {
 		try {
 			const {id} = req.params
 
-			const scraps = await ScrapsService.getManyByUser(id)
+			const {limit, skip} = req.body
 
-			res.status(200).json(scraps)
+			const [results, total] = await ScrapsService.getManyByUser(id, {limit, skip})
+
+			res.status(200).json({
+				total,
+				results
+			})
 		} catch (e) {
 			console.log(e)
 			res.status(400).json({errors: [{message: e.message}]})
