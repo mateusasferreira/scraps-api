@@ -1,6 +1,6 @@
 import { getRepository, } from 'typeorm'
 import bcrypt from 'bcrypt'
-import EmailConfirmationService from '@services/emailService'
+import EmailService from '@services/emailService'
 import { RefreshTokens } from '@models/RefreshTokens'
 import { User } from '@models/User'
 import { createToken } from '@utils/createToken'
@@ -62,7 +62,7 @@ class UserService {
     
 		await userRepo.save(user)
 
-		await EmailConfirmationService.sendConfirmationEmail(user.id, user.email)
+		await EmailService.sendConfirmationEmail(user.id, user.email)
 		
 		return user
 	}
