@@ -1,11 +1,11 @@
 import typeorm from 'typeorm'
 import bcrypt from 'bcrypt'
 
-import {User} from '../../src/models/User'
+import {User} from '../../../src/models/User'
 
-import UserService from '../../src/services/UserService'
+import UserService from '../../../src/services/UserService'
 
-jest.mock('../../src/services/EmailService')
+jest.mock('../../../src/services/EmailService')
 
 describe('User', () => {
 	it('should have an encrypted password', async () => {

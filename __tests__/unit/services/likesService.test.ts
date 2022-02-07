@@ -1,10 +1,10 @@
 import typeorm from 'typeorm'
-import { Like } from '../../src/models/Like'
-import { Scrap } from '../../src/models/Scrap'
-import { User } from '../../src/models/User'
-import LikesService from '../../src/services/LikeService'
+import { Like } from '../../../src/models/Like'
+import { Scrap } from '../../../src/models/Scrap'
+import { User } from '../../../src/models/User'
+import LikesService from '../../../src/services/LikeService'
 
-import LikeService from '../../src/services/LikeService'
+import LikeService from '../../../src/services/LikeService'
 
 const mockedTypeorm = typeorm as jest.Mocked<typeof typeorm>
 

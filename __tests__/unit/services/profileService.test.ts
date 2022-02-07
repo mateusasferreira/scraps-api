@@ -1,8 +1,8 @@
-import ProfileService from '../../src/services/ProfileService'
-import S3Service from '../../src/services/external/s3'
+import ProfileService from '../../../src/services/ProfileService'
+import S3Service from '../../../src/services/external/s3'
 import typeorm from 'typeorm'
-import { Profile } from '../../src/models/Profile'
-jest.mock('../../src/services/external/s3')
+import { Profile } from '../../../src/models/Profile'
+jest.mock('../../../src/services/external/s3')
 
 const mockedS3Service = S3Service as jest.Mocked<typeof S3Service>
 const mockedTypeorm = typeorm as jest.Mocked<typeof typeorm>

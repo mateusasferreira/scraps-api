@@ -1,14 +1,14 @@
 import typeorm from 'typeorm'
 import bcrypt from 'bcrypt'
-import {User} from '../../src/models/User'
-import UserService from '../../src/services/UserService'
-import EmailService from '../../src/services/EmailService'
+import {User} from '../../../src/models/User'
+import UserService from '../../../src/services/UserService'
+import EmailService from '../../../src/services/EmailService'
 
 import randomString from 'randomstring'
-import { RefreshTokens } from '../../src/models/RefreshTokens'
+import { RefreshTokens } from '../../../src/models/RefreshTokens'
 import jwt from 'jsonwebtoken'
 
-jest.mock('../../src/services/EmailService')
+jest.mock('../../../src/services/EmailService')
 jest.mock('randomstring')
 jest.mock('bcrypt')
 jest.mock('nodemailer')

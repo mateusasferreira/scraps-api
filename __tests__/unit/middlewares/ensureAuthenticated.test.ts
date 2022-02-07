@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from 'express'
-import ensureAuthenticated from '../../src/middlewares/ensureAuthenticated'
+import ensureAuthenticated from '../../../src/middlewares/ensureAuthenticated'
 import jwt from 'jsonwebtoken'
 
 jest.mock('jsonwebtoken')

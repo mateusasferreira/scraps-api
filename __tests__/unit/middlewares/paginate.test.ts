@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from 'express'
 import { OneToMany } from 'typeorm';
-import paginate from '../../src/middlewares/paginate'
+import paginate from '../../../src/middlewares/paginate'
 
 let mockRequest: Partial<Request>;
 let mockResponse: Partial<Response>;

@@ -1,6 +1,6 @@
-import ScrapService from '../../src/services/ScrapsService'
+import ScrapService from '../../../src/services/ScrapsService'
 import typeorm from 'typeorm'
-import { Scrap } from '../../src/models/Scrap'
+import { Scrap } from '../../../src/models/Scrap'
 
 const mockedTypeorm = typeorm as jest.Mocked<typeof typeorm>
 

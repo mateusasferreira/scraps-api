@@ -1,6 +1,6 @@
 import typeorm from 'typeorm'
-import { Follow } from '../../src/models/Follow'
-import FollowService from '../../src/services/FollowService'
+import { Follow } from '../../../src/models/Follow'
+import FollowService from '../../../src/services/FollowService'
 
 const mockedTypeorm = typeorm as jest.Mocked<typeof typeorm>
 
