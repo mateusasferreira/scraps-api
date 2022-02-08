@@ -139,7 +139,7 @@ class UserService {
 			password_hash: newPasswordHash
 		})
 
-		emailService.sendRecoverPassword(email, newPassword)
+		emailService.sendRecoverPassword(email, user.username, newPassword)
 	}
 
 	async changePassword(userId, oldPassword, newPassword): Promise<void>{

@@ -44,12 +44,28 @@ class EmailService {
 		await userRepo.update(id, { confirmed: true })
 	}
 
-	async sendRecoverPassword(email, newPassword) {
-		await transport.sendMail({
-			to: email,
-			subject: '[Scraper] new password',
-			html: `<span> Nova Senha: ${newPassword}</span>`,
-		})
+	async sendRecoverPassword(email, username, newPassword) {
+		
+		const link = `${process.env.CLIENT_ORIGIN}/login`
+
+		ejs.renderFile(
+			'src/views/emails/recoverPassword.ejs',
+			{ username, newPassword, link },
+			function(err, str){
+				if(err) {
+					console.log(err)
+					throw new Error(err.message)
+				}				
+				
+				transport.sendMail({
+					to: email,
+					subject: '[Scraper] New Password',
+					html: str,
+				})
+					.then(res => console.log(res))
+					.catch(e => console.log(e))
+			}
+		)
 	}
 }
 
