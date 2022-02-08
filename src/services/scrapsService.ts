@@ -22,6 +22,9 @@ class ScrapService {
 			.loadRelationCountAndMap('scraps.likes', 'scraps.likes')
 			.getOne()
 
+		if(!scrap) throw new Error('Scrap not found')
+		
+
 		return scrap
 	}
 

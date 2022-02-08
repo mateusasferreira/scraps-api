@@ -47,7 +47,7 @@ describe('Registration', () => {
 		}); 
 
 		const res: Response = await request(app)
-			.get(`/confirmation/${token}`);
+			.get(`/users/email-confirmation/${token}`);
 
 		expect(res.redirect).toBeTruthy();
 	})
