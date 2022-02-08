@@ -62,7 +62,7 @@ class UserService {
     
 		await userRepo.save(user)
 
-		await EmailService.sendConfirmationEmail(user.id, user.email)
+		await EmailService.sendConfirmationEmail(user.id, user.username, user.email)
 		
 		return user
 	}
