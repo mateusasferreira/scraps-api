@@ -1,13 +1,17 @@
-FROM node:alpine
+FROM node:alpine as base 
 
-WORKDIR /usr/app
+WORKDIR /app
 
-COPY package*.json ./
+COPY  package*.json ./
 
-RUN yarn
+RUN npm install
 
-COPY . .
+COPY . . 
 
-EXPOSE 3333
+FROM base as production 
 
-CMD yarn run dev
+ENV NODE_ENV=production
+
+RUN npm run build
+
+CMD npm run start

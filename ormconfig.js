@@ -1,3 +1,5 @@
+const baseDir = process.env.NODE_ENV === 'production' ? 'dist/' : 'src/'
+
 module.exports = { 
     name: "default",
     type: process.env.DB_CONNECTION,
@@ -8,13 +10,10 @@ module.exports = {
     database: process.env.DB_NAME,
     logging: true,
     synchronize: false,
-    entities: ["src/models/*.ts"],
-    subscribers: [
-      "src/subscriber/**/*.ts"
-    ],
-    migrations: ["src/migrations/*.ts"],
+    entities: [baseDir + 'models/*.{js,ts}'],
+	  migrations: [baseDir + 'migrations/*.{js,ts}'],
     cli: {
-      "entitiesDir": "src/models",
-      "migrationsDir": "src/migrations"
-    }  
+      'entitiesDir': baseDir + 'models',
+      'migrationsDir': baseDir + 'migrations'
+    }    
   }
