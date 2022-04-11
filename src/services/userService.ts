@@ -1,10 +1,8 @@
 import { getRepository, } from 'typeorm'
 import bcrypt from 'bcrypt'
-import EmailService from '@services/emailService'
 import { RefreshTokens } from '@models/RefreshTokens'
 import { User } from '@models/User'
 import { createToken } from '@utils/createToken'
-import emailService from '@services/emailService'
 import randomString from 'randomstring'
 
 
@@ -62,8 +60,6 @@ class UserService {
     
 		await userRepo.save(user)
 
-		await EmailService.sendConfirmationEmail(user.id, user.username, user.email)
-		
 		return user
 	}
 
@@ -76,8 +72,6 @@ class UserService {
 		})
 
 		if(!user) throw new Error('User doesn\'t exists')
-
-		if(!user.confirmed) throw new Error('Email not Confirmed')
 
 		const passwordIsValid = await bcrypt.compare(data.password, user.password_hash)
 
@@ -129,8 +123,6 @@ class UserService {
 
 		if(!user) throw new Error('invalid email')
 
-		if(!user.confirmed) throw new Error('Email not confirmed')
-
 		const newPassword = randomString.generate(16)
 
 		const newPasswordHash = await bcrypt.hash(newPassword, 8)
@@ -139,7 +131,6 @@ class UserService {
 			password_hash: newPasswordHash
 		})
 
-		emailService.sendRecoverPassword(email, user.username, newPassword)
 	}
 
 	async changePassword(userId, oldPassword, newPassword): Promise<void>{
@@ -150,8 +141,6 @@ class UserService {
 		const user = await userRepo.findOne(userId)
 
 		if(!user) throw new Error('User doesn\'t exists')
-
-		if(!user.confirmed) throw new Error('Email not Confirmed')
 
 		const oldPasswordIsValid = await bcrypt.compare(oldPassword, user.password_hash)
 		

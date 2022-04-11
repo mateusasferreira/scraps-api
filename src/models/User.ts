@@ -17,9 +17,6 @@ export class User {
   
   @Column({nullable: false})
   password_hash: string
-
-  @Column({default: false})
-  confirmed: boolean;
   
   @CreateDateColumn()
   created_at: string
