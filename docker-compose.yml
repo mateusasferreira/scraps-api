@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  database:
+    image: mysql:8.0.26
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - MYSQL_DATABASE=$DB_NAME
+      - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
+    volumes:
+      - db:/var/lib/mysql
+  app:
+    depends_on:
+      - database
+    build: .
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - 3333:3333
+    environment:
+    #   - DB_CONNECTION=$DB_CONNECTION
+      - DB_HOST=database
+    #   - DB_USERNAME=$DB_USERNAME
+    #   - DB_PASSWORD=$DB_PASSWORD
+    #   - DB_NAME=$DB_NAME
+    #   - DB_PORT=$DB_PORT
+
+volumes: 
+  db:
