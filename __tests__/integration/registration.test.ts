@@ -6,8 +6,6 @@ import jwt from 'jsonwebtoken'
 
 const mockedTypeorm = typeorm as jest.Mocked<typeof typeorm>
 
-jest.mock('../../src/services/emailService')
-
 describe('Registration', () => {
 	it('should create user', async () => {
 		(mockedTypeorm.getRepository(User).create as jest.Mock).mockResolvedValue({
@@ -33,22 +31,5 @@ describe('Registration', () => {
 			.send({username: 'example', email: 'example2@email.com', password: '12341234'})
 
 		expect(res.status).toBe(400)
-	})
-  
-	it('should be able to confirm email', async () => {
-		const user = {
-			id: 1
-		};
-
-		(mockedTypeorm.getRepository(User).findOne as jest.Mock).mockResolvedValue(user);
-
-		const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {
-			expiresIn: 60 * 60
-		}); 
-
-		const res: Response = await request(app)
-			.get(`/users/email-confirmation/${token}`);
-
-		expect(res.redirect).toBeTruthy();
 	})
 })

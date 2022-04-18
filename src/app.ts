@@ -1,10 +1,6 @@
 import express, {Express} from 'express'
 import dotenv from 'dotenv'
-
-import userRoutes from '@routes/userRoutes'
-import authRoutes from '@routes/authRoutes'
-import profileRoutes from '@routes/profileRoutes'
-import scrapsRoutes from '@routes/scrapsRoutes'
+import routes from './routes'
 
 dotenv.config()
 
@@ -23,10 +19,7 @@ class App {
 	}
 
 	routes(){
-		this.express.use('/users', userRoutes)
-		this.express.use('/auth', authRoutes)
-		this.express.use('/profile', profileRoutes)
-		this.express.use('/scraps', scrapsRoutes)
+		this.express.use('/', routes)
 	}
 }
 

@@ -3,8 +3,6 @@ import bcrypt from 'bcrypt'
 import { RefreshTokens } from '@models/RefreshTokens'
 import { User } from '@models/User'
 import { createToken } from '@utils/createToken'
-import randomString from 'randomstring'
-
 
 class UserService {
 	async getOne(username): Promise<User>{
@@ -110,27 +108,6 @@ class UserService {
 		const rTokenRepo = getRepository(RefreshTokens)
 
 		await rTokenRepo.delete(token)
-	}
-
-	async recoverPassword(email: string): Promise<void>{
-		const userRepo = getRepository(User)
-
-		const user = await userRepo.findOne({
-			where: {
-				email: email
-			}
-		})
-
-		if(!user) throw new Error('invalid email')
-
-		const newPassword = randomString.generate(16)
-
-		const newPasswordHash = await bcrypt.hash(newPassword, 8)
-
-		await userRepo.update(user.id, {
-			password_hash: newPasswordHash
-		})
-
 	}
 
 	async changePassword(userId, oldPassword, newPassword): Promise<void>{

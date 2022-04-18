@@ -1,0 +1,14 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Scraps API",
+    "version": "1.0.0",
+    "description": "A social network featuring a message functionality inspired in Orkut's scraps funcionality"
+  },
+  "servers": [
+    {
+      "name": "Development",
+      "url": "http://localhost:3333"
+    }
+  ]
+}

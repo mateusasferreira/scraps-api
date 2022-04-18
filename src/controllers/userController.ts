@@ -147,28 +147,6 @@ class UserController {
 		}
 	}
 
-	async recoverPassword(req: Request, res: Response) {
-		try {
-			const errors = validationResult(req)
-
-			if (!errors.isEmpty()) {
-				return res.status(400).json({
-					errors: errors.array().map((error) => {
-						return { message: error.msg }
-					}),
-				})
-			}
-
-			const { email } = req.body
-
-			await userService.recoverPassword(email)
-
-			res.status(200).json({ message: 'recovery password created' })
-		} catch (e) {
-			res.status(400).json({errors: [{ message: e.message}] })
-		}
-	}
-
 	async changePassword(req: Request, res: Response) {
 		try {
 			const errors = validationResult(req)
