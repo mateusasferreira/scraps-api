@@ -27,8 +27,13 @@ export default function validate(method: string) {
 			body('password')
 				.exists()
 				.withMessage('password missing')
-				.isLength({min: 8, max: 20})
-				.withMessage('password must be 8 to 20 characters long'),
+				.custom(password => {
+					const passwordMatch = password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)
+
+					if(!passwordMatch) throw new Error('Password must be at least 8 caracters long, one uppercase and one number')
+
+					return true
+				}),
 			body('username')
 				.exists()
 				.withMessage('username missing')
