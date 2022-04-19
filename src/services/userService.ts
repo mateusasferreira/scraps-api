@@ -66,7 +66,10 @@ class UserService {
 		const refreshTokenRepo = getRepository(RefreshTokens)
 
 		const user = await userRepo.findOne({
-			where: {username: data.username}
+			where: [
+				{username: data.user},
+				{email: data.user}
+			]
 		})
 
 		if(!user) throw new Error('User doesn\'t exists')

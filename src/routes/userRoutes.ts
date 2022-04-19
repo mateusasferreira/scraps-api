@@ -14,5 +14,6 @@ routes.delete('/:id/follow', ensureAuthenticated, followController.unfollow)
 routes.get('/', paginate, userController.getMany)
 routes.get('/:username', userController.get)
 routes.get('/:id/scraps', paginate, userController.getScraps)
+routes.post('/change-password', validate('change-password'), ensureAuthenticated, userController.changePassword)
 
 export default routes

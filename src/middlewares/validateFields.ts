@@ -58,11 +58,9 @@ export default function validate(method: string) {
 				.withMessage('password missing')
 				.isLength({min: 8, max: 20})
 				.withMessage('password must be 8 to 20 characters long'),
-			body('username')
+			body('user')
 				.exists()
-				.withMessage('username missing')
-				.isLength({min: 4, max: 20})
-				.withMessage('username must be 8 to 20 characters long')
+				.withMessage('user missing')
 		]
 	case 'logout':
 		return [
