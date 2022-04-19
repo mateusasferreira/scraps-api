@@ -10,5 +10,302 @@
       "name": "Development",
       "url": "http://localhost:3333"
     }
-  ]
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "description": "Creates a new User",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "user"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "user@email.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Password123",
+                    "description": "Must be at least 8 caracters long, at least one uppercase and one number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "sucessfully created new user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "username is already taken"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "description": "Returns a list of users",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "maximum number of results wanted",
+            "example": "10"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "page skip value",
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "type": "number",
+                      "description": "total count of objects in the database",
+                      "example": 1
+                    },
+                    "results": {
+                      "type": "array",
+                      "description": "list of users",
+                      "items": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/User"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{username}": {
+      "get": {
+        "description": "returns a user by its username",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "username",
+            "example": "user",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "username not found"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "description": "Login endpoint",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "type": "string",
+                    "example": "user",
+                    "description": "user's username or email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Password123"
+                  }
+                }            
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": { 
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "auth": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "accessToken": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiYjUzOTE1OWItZWI4Ny00NWRkLWFmZjQtM2FjNjQ5MzA1Y2U2IiwidXNlcm5hbWUiOiJtYXRldXMiLCJlbWFpbCI6Im1hdGV1c2FzZmVycmVpcmEyOEBnbWFpbC5jb20iLCJwYXNzd29yZF9oYXNoIjoiJDJiJDA4JGJKTGdBSktHQXdnUS9SZWkwSFVhc3VPeTRSc2k1THZ5M255T2RuNDFqTmxuWjhsbTh4ZnhLIiwiY3JlYXRlZF9hdCI6IjIwMjItMDQtMTFUMTM6NTY6MDQuMDAwWiJ9LCJpYXQiOjE2NDk2ODc3MDksImV4cCI6MTY0OTY4ODYwOX0.zVaJSINSviiISqjNCeJcPvNT5lpHnruOVEfpbtM_VD8",
+                      "description": "JWT auth token" 
+                    }, 
+                    "refreshToken": {
+                      "type": "string",
+                      "example": "c2450d44-9f65-447d-b952-194d62ecdcd9",
+                      "description": "uuid refresh token"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Incorrect password"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "b539159b-eb87-45dd-aff4-3ac649305ce6"
+          },
+          "username": {
+            "type": "string",
+            "example": "user"
+          },
+          "created_at": {
+            "type": "string",
+            "example": "2022-04-11T13:56:04.000Z"
+          },
+          "profile": {
+            "type": "object",
+            "$ref": "#/components/schemas/Profile"
+          },
+          "scraps_received": {
+            "type": "number",
+            "example": 0
+          },
+          "scraps_sent": {
+            "type": "number",
+            "example": 0
+          },
+          "followers": {
+            "type": "number",
+            "example": 0
+          },
+          "follows": {
+            "type": "number",
+            "example": 0
+          }
+        }
+      }
+    }
+  }
 }
