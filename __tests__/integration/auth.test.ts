@@ -29,7 +29,7 @@ describe('Authentication', () => {
 
 		const res = await request(app)
 			.post('/auth/login')
-			.send({username: 'mateus', password: '12341234'});
+			.send({user: 'mateus', password: '12341234'});
 		
 		expect(res.body).toHaveProperty('accessToken');
 		expect(res.body).toHaveProperty('refreshToken');
@@ -51,7 +51,7 @@ describe('Authentication', () => {
 
 		const res = await request(app)
 			.post('/auth/login')
-			.send({username: 'mateus', password: '123412345'});
+			.send({user: 'mateus', password: '123412345'});
 		
 		expect(res.status).toBe(401);
 	})
