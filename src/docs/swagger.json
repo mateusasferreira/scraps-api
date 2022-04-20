@@ -12,6 +12,213 @@
     }
   ],
   "paths": {
+    "/auth/login": {
+      "post": {
+        "description": "Login endpoint",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "type": "string",
+                    "example": "user",
+                    "description": "user's username or email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Password123"
+                  }
+                }            
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": { 
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "auth": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "accessToken": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiYjUzOTE1OWItZWI4Ny00NWRkLWFmZjQtM2FjNjQ5MzA1Y2U2IiwidXNlcm5hbWUiOiJtYXRldXMiLCJlbWFpbCI6Im1hdGV1c2FzZmVycmVpcmEyOEBnbWFpbC5jb20iLCJwYXNzd29yZF9oYXNoIjoiJDJiJDA4JGJKTGdBSktHQXdnUS9SZWkwSFVhc3VPeTRSc2k1THZ5M255T2RuNDFqTmxuWjhsbTh4ZnhLIiwiY3JlYXRlZF9hdCI6IjIwMjItMDQtMTFUMTM6NTY6MDQuMDAwWiJ9LCJpYXQiOjE2NDk2ODc3MDksImV4cCI6MTY0OTY4ODYwOX0.zVaJSINSviiISqjNCeJcPvNT5lpHnruOVEfpbtM_VD8",
+                      "description": "JWT auth token" 
+                    }, 
+                    "refreshToken": {
+                      "type": "string",
+                      "example": "c2450d44-9f65-447d-b952-194d62ecdcd9",
+                      "description": "uuid refresh token"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Incorrect password"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout/{refreshToken}": {
+      "delete": {
+        "description": "Deletes a refresh token from the database",
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "refreshToken"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Missing authentication token"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth_token": [
+              "write:users"
+            ]
+          }
+        ] 
+
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "description": "Generates a new valid JWT auth token through the refresh token",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody":{
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "example": "8c51b5be-386e-4c55-a4c1-725239e030fb", 
+                    "description": "A valid refresh token"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": { 
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "auth": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "accessToken": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiYjUzOTE1OWItZWI4Ny00NWRkLWFmZjQtM2FjNjQ5MzA1Y2U2IiwidXNlcm5hbWUiOiJtYXRldXMiLCJlbWFpbCI6Im1hdGV1c2FzZmVycmVpcmEyOEBnbWFpbC5jb20iLCJwYXNzd29yZF9oYXNoIjoiJDJiJDA4JGJKTGdBSktHQXdnUS9SZWkwSFVhc3VPeTRSc2k1THZ5M255T2RuNDFqTmxuWjhsbTh4ZnhLIiwiY3JlYXRlZF9hdCI6IjIwMjItMDQtMTFUMTM6NTY6MDQuMDAwWiJ9LCJpYXQiOjE2NDk2ODc3MDksImV4cCI6MTY0OTY4ODYwOX0.zVaJSINSviiISqjNCeJcPvNT5lpHnruOVEfpbtM_VD8",
+                      "description": "JWT auth token" 
+                    }, 
+                    "refreshToken": {
+                      "type": "string",
+                      "example": "c2450d44-9f65-447d-b952-194d62ecdcd9",
+                      "description": "uuid refresh token"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Refresh Token Invalid"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users": {
       "post": {
         "description": "Creates a new User",
@@ -258,86 +465,6 @@
             ]
           }
         ] 
-      }
-    },
-    "/auth/login": {
-      "post": {
-        "description": "Login endpoint",
-        "tags": [
-          "Auth"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "user": {
-                    "type": "string",
-                    "example": "user",
-                    "description": "user's username or email"
-                  },
-                  "password": {
-                    "type": "string",
-                    "example": "Password123"
-                  }
-                }            
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": { 
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "auth": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "accessToken": {
-                      "type": "string",
-                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiYjUzOTE1OWItZWI4Ny00NWRkLWFmZjQtM2FjNjQ5MzA1Y2U2IiwidXNlcm5hbWUiOiJtYXRldXMiLCJlbWFpbCI6Im1hdGV1c2FzZmVycmVpcmEyOEBnbWFpbC5jb20iLCJwYXNzd29yZF9oYXNoIjoiJDJiJDA4JGJKTGdBSktHQXdnUS9SZWkwSFVhc3VPeTRSc2k1THZ5M255T2RuNDFqTmxuWjhsbTh4ZnhLIiwiY3JlYXRlZF9hdCI6IjIwMjItMDQtMTFUMTM6NTY6MDQuMDAwWiJ9LCJpYXQiOjE2NDk2ODc3MDksImV4cCI6MTY0OTY4ODYwOX0.zVaJSINSviiISqjNCeJcPvNT5lpHnruOVEfpbtM_VD8",
-                      "description": "JWT auth token" 
-                    }, 
-                    "refreshToken": {
-                      "type": "string",
-                      "example": "c2450d44-9f65-447d-b952-194d62ecdcd9",
-                      "description": "uuid refresh token"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Failure",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "errors": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "message": {
-                            "type": "string",
-                            "example": "Incorrect password"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
       }
     }
   },
