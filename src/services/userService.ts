@@ -10,7 +10,7 @@ class UserService {
 
 		const profile = await userRepo
 			.createQueryBuilder('user')
-			.select(['user.id', 'user.username'])
+			.select(['user.id', 'user.username', 'user.created_at', 'user.email'])
 			.leftJoinAndSelect('user.profile', 'profile')
 			.where('user.username = :username', {username})
 			.loadRelationCountAndMap('user.scraps_received', 'user.scraps_received' )
@@ -27,7 +27,7 @@ class UserService {
 
 		const profile = await userRepo
 			.createQueryBuilder('user')
-			.select(['user.id', 'user.username', 'user.created_at'])
+			.select(['user.id', 'user.username', 'user.created_at', 'user.email' ])
 			.leftJoinAndSelect('user.profile', 'profile')
 			.loadRelationCountAndMap('user.scraps_received', 'user.scraps_received' )
 			.loadRelationCountAndMap('user.scraps_sent', 'user.scraps_sent')
