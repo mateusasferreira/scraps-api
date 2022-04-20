@@ -138,9 +138,11 @@ class UserController {
 				})
 			}
 
-			const { refreshToken } = req.body
+			const { refreshToken } = req.params
+			
 			await userService.logout(refreshToken)
-			res.status(200).json({ message: 'succesfully logged out' })
+
+			res.sendStatus(200)
 		} catch (e) {
 			console.log(e)
 			res.status(400).json({errors: [{ message: e.message}] })

@@ -60,12 +60,6 @@ export default function validate(method: string) {
 				.exists()
 				.withMessage('user missing')
 		]
-	case 'logout':
-		return [
-			body('refreshToken')
-				.exists()
-				.withMessage('missing refresh token'),
-		]
 	case 'recover-password': 
 		return [
 			body('email')
