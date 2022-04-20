@@ -55,9 +55,7 @@ export default function validate(method: string) {
 		return [
 			body('password')
 				.exists()
-				.withMessage('password missing')
-				.isLength({min: 8, max: 20})
-				.withMessage('password must be 8 to 20 characters long'),
+				.withMessage('password missing'),
 			body('user')
 				.exists()
 				.withMessage('user missing')
@@ -83,9 +81,14 @@ export default function validate(method: string) {
 				.withMessage('current password missing'),
 			body('newPassword')
 				.exists()
-				.withMessage('new password password missing')
-				.isLength({min: 8, max: 20})
-				.withMessage('password must be 8 to 20 characters long')
+				.withMessage('password missing')
+				.custom(password => {
+					const passwordMatch = password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)
+
+					if(!passwordMatch) throw new Error('Password must be at least 8 caracters long, one uppercase and one number')
+
+					return true
+				}),
 		]
 	case 'confirm-email':
 		return [
