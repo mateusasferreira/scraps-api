@@ -4,30 +4,20 @@ import { Request, Response } from 'express'
 
 class LikeController {
 	async like(req: Request, res: Response){
-		try {
-			const {id: scrapId} = req.params
-			const {user} = req.body
+		const {id: scrapId} = req.params
+		const {user} = req.body
       
-			await likeService.like(scrapId, user)
+		await likeService.like(scrapId, user)
 
-			res.sendStatus(201)
-		} catch (e) {
-			console.log()
-			res.status(400).json({errors: [{ message: e.message}] })
-		}
+		res.sendStatus(201)
 	}
 
 	async dislike(req: Request, res: Response){
-		try {
-			const {id: scrapId} = req.params
+		const {id: scrapId} = req.params
 
-			await likeService.dislike(scrapId)
+		await likeService.dislike(scrapId)
 
-			res.sendStatus(200)
-		} catch (e) {
-			console.log(e)
-			res.status(400).json({errors: [{ message: 'Failed occorred'}] })
-		}
+		res.sendStatus(200)
 	}
 }
 

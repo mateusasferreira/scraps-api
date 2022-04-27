@@ -1,6 +1,7 @@
 import { Like } from '@models/Like'
 import { Scrap } from '@models/Scrap'
 import { getRepository } from 'typeorm'
+import { HttpException } from '../utils/httpException'
 
 class LikeService {
 	async like(scrapId, user): Promise<void>{
@@ -9,7 +10,7 @@ class LikeService {
 
 		const scrap = await scrapRepo.findOne(scrapId)
 
-		if(!scrap) throw new Error('scrap is not available')
+		if(!scrap) throw new HttpException(400, 'scrap is not available')
 
 		const like = likeRepo.create({
 			user, 

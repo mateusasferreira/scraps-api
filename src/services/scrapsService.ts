@@ -1,5 +1,6 @@
 import { Scrap } from '@models/Scrap'
 import { getRepository } from 'typeorm'
+import { HttpException } from '../utils/httpException'
 
 class ScrapService {
 	async getOne(scrapId): Promise<Scrap> {
@@ -22,7 +23,7 @@ class ScrapService {
 			.loadRelationCountAndMap('scraps.likes', 'scraps.likes')
 			.getOne()
 
-		if(!scrap) throw new Error('Scrap not found')
+		if(!scrap) throw new HttpException(400, 'Scrap not found')
 		
 
 		return scrap
@@ -76,7 +77,7 @@ class ScrapService {
 		const oldScrap = await scrapRepo.findOne(scrapId)
 
 		if (oldScrap.senderId !== user.id)
-			throw new Error('Only the scrap creator can do this operation')
+			throw new HttpException(403, 'Only the scrap creator can do this operation')
 
 		await scrapRepo.update(scrapId, {
 			content: newContent,
@@ -93,7 +94,7 @@ class ScrapService {
 		const scrap = await scrapRepo.findOne(scrapId)
 
 		if (user.id !== scrap.senderId && user.id !== scrap.receiverId)
-			throw new Error('Caller is not scrap creator nor receiver')
+			throw new HttpException(403, 'Caller is not scrap creator nor receiver')
 
 		await scrapRepo.delete(scrap.id)
 	}

@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import { RefreshTokens } from '@models/RefreshTokens'
 import { User } from '@models/User'
 import { createToken } from '@utils/createToken'
+import { HttpException } from '../utils/httpException'
 
 class UserService {
 	async getOne(username): Promise<User>{
@@ -72,11 +73,11 @@ class UserService {
 			]
 		})
 
-		if(!user) throw new Error('User doesn\'t exists')
+		if(!user) throw new HttpException(401, 'Incorrect user and/or password')
 
 		const passwordIsValid = await bcrypt.compare(data.password, user.password_hash)
 
-		if(!passwordIsValid) throw new Error('Incorrect password')
+		if(!passwordIsValid) throw new HttpException(401, 'Incorrect user and/or password')
 
 		const accessToken = createToken(user)
 		
@@ -94,13 +95,13 @@ class UserService {
 
 		const validToken = await rTokenRepo.findOne(rToken)
 
-		if(!validToken) throw new Error('Refresh Token Invalid')
+		if(!validToken) throw new HttpException(401, 'Refresh Token Invalid')
 
 		const userRepo = getRepository(User)
 
 		const user = await userRepo.findOne(validToken.user)
 
-		if(!user) throw new Error('User Invalid')
+		if(!user) throw new HttpException(400, 'User Invalid')
 
 		const newToken = createToken(user)
 
@@ -120,11 +121,11 @@ class UserService {
 
 		const user = await userRepo.findOne(userId)
 
-		if(!user) throw new Error('User doesn\'t exists')
+		if(!user) throw new HttpException(400, 'User doesn\'t exists')
 
 		const oldPasswordIsValid = await bcrypt.compare(oldPassword, user.password_hash)
 		
-		if(!oldPasswordIsValid) throw new Error('current password is invalid')
+		if(!oldPasswordIsValid) throw new HttpException(401, 'current password is invalid')
 
 		const newPasswordHash = await bcrypt.hash(newPassword, 8)
 

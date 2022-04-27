@@ -1,5 +1,6 @@
-import {Router} from 'express'
+import { Router } from 'express'
 import multer from 'multer'
+import asyncHandler from 'express-async-handler'
 
 import profileController from '@controllers/profileController'
 import validate from '@middlewares/validateFields'
@@ -9,9 +10,32 @@ const routes = Router()
 
 const upload = multer()
 
-routes.post('/', upload.single('avatar'), validate('create-profile'), ensureAuthenticated, profileController.create)
-routes.get('/me', ensureAuthenticated, profileController.getMyProfile)
-routes.get('/image/:key', validate('get-image-stream'), profileController.getImageStream)
-routes.put('/', upload.single('avatar'), validate('create-profile'), ensureAuthenticated, profileController.update)
+routes.post(
+	'/',
+	upload.single('avatar'),
+	validate('create-profile'),
+	ensureAuthenticated,
+	asyncHandler(profileController.create.bind(profileController))
+)
+
+routes.get(
+	'/me',
+	ensureAuthenticated,
+	asyncHandler(profileController.getMyProfile.bind(profileController))
+)
+
+routes.get(
+	'/image/:key',
+	validate('get-image-stream'),
+	asyncHandler(profileController.getImageStream.bind(profileController))
+)
+
+routes.put(
+	'/',
+	upload.single('avatar'),
+	validate('create-profile'),
+	ensureAuthenticated,
+	asyncHandler(profileController.update.bind(profileController))
+)
 
 export default routes
