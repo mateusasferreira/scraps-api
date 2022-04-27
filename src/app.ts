@@ -1,26 +1,16 @@
-import express, {Express} from 'express'
+import express from 'express'
 import dotenv from 'dotenv'
 import routes from './routes'
+import errorHandler from './middlewares/errorHandler'
+import helmet from 'helmet'
 
 dotenv.config()
 
-class App {
+const app = express()
 
-	public express: Express
+app.use(helmet())
+app.use(express.json())
+app.use('/', routes)
+app.use(errorHandler)
 
-	constructor(){
-		this.express = express()
-		this.middlewares()
-		this.routes()
-	}
-
-	middlewares(){
-		this.express.use(express.json())
-	}
-
-	routes(){
-		this.express.use('/', routes)
-	}
-}
-
-export default new App().express
+export default app
