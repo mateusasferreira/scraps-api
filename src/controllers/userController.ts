@@ -145,7 +145,7 @@ class UserController {
 			})
 		}
 
-		const { id } = req.body
+		const { id } = req.body.user
 
 		await userService.delete(id)
 
