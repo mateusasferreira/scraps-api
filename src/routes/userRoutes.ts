@@ -9,7 +9,7 @@ import paginate from '@middlewares/paginate'
 const routes = Router()
 
 routes.post(
-	'/',
+	'/signup',
 	validate('create-user'),
 	asyncHandler(userController.create.bind(userController))
 )
@@ -26,8 +26,8 @@ routes.post(
 	asyncHandler(followController.follow.bind(followController))
 )
 
-routes.delete(
-	'/:id/follow',
+routes.post(
+	'/:id/unfollow',
 	ensureAuthenticated,
 	asyncHandler(followController.unfollow.bind(followController))
 )

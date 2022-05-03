@@ -109,7 +109,7 @@ class UserController {
 			})
 		}
 
-		const { refreshToken } = req.params
+		const { refreshToken } = req.body
 			
 		await userService.logout(refreshToken)
 
@@ -149,7 +149,7 @@ class UserController {
 
 		await userService.delete(id)
 
-		res.status(200).json({message: 'sucessfully deleted user'})
+		res.status(204).json({message: 'sucessfully deleted user'})
 	}
 }
 

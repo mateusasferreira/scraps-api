@@ -13,8 +13,8 @@ routes.post(
 	asyncHandler(userController.login.bind(userController))
 )
 
-routes.delete(
-	'/logout/:refreshToken',
+routes.post(
+	'/logout/',
 	ensureAuthenticated,
 	asyncHandler(userController.logout.bind(userController))
 )

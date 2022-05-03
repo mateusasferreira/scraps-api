@@ -15,9 +15,7 @@
     "/auth/login": {
       "post": {
         "description": "Login endpoint",
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -33,7 +31,7 @@
                     "type": "string",
                     "example": "Password123"
                   }
-                }            
+                }
               }
             }
           }
@@ -42,7 +40,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "application/json": { 
+              "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
@@ -53,8 +51,8 @@
                     "accessToken": {
                       "type": "string",
                       "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiYjUzOTE1OWItZWI4Ny00NWRkLWFmZjQtM2FjNjQ5MzA1Y2U2IiwidXNlcm5hbWUiOiJtYXRldXMiLCJlbWFpbCI6Im1hdGV1c2FzZmVycmVpcmEyOEBnbWFpbC5jb20iLCJwYXNzd29yZF9oYXNoIjoiJDJiJDA4JGJKTGdBSktHQXdnUS9SZWkwSFVhc3VPeTRSc2k1THZ5M255T2RuNDFqTmxuWjhsbTh4ZnhLIiwiY3JlYXRlZF9hdCI6IjIwMjItMDQtMTFUMTM6NTY6MDQuMDAwWiJ9LCJpYXQiOjE2NDk2ODc3MDksImV4cCI6MTY0OTY4ODYwOX0.zVaJSINSviiISqjNCeJcPvNT5lpHnruOVEfpbtM_VD8",
-                      "description": "JWT auth token" 
-                    }, 
+                      "description": "JWT auth token"
+                    },
                     "refreshToken": {
                       "type": "string",
                       "example": "c2450d44-9f65-447d-b952-194d62ecdcd9",
@@ -92,18 +90,25 @@
         }
       }
     },
-    "/auth/logout/{refreshToken}": {
-      "delete": {
-        "description": "Deletes a refresh token from the database",
-        "tags": [
-          "Auth"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "refreshToken"
+    "/auth/logout": {
+      "post": {
+        "description": "Logout user by destroying refresh token",
+        "tags": ["Auth"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refreshToken": {
+                    "type": "string",
+                    "example": "user"
+                  }
+                }
+              }
+            }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "Success"
@@ -135,21 +140,16 @@
         },
         "security": [
           {
-            "auth_token": [
-              "write:users"
-            ]
+            "auth_token": ["write:users"]
           }
-        ] 
-
+        ]
       }
     },
     "/auth/refresh": {
       "post": {
         "description": "Generates a new valid JWT auth token through the refresh token",
-        "tags": [
-          "Auth"
-        ],
-        "requestBody":{
+        "tags": ["Auth"],
+        "requestBody": {
           "content": {
             "application/json": {
               "schema": {
@@ -157,7 +157,7 @@
                 "properties": {
                   "token": {
                     "type": "string",
-                    "example": "8c51b5be-386e-4c55-a4c1-725239e030fb", 
+                    "example": "8c51b5be-386e-4c55-a4c1-725239e030fb",
                     "description": "A valid refresh token"
                   }
                 }
@@ -169,7 +169,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "application/json": { 
+              "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
@@ -180,8 +180,8 @@
                     "accessToken": {
                       "type": "string",
                       "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiYjUzOTE1OWItZWI4Ny00NWRkLWFmZjQtM2FjNjQ5MzA1Y2U2IiwidXNlcm5hbWUiOiJtYXRldXMiLCJlbWFpbCI6Im1hdGV1c2FzZmVycmVpcmEyOEBnbWFpbC5jb20iLCJwYXNzd29yZF9oYXNoIjoiJDJiJDA4JGJKTGdBSktHQXdnUS9SZWkwSFVhc3VPeTRSc2k1THZ5M255T2RuNDFqTmxuWjhsbTh4ZnhLIiwiY3JlYXRlZF9hdCI6IjIwMjItMDQtMTFUMTM6NTY6MDQuMDAwWiJ9LCJpYXQiOjE2NDk2ODc3MDksImV4cCI6MTY0OTY4ODYwOX0.zVaJSINSviiISqjNCeJcPvNT5lpHnruOVEfpbtM_VD8",
-                      "description": "JWT auth token" 
-                    }, 
+                      "description": "JWT auth token"
+                    },
                     "refreshToken": {
                       "type": "string",
                       "example": "c2450d44-9f65-447d-b952-194d62ecdcd9",
@@ -192,8 +192,8 @@
               }
             }
           },
-          "400": {
-            "description": "Failure",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -219,12 +219,10 @@
         }
       }
     },
-    "/users": {
+    "/users/signup": {
       "post": {
         "description": "Creates a new User",
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -291,12 +289,12 @@
             }
           }
         }
-      },
+      }
+    },
+    "/users": {
       "get": {
         "description": "Returns a list of users",
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "parameters": [
           {
             "in": "query",
@@ -338,14 +336,194 @@
             }
           }
         }
+      },
+      "delete": {
+        "description": "Delete itself",
+        "tags": ["Users"],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Invalid Token"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth_token": ["write:users"]
+          }
+        ]
+      }
+    },
+    "/users/{id}/follow": {
+      "post": {
+        "description": "To follow a user",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "ID of the followed user"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Users are not allowed to follow themselves"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Invalid Token"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth_token": ["write:users"]
+          }
+        ]
+      }
+    },
+    "/users/{id}/unfollow": {
+      "post": {
+        "description": "To follow a user",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "ID of the followed user"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Users are not allowed to follow themselves"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Invalid Token"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth_token": ["write:users"]
+          }
+        ]
       }
     },
     "/users/{username}": {
       "get": {
         "description": "returns a user by its username",
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "parameters": [
           {
             "in": "path",
@@ -396,9 +574,7 @@
     "/users/change-password": {
       "patch": {
         "description": "Changes a user's password",
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -456,15 +632,37 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Invalid Token"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
           {
-            "auth_token": [
-              "write:users"
-            ]
+            "auth_token": ["write:users"]
           }
-        ] 
+        ]
       }
     }
   },
@@ -517,4 +715,3 @@
     }
   }
 }
-

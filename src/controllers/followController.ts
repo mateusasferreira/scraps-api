@@ -16,7 +16,7 @@ class FollowController {
 
 		await followService.unfollow(id)
 
-		res.sendStatus(200)
+		res.sendStatus(204)
 	}
 }
 
