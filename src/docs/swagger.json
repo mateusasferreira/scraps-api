@@ -663,6 +663,9 @@
     "/profile": {
       "post": {
         "description": "Creates a user's profile",
+        "tags": [
+          "Profile"
+        ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -742,6 +745,9 @@
     "/profile/me": {
       "get": {
         "description": "Returns the logged user's profile",
+        "tags": [
+          "Profile"
+        ],
         "responses": {
           "200": {
             "content": {
