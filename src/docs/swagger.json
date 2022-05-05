@@ -657,6 +657,126 @@
               }
             }
           }
+        }
+      }
+    },
+    "/profile": {
+      "post": {
+        "description": "Creates a user's profile",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "avatar": {
+                    "type": "file",
+                    "format": "binary"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "bio": {
+                    "type": "string",
+                    "example": "I'm a user"
+                  },
+                  "birth_date": {
+                    "type": "string",
+                    "example": "2022-01-01",
+                    "description": "YYYY-MM-DD"
+                  },
+                  "location": {
+                    "type": "string",
+                    "example": "São Paulo - SP"
+                  }
+                }
+              }
+            }
+          }
+        }, 
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Profile"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "name is missing"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth_token": ["write:users"]
+          }
+        ]
+      }
+    }, 
+    "/profile/me": {
+      "get": {
+        "description": "Returns the logged user's profile",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Profile"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "No profile found"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         },
         "security": [
           {
@@ -669,7 +789,6 @@
   "components": {
     "schemas": {
       "User": {
-        "type": "object",
         "properties": {
           "id": {
             "type": "string",
@@ -702,6 +821,42 @@
           "follows": {
             "type": "number",
             "example": 0
+          }
+        }
+      },
+      "Profile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "2ee470a2-857a-424c-b387-2a1491c515e4"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "bio": {
+            "type": "string",
+            "example": "I'm an user"
+          },
+          "picture": {
+            "type": "string",
+            "description": "S3 key",
+            "example": "15f49986-0b55-4caf-a491-cb81c331000c-1651089833132"
+          },
+          "birth_date": {
+            "type": "string",
+            "example": "2022-01-01",
+            "description": "YYYY-MM-DD"
+          },
+          "location": {
+            "type": "string",
+            "example": "São Paulo - SP"
+          },
+          "userId": {
+            "type": "string",
+            "example": "c4af854a-c0d8-42fd-885b-9949526cdb50",
+            "description": "foreign key"
           }
         }
       }

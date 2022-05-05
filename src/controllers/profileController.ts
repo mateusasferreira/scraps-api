@@ -2,6 +2,7 @@ import profileService from '@services/profileService'
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import S3Service from '@services/external/s3'
+import { HttpException } from '../utils/httpException'
 
 class ProfileController {
 	async create(req: Request, res: Response){
@@ -24,13 +25,15 @@ class ProfileController {
 			user: req.body.user
 		})
 			
-		res.status(200).json(profile)
+		res.status(201).json(profile)
 	}
 
 	async getMyProfile(req: Request, res: Response){
 		const {user} = req.body
 			
 		const profile = await profileService.getMyProfile(user)
+
+		if(!profile) throw new HttpException(404, 'No profile found')	
 
 		res.status(200).json(profile)
 	}
