@@ -3,6 +3,8 @@ services:
   database:
     image: mysql:8.0.26
     restart: unless-stopped
+    ports:
+      - 3307:3306
     env_file: ./.env
     environment:
       - MYSQL_DATABASE=$DB_NAME

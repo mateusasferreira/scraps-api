@@ -1,3 +1,4 @@
+import { User } from '@models/User'
 import { Scrap } from '@models/Scrap'
 import { getRepository } from 'typeorm'
 import { HttpException } from '../utils/httpException'
@@ -88,13 +89,14 @@ class ScrapService {
 		return updatedScrap
 	}
 
-	async delete(scrapId, user): Promise<void> {
+	async delete(scrapId, user: User): Promise<void> {
 		const scrapRepo = getRepository(Scrap)
 
-		const scrap = await scrapRepo.findOne(scrapId)
+		const scrap = await scrapRepo.findOne(scrapId) 
 
-		if (user.id !== scrap.senderId && user.id !== scrap.receiverId)
-			throw new HttpException(403, 'Caller is not scrap creator nor receiver')
+		if(scrap && (scrap.senderId !== user.id && !user.permissions.any)) {
+			throw new HttpException(403, 'Not authorized')
+		} 
 
 		await scrapRepo.delete(scrap.id)
 	}

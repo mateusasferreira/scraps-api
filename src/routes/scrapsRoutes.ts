@@ -5,6 +5,7 @@ import likeController from '@controllers/likeController'
 import scrapController from '@controllers/scrapController'
 import ensureAuthenticated from '@middlewares/ensureAuthenticated'
 import validate from '@middlewares/validateFields'
+import authorizate from '../middlewares/ensureAutorizated'
 
 const routes = Router()
 
@@ -30,8 +31,9 @@ routes.patch(
 
 routes.delete(
 	'/:id',
-	validate('delete-scrap'),
+	// validate('delete-scrap'),
 	ensureAuthenticated,
+	authorizate('scrap', 'delete'),
 	asyncHandler(scrapController.delete.bind(scrapController))
 )
 

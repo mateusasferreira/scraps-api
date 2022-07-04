@@ -3,6 +3,7 @@ import { Follow } from './Follow'
 import { Profile } from './Profile'
 import { RefreshTokens } from './RefreshTokens'
 import { Scrap } from './Scrap'
+import { Permission } from './Permission'
 
 @Entity()
 export class User {
@@ -38,4 +39,6 @@ export class User {
 
   @OneToMany(() => Follow, follow => follow.following)
   followedBy: Follow[]
+
+  permissions?: Permission
 }
