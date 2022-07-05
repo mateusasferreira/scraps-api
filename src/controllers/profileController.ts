@@ -22,16 +22,14 @@ class ProfileController {
 			bio: req.body.bio,
 			birth_date: req.body.birth_date,
 			location: req.body.location,
-			user: req.body.user
+			user: req.user
 		})
 			
 		res.status(201).json(profile)
 	}
 
 	async getMyProfile(req: Request, res: Response){
-		const {user} = req.body
-			
-		const profile = await profileService.getMyProfile(user)
+		const profile = await profileService.getMyProfile(req.user)
 
 		if(!profile) throw new HttpException(404, 'No profile found')	
 
@@ -55,7 +53,7 @@ class ProfileController {
 			bio: req.body.bio,
 			birth_date: req.body.birth_date,
 			location: req.body.location,
-			user: req.body.user
+			user: req.user
 		})
 
 		res.status(200).json(profile)

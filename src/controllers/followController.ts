@@ -4,9 +4,8 @@ import { Request, Response } from 'express'
 class FollowController {
 	async follow(req: Request, res: Response){
 		const {id: followingId} = req.params 
-		const {user: follower} = req.body
 
-		await followService.follow(follower, followingId)
+		await followService.follow(req.user, followingId)
 
 		res.sendStatus(201)
 	}

@@ -127,9 +127,9 @@ class UserController {
 			})
 		}
 
-		const { user, oldPassword, newPassword } = req.body
+		const { oldPassword, newPassword } = req.body
 
-		await userService.changePassword(user.id, oldPassword, newPassword)
+		await userService.changePassword(req.user.id, oldPassword, newPassword)
 
 		res.status(200).json({ message: 'password changed' })
 	}
@@ -145,7 +145,7 @@ class UserController {
 			})
 		}
 
-		const { id } = req.body.user
+		const { id } = req.user
 
 		await userService.delete(id)
 

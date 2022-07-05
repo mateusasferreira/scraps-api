@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { HttpException } from '../utils/httpException'
 
-export default function errorHandler(err: any, req: Request, res: Response, _): void{
+export default function errorHandler(err: Error, req: Request, res: Response): void{
 	let statusCode = 500 
 	let message = 'Internal Server Error'
   

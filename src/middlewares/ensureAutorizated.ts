@@ -35,7 +35,7 @@ export default function authorizate(resource: string, action: string) {
 			return
 		}
 
-		req.body.user.permissions = {
+		req.user.permissions = {
 			any: permissionToAny.granted,
 			own: permissionToOwn.granted
 		}

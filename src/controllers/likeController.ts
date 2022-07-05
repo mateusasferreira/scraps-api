@@ -5,9 +5,8 @@ import { Request, Response } from 'express'
 class LikeController {
 	async like(req: Request, res: Response){
 		const {id: scrapId} = req.params
-		const {user} = req.body
       
-		await likeService.like(scrapId, user)
+		await likeService.like(scrapId, req.user)
 
 		res.sendStatus(201)
 	}

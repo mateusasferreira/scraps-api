@@ -12,7 +12,7 @@ export default function ensureAuthenticated(req: Request, res: Response, next: N
 	jwt.verify(token, process.env.JWT_SECRET, (err, decoded: any) => {
 		if (err) throw new HttpException(401, 'Invalid Token')
 		
-		req.body.user = decoded.payload 
+		req.user = decoded.payload 
 		
 		next()
 	}) as any

@@ -32,13 +32,13 @@ class ScrapController {
 			})
 		}
 
-		const {user, content} = req.body
+		const {content} = req.body
 
 		const {receiverId} = req.params
 
 		const scrap = await scrapsService.create({
 			content,
-			senderId: user.id, 
+			senderId: req.user.id, 
 			receiverId
 		})
 
@@ -58,9 +58,9 @@ class ScrapController {
 
 		const {id} = req.params
 
-		const {content, user} = req.body
+		const {content} = req.body
 
-		const scrap = await scrapsService.update(id, content, user)
+		const scrap = await scrapsService.update(id, content, req.user)
 
 		res.status(200).json(scrap)
 	}
@@ -78,9 +78,7 @@ class ScrapController {
 
 		const {id} = req.params
 
-		const {user} = req.body
-
-		await scrapsService.delete(id, user)
+		await scrapsService.delete(id, req.user)
 
 		res.status(200).json({message: 'succesfully deleted scrap'})
 	}
