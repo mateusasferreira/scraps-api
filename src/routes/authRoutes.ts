@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import userController from '@controllers/userController'
+import authController from '@controllers/authController'
 import validate from '@middlewares/validateFields'
 import ensureAuthenticated from '@middlewares/ensureAuthenticated'
 import asyncHandler from 'express-async-handler'
@@ -10,19 +10,19 @@ const routes = Router()
 routes.post(
 	'/login',
 	validate('login'),
-	asyncHandler(userController.login.bind(userController))
+	asyncHandler(authController.login.bind(authController))
 )
 
 routes.post(
 	'/logout/',
 	ensureAuthenticated,
-	asyncHandler(userController.logout.bind(userController))
+	asyncHandler(authController.logout.bind(authController))
 )
 
 routes.post(
 	'/refresh',
 	validate('refresh-token'),
-	asyncHandler(userController.refreshToken.bind(userController))
+	asyncHandler(authController.refreshToken.bind(authController))
 )
 
 export default routes
