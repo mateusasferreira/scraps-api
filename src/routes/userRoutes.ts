@@ -46,11 +46,4 @@ routes.get(
 	asyncHandler(userController.getScraps.bind(userController))
 )
 
-routes.patch(
-	'/change-password',
-	validate('change-password'),
-	ensureAuthenticated,
-	asyncHandler(userController.changePassword.bind(userController))
-)
-
 export default routes

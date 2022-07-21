@@ -25,4 +25,11 @@ routes.post(
 	asyncHandler(authController.refreshToken.bind(authController))
 )
 
+routes.patch(
+	'/change-password',
+	validate('change-password'),
+	ensureAuthenticated,
+	asyncHandler(authController.changePassword.bind(authController))
+)
+
 export default routes
