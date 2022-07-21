@@ -1,5 +1,7 @@
 FROM node:alpine as base 
 
+RUN apk update && apk add bash 
+
 WORKDIR /app
 
 COPY  package*.json ./
