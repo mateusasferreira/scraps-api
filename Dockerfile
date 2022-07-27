@@ -1,6 +1,4 @@
-FROM node:alpine as base 
-
-RUN apk update && apk add bash 
+FROM node:alpine
 
 WORKDIR /app
 
@@ -10,10 +8,10 @@ RUN yarn
 
 COPY . . 
 
-FROM base as production 
+# FROM base as production 
 
-ENV NODE_ENV=production
+# ENV NODE_ENV=production
 
 RUN yarn run build
 
-CMD yarn run start
+CMD yarn run dev

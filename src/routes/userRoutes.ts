@@ -2,9 +2,9 @@ import { Router } from 'express'
 import asyncHandler from 'express-async-handler'
 import userController from '@controllers/userController'
 import followController from '@controllers/followController'
-import ensureAuthenticated from '@middlewares/ensureAuthenticated'
 import validate from '@middlewares/validateFields'
 import paginate from '@middlewares/paginate'
+import passport from 'passport'
 
 const routes = Router()
 
@@ -16,19 +16,19 @@ routes.post(
 
 routes.delete(
 	'/',
-	ensureAuthenticated,
+	passport.authenticate('jwt', {session: false}),
 	asyncHandler(userController.delete.bind(userController))
 )
 
 routes.post(
 	'/:id/follow',
-	ensureAuthenticated,
+	passport.authenticate('jwt', {session: false}),
 	asyncHandler(followController.follow.bind(followController))
 )
 
 routes.post(
 	'/:id/unfollow',
-	ensureAuthenticated,
+	passport.authenticate('jwt', {session: false}),
 	asyncHandler(followController.unfollow.bind(followController))
 )
 
