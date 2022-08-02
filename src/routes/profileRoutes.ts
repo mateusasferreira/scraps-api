@@ -4,7 +4,7 @@ import asyncHandler from 'express-async-handler'
 
 import profileController from '@controllers/profileController'
 import validate from '@middlewares/validateFields'
-import ensureAuthenticated from '@middlewares/ensureAuthenticated'
+import passport from 'passport'
 
 const routes = Router()
 
@@ -14,13 +14,13 @@ routes.post(
 	'/',
 	upload.single('avatar'),
 	validate('create-profile'),
-	ensureAuthenticated,
+	passport.authenticate('jwt', {session: false}),
 	asyncHandler(profileController.create.bind(profileController))
 )
 
 routes.get(
 	'/me',
-	ensureAuthenticated,
+	passport.authenticate('jwt', {session: false}),
 	asyncHandler(profileController.getMyProfile.bind(profileController))
 )
 
@@ -34,7 +34,7 @@ routes.put(
 	'/',
 	upload.single('avatar'),
 	validate('create-profile'),
-	ensureAuthenticated,
+	passport.authenticate('jwt', {session: false}),
 	asyncHandler(profileController.update.bind(profileController))
 )
 

@@ -3,16 +3,16 @@ import asyncHandler from 'express-async-handler'
 
 import likeController from '@controllers/likeController'
 import scrapController from '@controllers/scrapController'
-import ensureAuthenticated from '@middlewares/ensureAuthenticated'
 import validate from '@middlewares/validateFields'
 import authorizate from '../middlewares/ensureAutorizated'
+import passport from 'passport'
 
 const routes = Router()
 
 routes.post(
 	'/:receiverId',
 	validate('create-scrap'),
-	ensureAuthenticated,
+	passport.authenticate('jwt', {session: false}),
 	asyncHandler(scrapController.create.bind(scrapController))
 )
 
@@ -25,27 +25,27 @@ routes.get(
 routes.patch(
 	'/:id',
 	validate('update-scrap'),
-	ensureAuthenticated,
+	passport.authenticate('jwt', {session: false}),
 	asyncHandler(scrapController.update.bind(scrapController))
 )
 
 routes.delete(
 	'/:id',
 	// validate('delete-scrap'),
-	ensureAuthenticated,
+	passport.authenticate('jwt', {session: false}),
 	authorizate('scrap', 'delete'),
 	asyncHandler(scrapController.delete.bind(scrapController))
 )
 
 routes.post(
 	'/:id/like',
-	ensureAuthenticated,
+	passport.authenticate('jwt', {session: false}),
 	asyncHandler(likeController.like.bind(likeController))
 )
 
 routes.delete(
 	'/:id/like',
-	ensureAuthenticated,
+	passport.authenticate('jwt', {session: false}),
 	asyncHandler(likeController.dislike.bind(likeController))
 )
 

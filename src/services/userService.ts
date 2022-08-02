@@ -79,7 +79,7 @@ class UserService {
 
 		if(!passwordIsValid) throw new HttpException(401, 'Incorrect user and/or password')
 
-		const accessToken = createToken(user)
+		const accessToken = createToken(user.id)
 		
 		const refreshToken = await refreshTokenRepo.create({
 			user: user
@@ -103,7 +103,7 @@ class UserService {
 
 		if(!user) throw new HttpException(400, 'User Invalid')
 
-		const newToken = createToken(user)
+		const newToken = createToken(user.id)
 
 		return {accessToken: newToken, refreshToken: validToken.token}
 	}
