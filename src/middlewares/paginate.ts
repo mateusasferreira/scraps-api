@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 
-export default function paginate(req: Request, res: Response, next: NextFunction): void {
+function paginate(req: Request, res: Response, next: NextFunction): void {
 	const limit: number = parseInt(req.query.limit as string) || 10
 	const page: number = parseInt(req.query.page as string) || 1
 
@@ -11,3 +11,5 @@ export default function paginate(req: Request, res: Response, next: NextFunction
   
 	next()
 }
+
+export default paginate

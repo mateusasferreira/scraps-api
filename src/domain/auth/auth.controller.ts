@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
-import userService from '@services/userService'
+import userService from '@domain/auth/auth.service'
 
 class AuthController {
 	async login(req: Request, res: Response) {

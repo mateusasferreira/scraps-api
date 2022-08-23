@@ -1,4 +1,4 @@
-import scrapsService from '@services/scrapsService'
+import scrapsService from '@domain/scrap/scrap.service'
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 
@@ -81,6 +81,22 @@ class ScrapController {
 		await scrapsService.delete(id, req.user)
 
 		res.status(200).json({message: 'succesfully deleted scrap'})
+	}
+
+	async like(req: Request, res: Response){
+		const {id: scrapId} = req.params
+      
+		await scrapsService.like(scrapId, req.user)
+
+		res.sendStatus(201)
+	}
+
+	async dislike(req: Request, res: Response){
+		const {id: scrapId} = req.params
+
+		await scrapsService.dislike(scrapId)
+
+		res.sendStatus(200)
 	}
 } 
 

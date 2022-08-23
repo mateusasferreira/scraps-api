@@ -1,8 +1,8 @@
-import profileService from '@services/profileService'
+import profileService from '@domain/profile/profile.service'
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
-import S3Service from '@services/external/s3'
-import { HttpException } from '../utils/httpException'
+import S3Service from '@services/s3'
+import { HttpException } from '@utils/httpException'
 
 class ProfileController {
 	async create(req: Request, res: Response){

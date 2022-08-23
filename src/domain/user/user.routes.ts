@@ -1,10 +1,9 @@
 import { Router } from 'express'
 import asyncHandler from 'express-async-handler'
-import userController from '@controllers/userController'
-import followController from '@controllers/followController'
-import validate from '@middlewares/validateFields'
+import userController from '@domain/user/user.controller'
+import validate from '@domain/user/user.validators'
 import paginate from '@middlewares/paginate'
-import passport from 'passport'
+import authenticate from '@middlewares/authenticate'
 
 const routes = Router()
 
@@ -16,20 +15,20 @@ routes.post(
 
 routes.delete(
 	'/',
-	passport.authenticate('jwt', {session: false}),
+	authenticate,
 	asyncHandler(userController.delete.bind(userController))
 )
 
 routes.post(
 	'/:id/follow',
-	passport.authenticate('jwt', {session: false}),
-	asyncHandler(followController.follow.bind(followController))
+	authenticate,
+	asyncHandler(userController.follow.bind(userController))
 )
 
 routes.post(
 	'/:id/unfollow',
-	passport.authenticate('jwt', {session: false}),
-	asyncHandler(followController.unfollow.bind(followController))
+	authenticate,
+	asyncHandler(userController.unfollow.bind(userController))
 )
 
 routes.get(

@@ -1,7 +1,8 @@
 import { User } from '@models/User'
 import { Scrap } from '@models/Scrap'
 import { getRepository } from 'typeorm'
-import { HttpException } from '../utils/httpException'
+import { HttpException } from '@utils/httpException'
+import { Like } from '@models/Like'
 
 class ScrapService {
 	async getOne(scrapId): Promise<Scrap> {
@@ -99,6 +100,31 @@ class ScrapService {
 		} 
 
 		await scrapRepo.delete(scrap.id)
+	}
+
+	async like(scrapId, user): Promise<void>{
+		const scrapRepo = getRepository(Scrap)
+		const likeRepo = getRepository(Like)
+
+		const scrap = await scrapRepo.findOne(scrapId)
+
+		if(!scrap) throw new HttpException(400, 'scrap is not available')
+
+		const like = likeRepo.create({
+			user, 
+			scrap
+		})
+
+		await likeRepo.save(like)
+	}
+
+	async dislike(scrapId): Promise<void>{
+		const likeRepo = getRepository(Like)
+		const scrapRepo = getRepository(Scrap)
+
+		const scrap = await scrapRepo.findOne(scrapId)
+		
+		await likeRepo.delete({scrap})
 	}
 }
 

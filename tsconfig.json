@@ -16,7 +16,8 @@
       "@middlewares/*": ["./src/middlewares/*"],
       "@repositories/*": ["./src/repositories/*"],
       "@utils/*": ["./src/utils/*"],
-      "@docs/*": ["./src/docs/*"]
+      "@docs/*": ["./src/docs/*"],
+      "@domain/*": ["./src/domain/*"]
     },                                      
     "typeRoots": [
       "./node_modules/@types",

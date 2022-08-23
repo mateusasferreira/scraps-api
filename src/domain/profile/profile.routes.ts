@@ -2,9 +2,9 @@ import { Router } from 'express'
 import multer from 'multer'
 import asyncHandler from 'express-async-handler'
 
-import profileController from '@controllers/profileController'
-import validate from '@middlewares/validateFields'
-import passport from 'passport'
+import profileController from '@domain/profile/profile.controller'
+import validate from '@domain/profile/profile.validators'
+import authenticate from '@middlewares/authenticate'
 
 const routes = Router()
 
@@ -14,13 +14,13 @@ routes.post(
 	'/',
 	upload.single('avatar'),
 	validate('create-profile'),
-	passport.authenticate('jwt', {session: false}),
+	authenticate,
 	asyncHandler(profileController.create.bind(profileController))
 )
 
 routes.get(
 	'/me',
-	passport.authenticate('jwt', {session: false}),
+	authenticate,
 	asyncHandler(profileController.getMyProfile.bind(profileController))
 )
 
@@ -34,7 +34,7 @@ routes.put(
 	'/',
 	upload.single('avatar'),
 	validate('create-profile'),
-	passport.authenticate('jwt', {session: false}),
+	authenticate,
 	asyncHandler(profileController.update.bind(profileController))
 )
 

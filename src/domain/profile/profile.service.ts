@@ -1,5 +1,5 @@
 import { Profile } from '@models/Profile'
-import S3Service from '@services/external/s3'
+import S3Service from '@services/s3'
 import {getRepository} from 'typeorm'
 
 class ProfileService {

@@ -2,10 +2,10 @@ import { Router } from 'express'
 import swaggerUi from 'swagger-ui-express'
 import swaggerDocs from '@docs/swagger.json'
 
-import userRoutes from '@routes/userRoutes'
-import authRoutes from '@routes/authRoutes'
-import profileRoutes from '@routes/profileRoutes'
-import scrapsRoutes from '@routes/scrapsRoutes'
+import userRoutes from '@domain/user/user.routes'
+import authRoutes from '@domain/auth/auth.routes'
+import profileRoutes from '@domain/profile/profile.routes'
+import scrapsRoutes from '@domain/scrap/scrap.routes'
 
 const routes = Router()
 

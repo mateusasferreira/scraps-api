@@ -23,7 +23,7 @@ const methods = {
   
 }
 
-export default function authorizate(resource: string, action: string) {
+function grantAccess(resource: string, action: string) {
 	return function(req: Request, res: Response, next: NextFunction) {
 		const permissions = ac.can('user')
 		const actions = methods[action]
@@ -43,3 +43,5 @@ export default function authorizate(resource: string, action: string) {
 		next()
 	}
 }
+
+export default grantAccess

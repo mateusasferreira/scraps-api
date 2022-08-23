@@ -1,9 +1,9 @@
 import { Router } from 'express'
 
-import authController from '@controllers/authController'
-import validate from '@middlewares/validateFields'
+import authController from './auth.controller'
+import validate from './auth.validators'
 import asyncHandler from 'express-async-handler'
-import passport from 'passport'
+import authenticate from '@middlewares/authenticate'
 
 const routes = Router()
 
@@ -15,7 +15,7 @@ routes.post(
 
 routes.post(
 	'/logout/',
-	passport.authenticate('jwt', {session: false}),
+	authenticate,
 	asyncHandler(authController.logout.bind(authController))
 )
 
@@ -28,7 +28,7 @@ routes.post(
 routes.patch(
 	'/change-password',
 	validate('change-password'),
-	passport.authenticate('jwt', {session: false}),
+	authenticate,
 	asyncHandler(authController.changePassword.bind(authController))
 )
 

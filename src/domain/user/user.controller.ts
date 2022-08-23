@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import userService from '@services/userService'
+import userService from '@domain/user/user.service'
 import { validationResult } from 'express-validator'
-import scrapsService from '@services/scrapsService'
-import { HttpException } from '../utils/httpException'
+import scrapsService from '@domain/scrap/scrap.service'
+import { HttpException } from '@utils/httpException'
 
 class UserController {
 	async get(req: Request, res: Response){
@@ -71,6 +71,22 @@ class UserController {
 		await userService.delete(id)
 
 		res.status(204).json({message: 'sucessfully deleted user'})
+	}
+
+	async follow(req: Request, res: Response){
+		const {id: followingId} = req.params 
+
+		await userService.follow(req.user, followingId)
+
+		res.sendStatus(201)
+	}
+  
+	async unfollow(req: Request, res: Response){
+		const {id} = req.params
+
+		await userService.unfollow(id)
+
+		res.sendStatus(204)
 	}
 }
 
