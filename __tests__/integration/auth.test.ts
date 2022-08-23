@@ -5,7 +5,7 @@ import {RefreshTokens} from '../../src/models/RefreshTokens'
 import bcrypt from 'bcrypt'
 import typeorm from 'typeorm'
 
-const mockedTypeorm = typeorm as jest.Mocked<typeof typeorm>
+const mockedTypeorm = typeorm as jest.Mocked<any>
 
 beforeAll(() => {
 	jest.clearAllMocks()
@@ -16,14 +16,14 @@ describe('Authentication', () => {
 		
 		const password = await bcrypt.hash('12341234', 8);
 		
-		(mockedTypeorm.getRepository(User).findOne as jest.Mock).mockResolvedValue({
+		mockedTypeorm.getRepository().findOne.mockResolvedValue({
 			username: 'example',
 			email: 'example@email.com',
 			password_hash: password,
 			confirmed: true,		
 		});
 
-		(mockedTypeorm.getRepository(RefreshTokens).create as jest.Mock).mockResolvedValue({
+		mockedTypeorm.getRepository().create.mockResolvedValue({
 			token: '1'
 		});
 
@@ -38,14 +38,14 @@ describe('Authentication', () => {
 	it('should not provide a token if credentials are invalid', async () => {
 		const password = await bcrypt.hash('12341234', 8);
 		
-		(mockedTypeorm.getRepository(User).findOne as jest.Mock).mockResolvedValue({
+		mockedTypeorm.getRepository().findOne.mockResolvedValue({
 			username: 'example',
 			email: 'example@email.com',
 			password_hash: password,
 			confirmed: true,		
 		});
 
-		(mockedTypeorm.getRepository(RefreshTokens).create as jest.Mock).mockResolvedValue({
+		mockedTypeorm.getRepository().create.mockResolvedValue({
 			token: '1'
 		});
 

@@ -26,7 +26,6 @@ routes.get(
 
 routes.get(
 	'/image/:key',
-	validate('get-image-stream'),
 	asyncHandler(profileController.getImageStream.bind(profileController))
 )
 
