@@ -12,7 +12,7 @@ async function authenticate(req: Request, res: Response, next: NextFunction){
 	
 		const [,token] = req.headers['authorization'].split(' ')
 
-		var decoded: any = jwt.verify(token, token);
+		var decoded: any = jwt.verify(token, process.env.JWT_SECRET);
 
 		const userRepo = getRepository(User)
 

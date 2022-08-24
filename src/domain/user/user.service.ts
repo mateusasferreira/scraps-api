@@ -4,11 +4,17 @@ import { User } from '@models/User'
 import { Follow } from '@models/Follow'
 import { HttpException } from '@utils/httpException'
 import { Service } from 'typedi'
+import { Dao } from '../common/data.service'
 
 @Service()
 export class UserService {
+
+	constructor(
+		private dao: Dao
+	) {}
+
 	async getOne(username): Promise<User>{
-		const userRepo = getRepository(User)
+		const userRepo = this.dao.get<User>(User)
 
 		const profile = await userRepo
 			.createQueryBuilder('user')
@@ -25,7 +31,7 @@ export class UserService {
 	}
 
 	async getMany(options): Promise<[User[], number]>{
-		const userRepo = getRepository(User)
+		const userRepo = this.dao.get<User>(User)
 
 		const profile = await userRepo
 			.createQueryBuilder('user')
@@ -46,7 +52,7 @@ export class UserService {
 	}
 
 	async create(data): Promise<User>{
-		const userRepo = getRepository(User)
+		const userRepo = this.dao.get<User>(User)
 
 		const passwordHash = await bcrypt.hash(data.password, 8)
 
@@ -64,14 +70,14 @@ export class UserService {
 	}
 
 	async delete(id): Promise<void>{
-		const userRepo = getRepository(User)
+		const userRepo = this.dao.get<User>(User)
 
 		await userRepo.delete(id)
 	}
 
 	async follow(follower, followingId): Promise<void>{
-		const userRepo = getRepository(User)
-		const followRepo = getRepository(Follow)
+		const userRepo = this.dao.get<User>(User)
+		const followRepo = this.dao.get<Follow>(Follow)
 
 		if(follower.id === followingId) throw new HttpException(400, 'Users are not allowed to follow themselves')
 
@@ -89,7 +95,7 @@ export class UserService {
   
 	async unfollow(followingId): Promise<void>{
 		const followRepo = getRepository(Follow)
-		const userRepo = getRepository(User)
+		const userRepo = this.dao.get<User>(User)
 
 		const following = await userRepo.findOne(followingId)
 

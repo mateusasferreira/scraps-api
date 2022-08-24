@@ -131,7 +131,7 @@ module.exports = {
 	// setupFiles: ['<rootDir>/ormconfig.js'],
 
 	// A list of paths to modules that run some code to configure or set up the testing framework before each test
-	setupFilesAfterEnv: ['<rootDir>/ormconfig.js'],
+	setupFilesAfterEnv: ['<rootDir>/ormconfig.js'/*, '<rootDir>/jest.setup.ts'*/],
 
 	// The number of seconds after which a test is considered as slow and reported as such in the results.
 	// slowTestThreshold: 5,
@@ -149,9 +149,10 @@ module.exports = {
 	// testLocationInResults: false,
 
 	// The glob patterns Jest uses to detect test files
-	testMatch: [
-	  "**/__tests__/**/*.test.[jt]s?(x)",
-	],
+	// testMatch: [
+	//   "**/__tests__/**/*.test.[jt]s?(x)",
+	// 	"**/src/**/*.spec.[jt]s?(x)"
+	// ],
 
 	// An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
 	// testPathIgnorePatterns: [

@@ -2,7 +2,7 @@ import { body } from "express-validator";
 import { getRepository } from "typeorm";
 import { User } from "../../models/User";
 
-export default function validate(method) {
+function validate(method) {
 	switch (method) {
 		case "create-user":
 			return [
@@ -58,3 +58,5 @@ export default function validate(method) {
 			];
 	}
 }
+
+export default validate
