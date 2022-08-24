@@ -1,9 +1,12 @@
 import { Router } from 'express'
 import asyncHandler from 'express-async-handler'
-import userController from '@domain/user/user.controller'
+import { UserController } from '@domain/user/user.controller'
 import validate from '@domain/user/user.validators'
 import paginate from '@middlewares/paginate'
 import authenticate from '@middlewares/authenticate'
+import Container from 'typedi'
+
+const userController = Container.get(UserController)
 
 const routes = Router()
 
@@ -28,7 +31,7 @@ routes.post(
 routes.post(
 	'/:id/unfollow',
 	authenticate,
-	asyncHandler(userController.unfollow.bind(userController))
+	asyncHandler(userController.unfollow)
 )
 
 routes.get(
@@ -37,12 +40,12 @@ routes.get(
 	asyncHandler(userController.getMany.bind(userController))
 )
 
-routes.get('/:username', asyncHandler(userController.get.bind(userController)))
+routes.get('/:username', asyncHandler(userController.get))
 
 routes.get(
 	'/:id/scraps',
 	paginate,
-	asyncHandler(userController.getScraps.bind(userController))
+	asyncHandler(userController.getScraps)
 )
 
 export default routes

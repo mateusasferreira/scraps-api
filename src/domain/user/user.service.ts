@@ -3,8 +3,10 @@ import bcrypt from 'bcrypt'
 import { User } from '@models/User'
 import { Follow } from '@models/Follow'
 import { HttpException } from '@utils/httpException'
+import { Service } from 'typedi'
 
-class UserService {
+@Service()
+export class UserService {
 	async getOne(username): Promise<User>{
 		const userRepo = getRepository(User)
 
@@ -94,5 +96,3 @@ class UserService {
 		await followRepo.delete({following}) 
 	}
 }
-
-export default new UserService()
