@@ -5,13 +5,12 @@ import { Follow } from '@models/Follow'
 import { HttpException } from '@utils/httpException'
 import { Service } from 'typedi'
 import { Dao } from '../common/data.service'
+import { CreateUserDto } from './user.dtos'
 
 @Service()
 export class UserService {
 
-	constructor(
-		private dao: Dao
-	) {}
+	constructor(private dao: Dao){}
 
 	async getOne(username): Promise<User>{
 		const userRepo = this.dao.get<User>(User)
@@ -51,7 +50,7 @@ export class UserService {
 		return [profile, count]
 	}
 
-	async create(data): Promise<User>{
+	async create(data: CreateUserDto): Promise<User>{
 		const userRepo = this.dao.get<User>(User)
 
 		const passwordHash = await bcrypt.hash(data.password, 8)
