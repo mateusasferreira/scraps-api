@@ -8,7 +8,8 @@ const dataSource = new DataSource({
 	username: process.env.DB_USERNAME,
 	password: process.env.DB_PASSWORD,
 	database: process.env.DB_NAME,
-	entities: [path.join(__dirname, '../models/*.{js,ts}')]
+	entities: [path.join(__dirname, '../models/*.{js,ts}')],
+	logging: true
 })
 
 dataSource.initialize()

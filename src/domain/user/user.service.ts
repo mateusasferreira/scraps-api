@@ -5,6 +5,7 @@ import { HttpException } from '@utils/httpException'
 import { Service } from 'typedi'
 import { CreateUserDto, UserSearchOptions } from './user.dtos'
 import {DataSource} from 'typeorm'
+import { Profile } from '../../models/Profile'
 
 @Service()
 export class UserService {
@@ -37,28 +38,27 @@ export class UserService {
 	async getMany(options: UserSearchOptions): Promise<[User[], number]>{
 		const userRepo = this.dataSource.getRepository(User)
 
-		const profile = await userRepo
-			.createQueryBuilder('user')
+		const profile = await this.dataSource
+			.createQueryBuilder()
 			.select([
-				'user.id', 
-				'user.username', 
-				'user.created_at', 
-				'user.email', 
-				// 'profile.name', 
-				// 'profile.bio'
+				'user.username',
+				'user.id',
+				'user.email',
+				'user.created_at',
+				'profile.name'
 			])
-			// .addSelect('profile.name', 'name')
-			// .leftJoin('user.profile', 'profile', 'user.id = profile.userId')
-			// .loadRelationCountAndMap('user.scraps_received', 'user.scraps_received' )
-			// .loadRelationCountAndMap('user.scraps_sent', 'user.scraps_sent')
-			// .loadRelationCountAndMap('user.followers', 'user.followedBy')
-			// .loadRelationCountAndMap('user.follows', 'user.following')
+			.from(User, 'user')
+			.leftJoin(Profile, 'profile', 'profile.userId = user.id')
+			.loadRelationCountAndMap('user.scraps_received', 'user.scraps_received' )
+			.loadRelationCountAndMap('user.scraps_sent', 'user.scraps_sent')
+			.loadRelationCountAndMap('user.followers', 'user.followedBy')
+			.loadRelationCountAndMap('user.following', 'user.following')
+			.where(builder => {
+				if(options.username) {
+					builder.where(`user.username like %:username%`, {username: options.username} )
+				}
+			})
 			.getMany()
-
-		// if(options.orderBy) {
-		// 	query.orderBy()
-		// }
-
 
 		const count = await userRepo.count()
 
