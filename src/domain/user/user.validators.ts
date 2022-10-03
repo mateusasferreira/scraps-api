@@ -1,5 +1,6 @@
 import { body } from "express-validator";
 import { getRepository } from "typeorm";
+import dataSource from "../../config/database.config";
 import { User } from "../../models/User";
 
 function validate(method) {
@@ -12,7 +13,7 @@ function validate(method) {
 					.isEmail()
 					.withMessage("email is not valid")
 					.custom(async (email) => {
-						const userRepo = getRepository(User);
+						const userRepo = dataSource.getRepository(User);
 
 						const emailIsTaken = await userRepo.findOne({
 							where: { email },
@@ -44,7 +45,7 @@ function validate(method) {
 					.isLength({ min: 4, max: 20 })
 					.withMessage("username must be 8 to 20 characters long")
 					.custom(async (username) => {
-						const userRepo = getRepository(User);
+						const userRepo = dataSource.getRepository(User);
 
 						const usernameIsTaken = await userRepo.findOne({
 							where: { username },

@@ -1,24 +1,29 @@
-import { getRepository, } from 'typeorm'
 import bcrypt from 'bcrypt'
 import { User } from '@models/User'
 import { Follow } from '@models/Follow'
 import { HttpException } from '@utils/httpException'
 import { Service } from 'typedi'
-import { Dao } from '../common/data.service'
-import { CreateUserDto } from './user.dtos'
+import { CreateUserDto, UserSearchOptions } from './user.dtos'
+import {DataSource} from 'typeorm'
 
 @Service()
 export class UserService {
 
-	constructor(private dao: Dao){}
+	constructor(private dataSource: DataSource){}
 
 	async getOne(username): Promise<User>{
-		const userRepo = this.dao.get<User>(User)
+		const userRepo = this.dataSource.getRepository(User)
 
 		const profile = await userRepo
 			.createQueryBuilder('user')
-			.select(['user.id', 'user.username', 'user.created_at', 'user.email'])
-			.leftJoinAndSelect('user.profile', 'profile')
+			.select([
+				'user.id', 
+				'user.username', 
+				'user.created_at', 
+				'user.email', 
+				'profile.name', 
+				'profile.bio'])
+			.leftJoin('user.profile', 'profile')
 			.where('user.username = :username', {username})
 			.loadRelationCountAndMap('user.scraps_received', 'user.scraps_received' )
 			.loadRelationCountAndMap('user.scraps_sent', 'user.scraps_sent')
@@ -29,21 +34,31 @@ export class UserService {
 		return profile
 	}
 
-	async getMany(options): Promise<[User[], number]>{
-		const userRepo = this.dao.get<User>(User)
+	async getMany(options: UserSearchOptions): Promise<[User[], number]>{
+		const userRepo = this.dataSource.getRepository(User)
 
 		const profile = await userRepo
 			.createQueryBuilder('user')
-			.select(['user.id', 'user.username', 'user.created_at', 'user.email' ])
-			.leftJoinAndSelect('user.profile', 'profile')
-			.loadRelationCountAndMap('user.scraps_received', 'user.scraps_received' )
-			.loadRelationCountAndMap('user.scraps_sent', 'user.scraps_sent')
-			.loadRelationCountAndMap('user.followers', 'user.followedBy')
-			.loadRelationCountAndMap('user.follows', 'user.following')
-			.orderBy('user.created_at', 'DESC')
-			.take(options.limit)
-			.skip(options.skip)
+			.select([
+				'user.id', 
+				'user.username', 
+				'user.created_at', 
+				'user.email', 
+				// 'profile.name', 
+				// 'profile.bio'
+			])
+			// .addSelect('profile.name', 'name')
+			// .leftJoin('user.profile', 'profile', 'user.id = profile.userId')
+			// .loadRelationCountAndMap('user.scraps_received', 'user.scraps_received' )
+			// .loadRelationCountAndMap('user.scraps_sent', 'user.scraps_sent')
+			// .loadRelationCountAndMap('user.followers', 'user.followedBy')
+			// .loadRelationCountAndMap('user.follows', 'user.following')
 			.getMany()
+
+		// if(options.orderBy) {
+		// 	query.orderBy()
+		// }
+
 
 		const count = await userRepo.count()
 
@@ -51,7 +66,7 @@ export class UserService {
 	}
 
 	async create(data: CreateUserDto): Promise<User>{
-		const userRepo = this.dao.get<User>(User)
+		const userRepo = this.dataSource.getRepository(User)
 
 		const passwordHash = await bcrypt.hash(data.password, 8)
 
@@ -69,14 +84,14 @@ export class UserService {
 	}
 
 	async delete(id): Promise<void>{
-		const userRepo = this.dao.get<User>(User)
+		const userRepo = this.dataSource.getRepository(User)
 
 		await userRepo.delete(id)
 	}
 
 	async follow(follower, followingId): Promise<void>{
-		const userRepo = this.dao.get<User>(User)
-		const followRepo = this.dao.get<Follow>(Follow)
+		const userRepo = this.dataSource.getRepository(User)
+		const followRepo = this.dataSource.getRepository(Follow)
 
 		if(follower.id === followingId) throw new HttpException(400, 'Users are not allowed to follow themselves')
 
@@ -93,8 +108,8 @@ export class UserService {
 	}
   
 	async unfollow(followingId): Promise<void>{
-		const followRepo = getRepository(Follow)
-		const userRepo = this.dao.get<User>(User)
+		const followRepo = this.dataSource.getRepository(Follow)
+		const userRepo = this.dataSource.getRepository(User)
 
 		const following = await userRepo.findOne(followingId)
 

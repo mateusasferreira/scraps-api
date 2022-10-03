@@ -12,6 +12,6 @@ COPY . .
 
 # ENV NODE_ENV=production
 
-RUN yarn run build
+# RUN yarn run build
 
 CMD yarn run dev

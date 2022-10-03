@@ -1,5 +1,5 @@
 export const UserDaoMock = {
-  get(){
+  getRepository(){
     return UserRepo
   }
 }

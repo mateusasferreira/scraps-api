@@ -20,9 +20,9 @@ export class UserController {
 	}
 
 	async getMany(req: Request, res: Response){
-		const {limit, skip} = req.body
+		const {limit, page} = req.body
 			
-		const [results, total] = await this.userService.getMany({limit, skip})
+		const [results, total] = await this.userService.getMany({limit, page})
 
 		res.status(200).json({
 			total,
