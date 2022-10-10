@@ -5,9 +5,9 @@ export interface CreateUserDto {
 }
 
 export interface UserSearchOptions {
-  limit?: number;
-  page?: number;
+  limit?: string;
+  page?: string;
   username?: string;
   orderBy?: string;
-  direction?: string;
+  direction?: 'ASC' | 'DESC';
 }

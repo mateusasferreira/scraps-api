@@ -6,39 +6,43 @@ import { Service } from 'typedi'
 import { CreateUserDto, UserSearchOptions } from './user.dtos'
 import {DataSource} from 'typeorm'
 import { Profile } from '../../models/Profile'
+import { Paginated } from '../../utils/pagination'
 
 @Service()
 export class UserService {
 
 	constructor(private dataSource: DataSource){}
 
-	async getOne(username): Promise<User>{
+	async getOne(id): Promise<User>{
 		const userRepo = this.dataSource.getRepository(User)
 
-		const profile = await userRepo
-			.createQueryBuilder('user')
+		const user = await userRepo
+			.createQueryBuilder()
 			.select([
-				'user.id', 
-				'user.username', 
-				'user.created_at', 
-				'user.email', 
-				'profile.name', 
-				'profile.bio'])
-			.leftJoin('user.profile', 'profile')
-			.where('user.username = :username', {username})
+				'user.username',
+				'user.id',
+				'user.email',
+				'user.created_at',
+				'profile.name'
+			])
+			.from(User, 'user')
+			.leftJoin(Profile, 'profile', 'profile.userId = user.id')
 			.loadRelationCountAndMap('user.scraps_received', 'user.scraps_received' )
 			.loadRelationCountAndMap('user.scraps_sent', 'user.scraps_sent')
 			.loadRelationCountAndMap('user.followers', 'user.followedBy')
-			.loadRelationCountAndMap('user.follows', 'user.following')
+			.loadRelationCountAndMap('user.following', 'user.following')
+			.where('user.id = :id', {id})
 			.getOne()
 
-		return profile
+		if(!user) throw new HttpException(404, 'User not found')
+
+		return user
 	}
 
-	async getMany(options: UserSearchOptions): Promise<[User[], number]>{
+	async getMany(options: UserSearchOptions): Promise<Paginated<User>>{
 		const userRepo = this.dataSource.getRepository(User)
 
-		const profile = await this.dataSource
+		const query = this.dataSource
 			.createQueryBuilder()
 			.select([
 				'user.username',
@@ -55,14 +59,41 @@ export class UserService {
 			.loadRelationCountAndMap('user.following', 'user.following')
 			.where(builder => {
 				if(options.username) {
-					builder.where(`user.username like %:username%`, {username: options.username} )
+					builder.where(`lower(user.username) like :username`, {username: `%${options.username}%`} )
 				}
-			})
-			.getMany()
+		})
+			
+		if(options.limit) {
+			query.take(parseInt(options.limit))
+		}
+		
+		if(options.page) {
+			query.skip((parseInt(options.page) - 1) * parseInt(options.limit))
+		}
 
-		const count = await userRepo.count()
+		if(options.orderBy) {
+			const direction = options.direction || 'ASC'
+			switch (options.orderBy) {
+				case 'username':
+					query.orderBy('user.username', direction)
+					break;
+				case 'email':
+					query.orderBy('user.email', direction)
+					break;
+				default:
+					query.orderBy('user.username', direction)
+					break;
+			}
+		}
 
-		return [profile, count]
+		const total = await userRepo.count()
+
+		const data = await query.getMany()
+
+		return {
+			data,
+			total 
+		}
 	}
 
 	async create(data: CreateUserDto): Promise<User>{

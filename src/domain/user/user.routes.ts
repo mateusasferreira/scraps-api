@@ -36,11 +36,10 @@ routes.post(
 
 routes.get(
 	'/',
-	paginate,
 	asyncHandler(userController.getMany.bind(userController))
 )
 
-routes.get('/:username', asyncHandler(userController.get))
+routes.get('/:id', asyncHandler(userController.get.bind(userController)))
 
 routes.get(
 	'/:id/scraps',

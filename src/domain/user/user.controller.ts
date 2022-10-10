@@ -10,24 +10,18 @@ export class UserController {
 	constructor(private userService: UserService) {}
 	
 	async get(req: Request, res: Response){
-		const {username} = req.params
+		const {id} = req.params
 
-		const user = await this.userService.getOne(username)
-
-		if(!user) throw new HttpException(404, 'User not found')
+		const user = await this.userService.getOne(id)
 
 		res.status(200).json(user)
 	}
 
 	async getMany(req: Request, res: Response){
-		const {limit, page} = req.body
-			
-		const [results, total] = await this.userService.getMany({limit, page})
 
-		res.status(200).json({
-			total,
-			results
-		})
+		const response = await this.userService.getMany(req.query)
+
+		res.status(200).json(response)
 	}
 
 	async getScraps(req: Request, res: Response){
