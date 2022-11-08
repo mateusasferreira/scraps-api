@@ -2,7 +2,6 @@ import { Router } from 'express'
 import asyncHandler from 'express-async-handler'
 import { UserController } from '@domain/user/user.controller'
 import validate from '@domain/user/user.validators'
-import paginate from '@middlewares/paginate'
 import authenticate from '@middlewares/authenticate'
 import Container from 'typedi'
 
@@ -43,7 +42,6 @@ routes.get('/:id', asyncHandler(userController.get.bind(userController)))
 
 routes.get(
 	'/:id/scraps',
-	paginate,
 	asyncHandler(userController.getScraps)
 )
 

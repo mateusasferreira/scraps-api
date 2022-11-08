@@ -96,13 +96,11 @@ export class UserService {
 		}
 	}
 
-	async create(data: CreateUserDto): Promise<User>{
+	async create(data: CreateUserDto): Promise<void>{
 		const userRepo = this.dataSource.getRepository(User)
 
 		const passwordHash = await bcrypt.hash(data.password, 8)
 
-		data.password = undefined
-			
 		const user = await userRepo.create({
 			username: data.username, 
 			email: data.email,
@@ -110,8 +108,6 @@ export class UserService {
 		})
     
 		await userRepo.save(user)
-
-		return user
 	}
 
 	async delete(id): Promise<void>{
