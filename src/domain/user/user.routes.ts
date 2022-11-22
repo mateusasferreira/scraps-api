@@ -12,37 +12,37 @@ const routes = Router()
 routes.post(
 	'/signup',
 	validate('create-user'),
-	asyncHandler(userController.create.bind(userController))
+	userController.create.bind(userController)
 )
 
 routes.delete(
 	'/',
 	authenticate,
-	asyncHandler(userController.delete.bind(userController))
+	userController.delete.bind(userController)
 )
 
 routes.post(
 	'/:id/follow',
 	authenticate,
-	asyncHandler(userController.follow.bind(userController))
+	userController.follow.bind(userController)
 )
 
 routes.post(
 	'/:id/unfollow',
 	authenticate,
-	asyncHandler(userController.unfollow)
+	userController.unfollow.bind(userController)
 )
 
 routes.get(
 	'/',
-	asyncHandler(userController.getMany.bind(userController))
+	userController.getMany.bind(userController)
 )
 
-routes.get('/:id', asyncHandler(userController.get.bind(userController)))
+routes.get('/:id', userController.get.bind(userController))
 
 routes.get(
 	'/:id/scraps',
-	asyncHandler(userController.getScraps)
+	userController.getScraps.bind(userController)
 )
 
 export default routes
