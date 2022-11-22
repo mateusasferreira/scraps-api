@@ -1,35 +1,37 @@
 import { Router } from 'express'
 
-import authController from './auth.controller'
 import validate from './auth.validators'
-import asyncHandler from 'express-async-handler'
 import authenticate from '@middlewares/authenticate'
+import Container from 'typedi'
+import { AuthController } from './auth.controller'
 
 const routes = Router()
+
+const authController = Container.get(AuthController)
 
 routes.post(
 	'/login',
 	validate('login'),
-	asyncHandler(authController.login.bind(authController))
+	authController.login.bind(authController)
 )
 
 routes.post(
 	'/logout/',
 	authenticate,
-	asyncHandler(authController.logout.bind(authController))
+	authController.logout.bind(authController)
 )
 
 routes.post(
 	'/refresh',
 	validate('refresh-token'),
-	asyncHandler(authController.refreshToken.bind(authController))
+	authController.refreshToken.bind(authController)
 )
 
 routes.patch(
 	'/change-password',
 	validate('change-password'),
 	authenticate,
-	asyncHandler(authController.changePassword.bind(authController))
+	authController.changePassword.bind(authController)
 )
 
 export default routes

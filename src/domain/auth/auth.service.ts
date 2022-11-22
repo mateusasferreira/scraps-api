@@ -1,14 +1,20 @@
-import { getRepository } from "typeorm"
-import { RefreshTokens } from "../../models/RefreshTokens"
+import { DataSource } from "typeorm"
+import { RefreshTokens } from "../../models/RefreshToken"
 import { User } from "../../models/User"
 import { HttpException } from "../../utils/httpException"
 import bcrypt from 'bcrypt'
 import { createToken } from "../../utils/createToken"
+import { Service } from "typedi"
+import { AuthSuccessResponse } from "./auth.interfaces"
 
-class AuthService {
-  async login(data): Promise<{accessToken: string, refreshToken: string}> {
-		const userRepo = getRepository(User)
-		const refreshTokenRepo = getRepository(RefreshTokens)
+@Service()
+export class AuthService {
+	
+	constructor( private dataSource: DataSource ) {}
+
+  async login(data): Promise<AuthSuccessResponse> {
+		const userRepo = this.dataSource.getRepository(User)
+		const refreshTokenRepo = this.dataSource.getRepository(RefreshTokens)
 
 		const user = await userRepo.findOne({
 			where: [
@@ -34,16 +40,16 @@ class AuthService {
 		return {accessToken, refreshToken: refreshToken.token}
 	}
 
-	async validateRefreshToken(rToken):  Promise<{accessToken: string, refreshToken: string}>{
-		const rTokenRepo = getRepository(RefreshTokens)
+	async validateRefreshToken(rToken):  Promise<AuthSuccessResponse>{
+		const rTokenRepo = this.dataSource.getRepository(RefreshTokens)
 
 		const validToken = await rTokenRepo.findOne(rToken)
 
 		if(!validToken) throw new HttpException(401, 'Refresh Token Invalid')
 
-		const userRepo = getRepository(User)
+		const userRepo = this.dataSource.getRepository(User)
 
-		const user = await userRepo.findOne(validToken.user)
+		const user = await userRepo.findOne({where: {id: validToken.user.id}})
 
 		if(!user) throw new HttpException(400, 'User Invalid')
 
@@ -53,14 +59,14 @@ class AuthService {
 	}
 
 	async logout(token): Promise<void>{
-		const rTokenRepo = getRepository(RefreshTokens)
+		const rTokenRepo = this.dataSource.getRepository(RefreshTokens)
 
 		await rTokenRepo.delete(token)
 	}
 
 	async changePassword(userId, oldPassword, newPassword): Promise<void>{
-		const userRepo = getRepository(User)
-		const rTokenRepo = getRepository(RefreshTokens)
+		const userRepo = this.dataSource.getRepository(User)
+		const rTokenRepo = this.dataSource.getRepository(RefreshTokens)
 
 
 		const user = await userRepo.findOne(userId)
@@ -80,5 +86,3 @@ class AuthService {
 		await rTokenRepo.delete({user: userId})
 	}
 }
-
-export default new AuthService()
