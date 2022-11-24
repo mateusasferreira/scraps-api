@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, OneToOne } from 'typeorm'
 import { Follow } from './Follow'
 import { Profile } from './Profile'
-import { RefreshTokens } from './RefreshTokens'
+import { RefreshTokens } from './RefreshToken'
 import { Scrap } from './Scrap'
 import { Permission } from './Permission'
 
