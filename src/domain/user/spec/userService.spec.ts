@@ -1,7 +1,7 @@
 import { UserService } from "../user.service"
 import bcrypt from 'bcrypt'
-import { User } from "../../../models/User"
-import { DataSource } from "typeorm"
+import { getUserFixture } from "./fixture"
+import { faker } from "@faker-js/faker"
 
 const mockedBcrypt = bcrypt as jest.Mocked<typeof bcrypt>
 
@@ -10,14 +10,12 @@ jest.mock('bcrypt')
 describe('user service', () => {
  
   it('should create a user with hashed password', async () => {
-    const mockUser = {
-      password: 'User@123',
-      email: 'user@email.com',
-      username: 'user'
-    }
-    
+    const user = getUserFixture();
+    const hashedPassword = faker.datatype.string()
+    const userId =  faker.datatype.uuid()
+
     const mockCreate = jest.fn((payload) => {
-      return {...payload, id: '123'}
+      return {...payload, id: userId}
     })
     const mockSave = jest.fn()
     
@@ -31,32 +29,29 @@ describe('user service', () => {
       return this
     })
     mockedBcrypt.hash.mockImplementation((password, salt) => {
-      if(password = 'User@123') {
-        return 'hashed_User@123'
+      if(password = user.password) {
+        return hashedPassword
       }
     })
 
     const service = new UserService(dataSource)
     
-    await service.create(mockUser)
+    await service.create(user)
     
     expect(mockSave).toHaveBeenCalledWith({
-      id: '123',
-      email: 'user@email.com',
-      username: 'user',
-      password_hash: 'hashed_User@123'
+      id: userId,
+      email: user.email,
+      username: user.username,
+      password_hash: hashedPassword
     })
   })
   
   it('should not create a user if password hashing fails', async () => {
-    const mockUser = {
-      password: 'User@123',
-      email: 'user@email.com',
-      username: 'user'
-    }
-    
+    const user = getUserFixture();
+    const userId =  faker.datatype.uuid()
+
     const mockCreate = jest.fn((payload) => {
-      return {...payload, id: '123'}
+      return {...payload, id: userId}
     })
     const mockSave = jest.fn()
     
@@ -75,7 +70,7 @@ describe('user service', () => {
 
     const service = new UserService(dataSource)
     
-    const result = await service.create(mockUser)
+    const result = await service.create(user)
       .catch(err => err.message)
     
     expect(mockCreate).toHaveBeenCalledTimes(0)
