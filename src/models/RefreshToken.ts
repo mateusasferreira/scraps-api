@@ -3,7 +3,7 @@ import { User } from './User'
 
 
 @Entity('refresh_tokens')
-export class RefreshTokens {
+export class RefreshToken {
   @PrimaryGeneratedColumn('uuid')
   token: string
 

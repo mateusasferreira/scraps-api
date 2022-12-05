@@ -1,31 +1,30 @@
 import { DataSource } from "typeorm"
-import { RefreshTokens } from "../../models/RefreshToken"
+import { RefreshToken } from "../../models/RefreshToken"
 import { User } from "../../models/User"
 import { HttpException } from "../../utils/httpException"
 import bcrypt from 'bcrypt'
-import { createToken } from "../../utils/createToken"
+import createToken from "../../utils/createToken"
 import { Service } from "typedi"
-import { AuthSuccessResponse } from "./auth.interfaces"
+import { AuthSuccessResponse, LoginPayload } from "./auth.interfaces"
+import { getLoginPayloadFixture } from "./spec/fixtures"
 
 @Service()
 export class AuthService {
 	
 	constructor( private dataSource: DataSource ) {}
 
-  async login(data): Promise<AuthSuccessResponse> {
+  async login(payload: LoginPayload): Promise<AuthSuccessResponse> {
 		const userRepo = this.dataSource.getRepository(User)
-		const refreshTokenRepo = this.dataSource.getRepository(RefreshTokens)
+		const refreshTokenRepo = this.dataSource.getRepository(RefreshToken)
 
-		const user = await userRepo.findOne({
-			where: [
-				{username: data.user},
-				{email: data.user}
-			]
-		})
+		const user = await userRepo.createQueryBuilder()
+			.where('user.email = :email', {email: payload.user})
+			.orWhere('user.username = :username', {username: payload.user})
+			.getOne()
 
 		if(!user) throw new HttpException(401, 'Incorrect user and/or password')
 
-		const passwordIsValid = await bcrypt.compare(data.password, user.password_hash)
+		const passwordIsValid = await bcrypt.compare(payload.password, user.password_hash)
 
 		if(!passwordIsValid) throw new HttpException(401, 'Incorrect user and/or password')
 
@@ -41,7 +40,7 @@ export class AuthService {
 	}
 
 	async validateRefreshToken(rToken):  Promise<AuthSuccessResponse>{
-		const rTokenRepo = this.dataSource.getRepository(RefreshTokens)
+		const rTokenRepo = this.dataSource.getRepository(RefreshToken)
 
 		const validToken = await rTokenRepo.findOne(rToken)
 
@@ -59,14 +58,14 @@ export class AuthService {
 	}
 
 	async logout(token): Promise<void>{
-		const rTokenRepo = this.dataSource.getRepository(RefreshTokens)
+		const rTokenRepo = this.dataSource.getRepository(RefreshToken)
 
 		await rTokenRepo.delete(token)
 	}
 
 	async changePassword(userId, oldPassword, newPassword): Promise<void>{
 		const userRepo = this.dataSource.getRepository(User)
-		const rTokenRepo = this.dataSource.getRepository(RefreshTokens)
+		const rTokenRepo = this.dataSource.getRepository(RefreshToken)
 
 
 		const user = await userRepo.findOne(userId)

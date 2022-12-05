@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, OneToOne } from 'typeorm'
 import { Follow } from './Follow'
 import { Profile } from './Profile'
-import { RefreshTokens } from './RefreshToken'
+import { RefreshToken } from './RefreshToken'
 import { Scrap } from './Scrap'
 import { Permission } from './Permission'
 
@@ -22,8 +22,8 @@ export class User {
   @CreateDateColumn()
   created_at: string
 
-  @OneToMany(() => RefreshTokens, token => token.user, {cascade: true})
-  token: RefreshTokens[]
+  @OneToMany(() => RefreshToken, token => token.user, {cascade: true})
+  token: RefreshToken[]
 
   @OneToOne(() => Profile, profile => profile.user)
   profile: Profile

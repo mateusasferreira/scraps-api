@@ -7,13 +7,14 @@
     "dev": "ts-node-dev -r tsconfig-paths/register --inspect=0.0.0.0:9999 --respawn --transpile-only --ignore-watch node_modules src/server.ts",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
     "migration:run": "ts-node --transpile-only ./node_modules/typeorm/cli.js -c default migration:run",
-    "test": "jest",
+    "test": "jest --watchAll",
     "test:inspect": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
     "prestart": "typeorm migration:run",
     "start": "node dist/server.js"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@types/bcrypt": "^5.0.0",
     "@types/better-sqlite3": "^7.4.0",
     "@types/ejs": "^3.1.0",
