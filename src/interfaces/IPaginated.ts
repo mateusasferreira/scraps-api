@@ -1,4 +1,4 @@
 export interface Paginated<T> {
-  data: T[];
-  total: number
+	data: T[];
+	total: number
 }

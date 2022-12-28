@@ -1,11 +1,11 @@
 import bcrypt from 'bcrypt'
 import { User } from '@models/User'
 import { Service } from 'typedi'
-import { Paginated } from '../../utils/pagination'
+import { Paginated } from '@interfaces/IPaginated'
 import { UserSearchOptions } from './interfaces/IUserSearchOptions'
 import { CreateUserPayload } from './interfaces/ICreateUserPayload'
 import { UserDao } from './interfaces/UserDao'
-import { NotFoundError, ValidationError } from '../../utils/errors'
+import { NotFoundError, ValidationError } from '@utils/errors'
 
 @Service()
 export class UserService {

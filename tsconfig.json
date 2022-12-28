@@ -17,7 +17,8 @@
       "@repositories/*": ["./src/repositories/*"],
       "@utils/*": ["./src/utils/*"],
       "@docs/*": ["./src/docs/*"],
-      "@domain/*": ["./src/domain/*"]
+      "@domain/*": ["./src/domain/*"],
+      "@interfaces/*": ["./src/interfaces/*"],
     },                                      
     "typeRoots": [
       "./node_modules/@types",
