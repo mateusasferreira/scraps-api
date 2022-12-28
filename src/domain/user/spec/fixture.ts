@@ -1,3 +1,5 @@
+import { User } from "@models/User"
+
 export function getUserFixture(props?){
     return {
         password: 'User@123',
