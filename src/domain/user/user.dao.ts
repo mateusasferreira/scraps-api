@@ -1,15 +1,17 @@
 import { User } from "@models/User";
-import { Service } from "typedi";
-import { DataSource, Repository } from "typeorm";
-import { FindOptions } from "../../interfaces/IDao";
+import { Injectable } from "@nestjs/common";
+import { Inject } from "typedi";
+import { DataSource } from "typeorm";
 import { Profile } from "../../models/Profile";
-import { UserDao } from "./interfaces/UserDao";
-import { UserSearchOptions } from "./interfaces/IUserSearchOptions";
+import { Scrap } from "../../models/Scrap";
+import { IUserDao } from "./interfaces/IUserDao";
+import { ScrapsSearchOptions, UserSearchOptions } from "./interfaces/IUserSearchOptions";
+import { TYPES } from "./user.constants";
 
-@Service()
-export class TypeORMUserDao implements UserDao {
+@Injectable()
+export class TypeORMUserDao implements IUserDao {
     
-    constructor(private dataSource: DataSource) { }
+    constructor( private dataSource: DataSource) { }
     
     findOne(id: Partial<User> | string){
         return this.dataSource
@@ -31,8 +33,10 @@ export class TypeORMUserDao implements UserDao {
         .getOne()
     }
 
-    find(options: UserSearchOptions) {
-        const query = this.dataSource
+	async find(options: UserSearchOptions) {
+		let data, total	
+		
+		const query = this.dataSource
 			.createQueryBuilder()
 			.select([
 				'user.username',
@@ -52,13 +56,15 @@ export class TypeORMUserDao implements UserDao {
 					builder.where(`lower(user.username) like :username`, {username: `%${options.username}%`} )
 				}
 		})
+
+		total = await query.getCount()
 			
 		if(options.limit) {
-			query.take(parseInt(options.limit))
+			query.take(options.limit)
 		}
 		
 		if(options.page) {
-			query.skip((parseInt(options.page) - 1) * parseInt(options.limit))
+			query.skip((options.page - 1) * options.limit)
 		}
 
 		if(options.orderBy) {
@@ -76,11 +82,67 @@ export class TypeORMUserDao implements UserDao {
 			}
 		}
 
-        return query.getMany()
-    }
+		data = await query.getMany()
 
-	count() {
-		return this.dataSource.getRepository(User).count()
+		return {
+			data, 
+			total
+		}
+	}
+
+	async getScraps(userId: any, options: ScrapsSearchOptions) {
+		let data, total	
+		
+		const query = this.dataSource
+			.createQueryBuilder()
+			.select([
+				'scraps.id',
+				'scraps.created_at',
+				'scraps.content',
+				'sender.username',
+				'sender.id',
+				'receiver.username',
+				'receiver.id',
+			])
+			.from(Scrap, 'scrap')
+			.where('scraps.receiver = :userId', { userId })
+			.leftJoin('scraps.sender', 'sender')
+			.leftJoin('scraps.receiver', 'receiver')
+			.loadRelationCountAndMap('scraps.likes', 'scraps.likes')
+			.orderBy('scraps.created_at', 'ASC' )
+			
+
+		total = await query.getCount()
+			
+		if(options.limit) {
+			query.take(options.limit)
+		}
+		
+		if(options.page) {
+			query.skip((options.page - 1) * options.limit)
+		}
+
+		if(options.orderBy) {
+			const direction = options.direction || 'ASC'
+			switch (options.orderBy) {
+				case 'username':
+					query.orderBy('user.username', direction)
+					break;
+				case 'email':
+					query.orderBy('user.email', direction)
+					break;
+				default:
+					query.orderBy('user.username', direction)
+					break;
+			}
+		}
+
+		data = query.getMany()
+
+		return {
+			data, 
+			total
+		}
 	}
 
 	async insert(payload: Partial<User>) {
@@ -103,5 +165,9 @@ export class TypeORMUserDao implements UserDao {
 	
 	async unfollow(followerId: string, followingId: string) {
 
+	}
+
+	async checkIsFollowing(followerId: string, followingId: string) {
+		return true
 	}
 }

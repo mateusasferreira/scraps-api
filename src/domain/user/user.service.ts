@@ -1,16 +1,19 @@
 import bcrypt from 'bcrypt'
 import { User } from '@models/User'
-import { Service } from 'typedi'
 import { Paginated } from '@interfaces/IPaginated'
-import { UserSearchOptions } from './interfaces/IUserSearchOptions'
+import { ScrapsSearchOptions, UserSearchOptions } from './interfaces/IUserSearchOptions'
 import { CreateUserPayload } from './interfaces/ICreateUserPayload'
-import { UserDao } from './interfaces/UserDao'
+import { IUserDao } from './interfaces/IUserDao'
 import { NotFoundError, ValidationError } from '@utils/errors'
+import { IUserService } from './interfaces/IUserService'
+import { Inject, Injectable } from '@nestjs/common'
+import { TYPES } from './user.constants'
+import { Scrap } from '../../models/Scrap'
 
-@Service()
-export class UserService {
+@Injectable()
+export class UserService implements IUserService {
 
-	constructor(private userDao: UserDao){}
+	constructor(@Inject(TYPES.USERDAO) private userDao: IUserDao){}
 
 	async getOne(id): Promise<User>{
 		const user = await this.userDao.findOne(id)
@@ -20,15 +23,8 @@ export class UserService {
 		return user
 	}
 
-	async getMany(options: UserSearchOptions): Promise<Paginated<User>>{
-		const users = await this.userDao.find(options)
-
-		const total = await this.userDao.count(options)
-
-		return {
-			data: users,
-			total 
-		}
+	getMany(options: UserSearchOptions): Promise<Paginated<User>>{
+		return this.userDao.find(options)
 	}
 
 	async create(data: CreateUserPayload): Promise<void>{
@@ -61,4 +57,8 @@ export class UserService {
 	async unfollow(followerId, followingId): Promise<void>{
 		this.userDao.unfollow(followerId, followingId)
 	}
+
+	getScraps(id: any, options: ScrapsSearchOptions) {
+		return this.userDao.getScraps(id, options)
+	};
 }

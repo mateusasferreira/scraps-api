@@ -1,15 +1,19 @@
 import { NextFunction, Request, Response } from 'express'
 import {UserService} from '@domain/user/user.service'
 import { validationResult } from 'express-validator'
-import scrapsService from '@domain/scrap/scrap.service'
-import { Service } from 'typedi'
-import { nextTick } from 'process'
+import { Controller, Delete, Get, Next, Post, Req, Res, Inject } from '@nestjs/common'
+import { TYPES } from './user.constants'
 
-@Service()
+@Controller('users')
 export class UserController {
-	constructor(private userService: UserService) {}
+	constructor(@Inject(TYPES.USERSERVICE) private userService: UserService) {}
 	
-	async get(req: Request, res: Response, next: NextFunction){
+	@Get(':id')
+	async get(
+		@Req() req: Request, 
+		@Res() res: Response, 
+		@Next() next: NextFunction
+	){
 		try {
 			const {id} = req.params
 
@@ -21,7 +25,12 @@ export class UserController {
 		}
 	}
 
-	async getMany(req: Request, res: Response, next: NextFunction){
+	@Get()
+	async getMany(
+		@Req() req: Request, 
+		@Res() res: Response, 
+		@Next() next: NextFunction
+	){
 		try {
 			const response = await this.userService.getMany(req.query)
 
@@ -32,24 +41,29 @@ export class UserController {
 		
 	}
 
-	async getScraps(req: Request, res: Response, next: NextFunction){
+	@Get('/scraps')
+	async getScraps(
+		@Req() req: Request, 
+		@Res() res: Response, 
+		@Next() next: NextFunction
+	){
 		try {
 			const {id} = req.params
 
-			const {limit, skip} = req.body
+			const result = await this.userService.getScraps(id, req.query)
 
-			const [results, total] = await scrapsService.getManyByUser(id, {limit, skip})
-
-			res.status(200).json({
-				total,
-				results
-			})
+			res.status(200).json(result)
 		} catch (error) {
 			next(error)
 		}
 	}
 	
-	async create(req: Request, res: Response, next: NextFunction) {
+	@Post()
+	async create(
+		@Req() req: Request, 
+		@Res() res: Response, 
+		@Next() next: NextFunction
+	) {
 		try {
 			const errors = validationResult(req)
 
@@ -71,7 +85,12 @@ export class UserController {
 		}
 	}
 
-	async delete(req: Request, res: Response, next: NextFunction) {
+	@Delete()
+	async delete(
+		@Req() req: Request, 
+		@Res() res: Response, 
+		@Next() next: NextFunction
+	) {
 		try {
 			const errors = validationResult(req)
 
@@ -95,7 +114,12 @@ export class UserController {
 		}
 	}
 
-	async follow(req: Request, res: Response, next: NextFunction){
+	@Post(':id/follow')
+	async follow(
+		@Req() req: Request, 
+		@Res() res: Response, 
+		@Next() next: NextFunction
+	){
 		try {
 			const {id: followingId} = req.params 
 
@@ -107,11 +131,16 @@ export class UserController {
 		}
 	}
   
-	async unfollow(req: Request, res: Response, next: NextFunction){
+	@Post(':id/unfollow')
+	async unfollow(
+		@Req() req: Request, 
+		@Res() res: Response, 
+		@Next() next: NextFunction
+	){
 		try {
 			const {id} = req.params
 
-			await this.userService.unfollow(id)
+			await this.userService.unfollow(req.user.id, id)
 
 			res.sendStatus(204)
 		} catch (error) {

@@ -1,5 +1,8 @@
 import path from 'path'
 import {DataSource} from 'typeorm'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const dataSource = new DataSource({
 	type: process.env.DB_CONNECTION as any,

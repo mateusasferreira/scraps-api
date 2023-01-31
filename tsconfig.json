@@ -18,7 +18,7 @@
       "@utils/*": ["./src/utils/*"],
       "@docs/*": ["./src/docs/*"],
       "@domain/*": ["./src/domain/*"],
-      "@interfaces/*": ["./src/interfaces/*"],
+      "@interfaces/*": ["./src/interfaces/*"]
     },                                      
     "typeRoots": [
       "./node_modules/@types",

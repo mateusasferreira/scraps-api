@@ -7,6 +7,12 @@ import { UserSearchOptions } from "../interfaces/IUserSearchOptions"
 const mockedBcrypt = bcrypt as jest.Mocked<typeof bcrypt>
 
 jest.mock('bcrypt')
+jest.mock('@nestjs/common', () => {
+  return {
+    Injectable: () => jest.fn(),
+    Inject: () => jest.fn()
+  }
+})
 
 describe('user service', () => {
 
@@ -63,19 +69,13 @@ describe('user service', () => {
     const userDao = new Object() as any
     userDao.find = jest.fn((options) => {
       return new Promise((resolve) => {
-        resolve(users)
-      })
-    })
-    userDao.count = jest.fn((options) => {
-      return new Promise((resolve) => {
-        resolve(2)
+        resolve({data: users, total: users.length})
       })
     })
 
     const result = await new UserService(userDao).getMany(options)
 
     expect(userDao.find).toBeCalledWith(options)
-    expect(userDao.count).toBeCalledWith(options)
     expect(result).toEqual({
       data: users,
       total: 2
