@@ -1,29 +1,13 @@
 import { body } from "express-validator";
-import { getRepository } from "typeorm";
-import dataSource from "../../config/database.config";
-import { User } from "../../models/User";
 
-function validate(method) {
+export function validate(method) {
 	switch (method) {
 		case "create-user":
 			return [
 				body("email")
 					.exists()
 					.withMessage("email missing")
-					.isEmail()
-					.withMessage("email is not valid")
-					.custom(async (email) => {
-						const userRepo = dataSource.getRepository(User);
-
-						const emailIsTaken = await userRepo.findOne({
-							where: { email },
-						});
-
-						if (emailIsTaken)
-							throw new Error("email is already taken");
-
-						return true;
-					}),
+					.isEmail(),
 				body("password")
 					.exists()
 					.withMessage("password missing")
@@ -44,20 +28,6 @@ function validate(method) {
 					.withMessage("username missing")
 					.isLength({ min: 4, max: 20 })
 					.withMessage("username must be 8 to 20 characters long")
-					.custom(async (username) => {
-						const userRepo = dataSource.getRepository(User);
-
-						const usernameIsTaken = await userRepo.findOne({
-							where: { username },
-						});
-
-						if (usernameIsTaken)
-							throw new Error("username is already taken");
-
-						return true;
-					}),
-			];
+				];
+		}
 	}
-}
-
-export default validate

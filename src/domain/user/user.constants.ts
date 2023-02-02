@@ -1,5 +1,3 @@
-export enum TYPES {
+export enum TOKENS {
   USERDAO = 'USERDAO',
-  USERSERVICE ='USERSERVICE',
-  DATASOURCE = 'DATASOURCE'
 }

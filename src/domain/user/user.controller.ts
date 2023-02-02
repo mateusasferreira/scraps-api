@@ -1,12 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
 import {UserService} from '@domain/user/user.service'
 import { validationResult } from 'express-validator'
-import { Controller, Delete, Get, Next, Post, Req, Res, Inject } from '@nestjs/common'
-import { TYPES } from './user.constants'
+import { Controller, Delete, Get, Next, Post, Req, Res } from '@nestjs/common'
 
 @Controller('users')
 export class UserController {
-	constructor(@Inject(TYPES.USERSERVICE) private userService: UserService) {}
+	constructor(private userService: UserService) {}
 	
 	@Get(':id')
 	async get(

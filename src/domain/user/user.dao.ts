@@ -1,37 +1,49 @@
 import { User } from "@models/User";
 import { Injectable } from "@nestjs/common";
-import { Inject } from "typedi";
+import { userInfo } from "os";
 import { DataSource } from "typeorm";
 import { Profile } from "../../models/Profile";
 import { Scrap } from "../../models/Scrap";
 import { IUserDao } from "./interfaces/IUserDao";
 import { ScrapsSearchOptions, UserSearchOptions } from "./interfaces/IUserSearchOptions";
-import { TYPES } from "./user.constants";
 
 @Injectable()
 export class TypeORMUserDao implements IUserDao {
     
-    constructor( private dataSource: DataSource) { }
-    
-    findOne(id: Partial<User> | string){
-        return this.dataSource
-        .createQueryBuilder()
-        .select([
-            'user.username',
-            'user.id',
-            'user.email',
-            'user.created_at',
-            'profile.name'
-        ])
-        .from(User, 'user')
-        .leftJoin(Profile, 'profile', 'profile.userId = user.id')
-        .loadRelationCountAndMap('user.scraps_received', 'user.scraps_received' )
-        .loadRelationCountAndMap('user.scraps_sent', 'user.scraps_sent')
-        .loadRelationCountAndMap('user.followers', 'user.followedBy')
-        .loadRelationCountAndMap('user.following', 'user.following')
-        .where('user.id = :id', {id})
-        .getOne()
-    }
+	constructor( private dataSource: DataSource) { }
+	
+	findOne(search: Partial<User> | string){
+		const query = this.dataSource
+			.createQueryBuilder()
+			.select([
+					'user.username',
+					'user.id',
+					'user.email',
+					'user.created_at',
+					'profile.name'
+			])
+			.from(User, 'user')
+			.leftJoin(Profile, 'profile', 'profile.userId = user.id')
+			.loadRelationCountAndMap('user.scraps_received', 'user.scraps_received' )
+			.loadRelationCountAndMap('user.scraps_sent', 'user.scraps_sent')
+			.loadRelationCountAndMap('user.followers', 'user.followedBy')
+			.loadRelationCountAndMap('user.following', 'user.following')
+			
+
+		if(typeof search === 'object') {
+			if(search.email) {
+				query.where('user.email = :email', {email: search.email})
+			}
+
+			if(search.username) {
+				query.where('user.username = :username', {username: search.username})
+			}
+		} else {
+			query.where('user.id = :id', {id: search})
+		}
+
+		return query.getOne()
+	}
 
 	async find(options: UserSearchOptions) {
 		let data, total	
