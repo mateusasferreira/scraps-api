@@ -7,15 +7,15 @@ import { IUserDao } from './interfaces/IUserDao'
 import { NotFoundError, ValidationError } from '@utils/errors'
 import { IUserService } from './interfaces/IUserService'
 import { Inject, Injectable } from '@nestjs/common'
-import { TYPES } from './user.constants'
+import { TOKENS } from './user.constants'
 import { Scrap } from '../../models/Scrap'
 
 @Injectable()
 export class UserService implements IUserService {
 
-	constructor(@Inject(TYPES.USERDAO) private userDao: IUserDao){}
+	constructor(@Inject(TOKENS.USERDAO) private userDao: IUserDao){}
 
-	async getOne(id): Promise<User>{
+	async getOne(id: string): Promise<User>{
 		const user = await this.userDao.findOne(id)
 
 		if(!user) throw new NotFoundError('User not found')
@@ -28,6 +28,18 @@ export class UserService implements IUserService {
 	}
 
 	async create(data: CreateUserPayload): Promise<void>{
+		const emailAlreadyTaken = await this.userDao.findOne({email: data.email})
+		
+		if(emailAlreadyTaken) {
+			throw new ValidationError('Email already taken!')
+		}
+		
+		const usernameAlreadyTaken = await this.userDao.findOne({username: data.username})
+		
+		if(usernameAlreadyTaken) {
+			throw new ValidationError('Username already taken!')
+		}
+
 		const passwordHash = await bcrypt.hash(data.password, 8)
 
 		await this.userDao.insert({
@@ -37,7 +49,7 @@ export class UserService implements IUserService {
 		})
 	}
 
-	async delete(id): Promise<void>{
+	async delete(id: string): Promise<void>{
 		await this.userDao.delete(id)
 	}
 
@@ -54,7 +66,7 @@ export class UserService implements IUserService {
 		await this.userDao.follow(followerId, followingId)
 	}
   
-	async unfollow(followerId, followingId): Promise<void>{
+	async unfollow(followerId: string, followingId: string): Promise<void>{
 		this.userDao.unfollow(followerId, followingId)
 	}
 

@@ -18,7 +18,7 @@ describe('user service', () => {
 
   it('should return one existing user', async () => {
     const user = getUserFixture();
-    const id = 99
+    const id = '99'
 
     const userDao = new Object() as any
     userDao.findOne = jest.fn((_id) => {
@@ -37,7 +37,7 @@ describe('user service', () => {
   })
   
   it('should throw NotFoundError if user does not exists', async () => {
-    const id = 99
+    const id = '99'
 
     const userDao = new Object() as any
     userDao.findOne = jest.fn((_id) => {
@@ -83,7 +83,7 @@ describe('user service', () => {
   })
 
   it('should delete a user', async () => {
-    const id = 99
+    const id = '99'
     
     const userDao = new Object() as any
     userDao.delete = jest.fn()
@@ -163,6 +163,11 @@ describe('user service', () => {
     
     const userDao = new Object() as any
     userDao.insert = jest.fn()
+    userDao.findOne = jest.fn((user) => {
+      return new Promise(resolve => {
+        resolve(null)
+      })
+    })
 
     mockedBcrypt.hash.mockImplementation((password, salt) => {
       if(password = user.password) {
@@ -184,6 +189,11 @@ describe('user service', () => {
 
     const userDao = new Object() as any
     userDao.insert = jest.fn()
+    userDao.findOne = jest.fn((user) => {
+      return new Promise(resolve => {
+        resolve(null)
+      })
+    })
 
     mockedBcrypt.hash.mockImplementation(() => {
       throw new Error('hashingError');
@@ -194,5 +204,70 @@ describe('user service', () => {
     
     expect(userDao.insert).toHaveBeenCalledTimes(0)
     expect(result).toEqual('hashingError')
+  })
+  
+  it('should not create a user if password hashing fails', async () => {
+    const user = getUserFixture();
+
+    const userDao = new Object() as any
+    userDao.insert = jest.fn()
+    userDao.findOne = jest.fn((user) => {
+      return new Promise(resolve => {
+        resolve(null)
+      })
+    })
+
+    mockedBcrypt.hash.mockImplementation(() => {
+      throw new Error('hashingError');
+    })
+
+    const result = await new UserService(userDao).create(user)
+      .catch(error => error.message)
+    
+    expect(userDao.insert).toHaveBeenCalledTimes(0)
+    expect(result).toEqual('hashingError')
+  })
+  
+  it('should not create user if email is already taken', async () => {
+    const _user = getUserFixture();
+
+    const userDao = new Object() as any
+    userDao.insert = jest.fn()
+    userDao.findOne = jest.fn((user) => {
+      return new Promise(resolve => {
+        if(user && user.email === _user.email) {
+          resolve(_user)
+        } else {
+          resolve(null)
+        }
+      })
+    })
+
+    const result = await new UserService(userDao).create(_user)
+      .catch(error => error.name)
+    
+    expect(userDao.insert).toHaveBeenCalledTimes(0)
+    expect(result).toEqual('ValidationError')
+  })
+  it('should not create user if email is already taken', async () => {
+    const _user = getUserFixture();
+
+    const userDao = new Object() as any
+    userDao.insert = jest.fn()
+    userDao.findOne = jest.fn((user) => {
+      return new Promise(resolve => {
+        if(user && user.username === _user.username) {
+          resolve(_user)
+        } else {
+          resolve(null)
+        }
+      })
+    })
+
+    const result = await new UserService(userDao).create(_user)
+      .catch(error => error.name)
+    
+    expect(userDao.insert).toHaveBeenCalledTimes(0)
+    expect(result).toEqual('ValidationError')
   })
 })
