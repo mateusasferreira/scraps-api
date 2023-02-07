@@ -1,22 +1,21 @@
-import { NextFunction, Request, Response } from 'express'
-import { HttpException } from '../utils/httpException'
+import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
+import { Response } from "express";
+import { mapErrorToHttp } from "@utils/errorHttpMapper";
 
-function errorHandler(err: Error, req: Request, res: Response, next: NextFunction): void{
-	let statusCode = 500 
-	let message = 'Internal Server Error'
-  
-	if (err instanceof HttpException){
-		statusCode = err.status
-		message = err.message
-	} else {
-		console.error(err)
-	}
+@Catch()
+export class ErrorHandler implements ExceptionFilter {
+  catch(exception: any, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse<Response>();
 
-	res.status(statusCode).json({
-		errors: [
-			{message}
-		]
-	})
+		const {status, message} = mapErrorToHttp(exception)
+
+		if(message) {
+			response.status(status).json({
+				errors: [{message}]
+			})
+		} else {
+			response.sendStatus(status)
+		}
+  }
 }
-
-export default errorHandler
