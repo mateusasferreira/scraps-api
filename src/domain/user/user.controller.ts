@@ -40,7 +40,7 @@ export class UserController {
 		
 	}
 
-	@Get('/scraps')
+	@Get(':id/scraps')
 	async getScraps(
 		@Req() req: Request, 
 		@Res() res: Response, 
@@ -122,7 +122,7 @@ export class UserController {
 		try {
 			const {id: followingId} = req.params 
 
-			await this.userService.follow(req.user, followingId)
+			await this.userService.follow(req.user.id, followingId)
 
 			res.sendStatus(201)
 		} catch (error) {

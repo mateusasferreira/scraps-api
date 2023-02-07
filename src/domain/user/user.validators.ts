@@ -1,16 +1,17 @@
 import { body } from "express-validator";
 
-export function validate(method) {
+export function validate(method): any {
 	switch (method) {
 		case "create-user":
 			return [
 				body("email")
 					.exists()
-					.withMessage("email missing")
-					.isEmail(),
+					.withMessage("Email is missing")
+					.isEmail()
+					.withMessage("Invalid email"),
 				body("password")
 					.exists()
-					.withMessage("password missing")
+					.withMessage("Passwpasswordord missing")
 					.custom((password) => {
 						const passwordMatch = password.match(
 							/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
@@ -25,9 +26,9 @@ export function validate(method) {
 					}),
 				body("username")
 					.exists()
-					.withMessage("username missing")
+					.withMessage("Username is missing")
 					.isLength({ min: 4, max: 20 })
-					.withMessage("username must be 8 to 20 characters long")
+					.withMessage("Username must be 8 to 20 characters long")
 				];
 		}
 	}
